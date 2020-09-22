@@ -1,13 +1,16 @@
 package com.example.demo.dto;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
 /**
  * @author 이혜연
  *
  */
 @javax.persistence.Entity
 public class Member {
-	@org.springframework.data.annotation.Id
-	@javax.persistence.GeneratedValue(strategy = javax.persistence.GenerationType.IDENTITY)
+	@Id
+	@GeneratedValue(strategy = javax.persistence.GenerationType.IDENTITY)
 	private String id;
 	private String name;
 
