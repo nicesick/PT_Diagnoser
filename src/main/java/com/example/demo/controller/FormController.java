@@ -13,9 +13,9 @@ public class FormController {
 	 * = fromService; }
 	 */
 	
-	@PostMapping("form")
+	@PostMapping("main")
 	public String createForm() {
 		
-		return "survey";
+		return "main";
 	}
 }
