@@ -1,0 +1,80 @@
+## 테이블 생성 SQL
+
+-- CREATE GUEST
+CREATE TABLE GUEST (
+    ID VARCHAR(30) PRIMARY KEY,
+    NAME VARCHAR(50) NOT NULL
+);
+
+
+
+-- CREATE QUESTION
+-- 's' : speech, 'p' : presentation, 'u' : unrest, 'e' : evaluation
+CREATE TABLE QUESTION (
+    ID INT(6) AUTO_INCREMENT PRIMARY KEY,
+    CATEGORY VARCHAR(1) NOT NULL,
+    CONTENT VARCHAR(150) NOT NULL
+);
+
+
+
+-- CREATE RESULT
+CREATE TABLE RESULT (
+    USER_ID VARCHAR(30) NOT NULL,
+    QUESTION_ID INT(6) NOT NULL,
+    SCORE INT(3) NOT NULL,
+    
+
+​	FOREIGN KEY(USER_ID) REFERENCES GUEST(ID),
+​	FOREIGN KEY(QUESTION_ID) REFERENCES QUESTION(ID),
+
+​	PRIMARY KEY(USER_ID, QUESTION_ID)
+
+);
+
+
+
+## 카테고리별 질문 조회
+
+-- SELECT QUESTION
+SELECT ID          AS id
+      , CATEGORY  AS category
+      , CONTENT   AS content
+  FROM QUESTION
+-- WHERE category = #{category}
+ WHERE category = 's'
+ORDER BY ID;
+
+
+
+## 결과 조회, 입력, 수정, 삭제
+
+-- SELECT RESULT SUM EACH CATEGORY USING LISTAGG (LISTAGG is not supported in H2)
+SELECT a.USER_ID        AS userId
+      , SUM(CASE WHEN b.CATEGORY = 's' THEN a.SCORE ELSE 0 END) AS speechResult
+      , SUM(CASE WHEN b.CATEGORY = 'p' THEN a.SCORE ELSE 0 END) AS presentationResult
+      , SUM(CASE WHEN b.CATEGORY = 'u' THEN a.SCORE ELSE 0 END) AS unrestResult
+      , SUM(CASE WHEN b.CATEGORY = 'e' THEN a.SCORE ELSE 0 END) AS evaluationResult
+  FROM RESULT a
+      , QUESTION b
+ WHERE a.QUESTION_ID = b.ID
+--   AND a.USER_ID = #{user_id}
+  AND a.USER_ID = 'test01';
+
+
+
+-- INSERT RESULT
+INSERT INTO RESULT VALUES('test01', '2', '5');
+
+
+
+-- UPDATE RESULT
+UPDATE RESULT
+SET    SCORE = '99'
+ WHERE USER_ID = 'test01'
+   AND QUESTION_ID = '1';
+
+
+
+-- DELETE RESULT
+DELETE FROM RESULT WHERE USER_ID = 'test01';
