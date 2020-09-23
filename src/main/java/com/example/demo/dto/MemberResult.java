@@ -1,15 +1,15 @@
 package com.example.demo.dto;
 
 public class MemberResult {
-	private Long user_id;
+	private String user_id;
 	private int question_id;
 	private int score;
 
-	public Long getUser_id() {
+	public String getUser_id() {
 		return user_id;
 	}
 
-	public void setUser_id(Long user_id) {
+	public void setUser_id(String user_id) {
 		this.user_id = user_id;
 	}
 
