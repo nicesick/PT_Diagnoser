@@ -29,7 +29,7 @@ public class FormItem {
 		this.category = category;
 	}
 
-	public String getContenl() {
+	public String getContent() {
 		return content;
 	}
 

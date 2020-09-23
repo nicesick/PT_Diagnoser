@@ -19,6 +19,7 @@ public class ResultController {
 
 	@RequestMapping("result")
 	public ModelAndView home(HttpSession session, ModelAndView modelAndView) {
+		System.out.println("result controller");
 //		String userId = (String)session.getAttribute("id");
 //
 //		if (userId == null) {
@@ -33,5 +34,13 @@ public class ResultController {
 		modelAndView.setViewName("result");
 
 		return modelAndView;
+	}
+	@RequestMapping("result/submit")
+	public ModelAndView submit()
+	{
+		System.out.println("result/submit controller");
+		
+		
+		return null; 
 	}
 }

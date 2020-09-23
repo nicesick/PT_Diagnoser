@@ -1,29 +1,36 @@
 package com.example.demo.controller;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.example.demo.dto.FormItem;
+import com.example.demo.service.FormService;
 
 @Controller
 public class FormController {
-/*	@Autowired
-	private FormRepository formRepository;*/
-
-	/*
-	 * private final FromService fromService;
-	 * 
-	 * @Autowired public FromController (FromService fromService) { this.fromService
-	 * = fromService; }
-	 */
 	
-	@PostMapping("main")
-	public String createForm() {
-/*		List<FormItem> formItemList = formRepository.findAll();
+	private final FormService formService;
+	
+	@Autowired
+	public FormController(FormService formService) {
+		this.formService = formService;
+	}
+	
+	@RequestMapping("survey")
+	public ModelAndView surveyPost() {
 
-		for (FormItem formItem : formItemList) {
-			System.out.println(formItem.getContenl());
-			System.out.println(formItem.getCategory());
-		}*/
-
-		return "main";
+		ModelAndView mv = new ModelAndView(); 
+		List<FormItem> formList = formService.findQuestions();
+		
+		for(int i =0 ;i<formList.size(); i++ ) {
+			System.out.println(formList.get(i).getId() + ", " + formList.get(i).getCategory() + ", "+ formList.get(i).getContent());
+		}
+		mv.addObject("formList", formList);
+		mv.setViewName("survey");
+		return mv;
 	}
 }
