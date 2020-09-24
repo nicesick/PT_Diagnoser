@@ -2,7 +2,7 @@ package com.example.demo.dto;
 
 public class MemberResult {
 	private String user_id;
-	private int question_id;
+	private String question_id;
 	private int score;
 
 	public String getUser_id() {
@@ -13,11 +13,11 @@ public class MemberResult {
 		this.user_id = user_id;
 	}
 
-	public int getQuestion_id() {
+	public String getQuestion_id() {
 		return question_id;
 	}
 
-	public void setQuestion_id(int question_id) {
+	public void setQuestion_id(String question_id) {
 		this.question_id = question_id;
 	}
 

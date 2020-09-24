@@ -1,12 +1,19 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.FormItem;
 import com.example.demo.dto.MemberResultSum;
 import com.example.demo.service.MemberResultService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -35,12 +42,19 @@ public class ResultController {
 
 		return modelAndView;
 	}
-	@RequestMapping("result/submit")
-	public ModelAndView submit()
+	
+	@ResponseBody
+	@PostMapping("submit")
+	public String submit(Model model, @RequestBody List<FormItem> allData)
 	{
-		System.out.println("result/submit controller");
-		
-		
-		return null; 
+		System.out.println("survey/submit controller");
+		int rslt = memberResultService.saveMemberResult(allData);
+		if(rslt >=4) {
+			// 성공 
+		} else {
+			// 실패
+		}
+		return "redirect:/"; 
 	}
+	
 }

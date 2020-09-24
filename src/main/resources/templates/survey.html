@@ -362,37 +362,36 @@
 						</div>
 						<div class="card-body">
 							<div class="table-responsive">
-								<table class="table table-bordered" id="dataTable" width="100%"
+								<table class="table table-bordered" id="surveyTable" width="100%"
 									cellspacing="0">
 									<thead>
 										<tr>
 											<th>No</th>
 											<th>Content</th>
+											<th style ="display:none">Category</th>
 											<th>0점</th>
 											<th>1점</th>
 											<th>2점</th>
 											<th>3점</th>
 										</tr>
 									</thead>
-									<tbody>
+									<tbody id = "surveyTable_tbody">
 										<tr th:each="item : ${formList}">
 											<td th:text="${item.id}"></td>
 											<td th:text="${item.content}"></td>
-											<td><input type="radio" name="${item.id}" value="0"><label for="default-radio"></label></td>
-											<td><input type="radio" name="${item.id}" value="1"><label for="default-radio"></label></td>
-											<td><input type="radio" name="${item.id}" value="2"><label for="default-radio"></label></td>
-											<td><input type="radio" name="${item.id}" value="3"><label for="default-radio"></label></td>
+											<td th:text="${item.category}" style ="display:none"></td>
+											<td><input type="radio" th:name="${item.id}" value="0"><label for="default-radio"></label></td>
+											<td><input type="radio" th:name="${item.id}" value="1"><label for="default-radio"></label></td>
+											<td><input type="radio" th:name="${item.id}" value="2"><label for="default-radio"></label></td>
+											<td><input type="radio" th:name="${item.id}" value="3"><label for="default-radio"></label></td>
 										</tr>
 									</tbody>
 								</table>
 							</div>
 						</div>
-						<div text-align="right">
-							<a href="result/submit" class="btn btn-success btn-icon-split">
-								<span class="icon text-white-50"> <i class="fas fa-check"></i>
-							</span> <span class="text">제 출</span>
-							</a>
-						</div>
+						<a id ="btn_submit" onclick = "fn_onclick_btn_submit()" class="btn btn-success btn-icon-split">
+							<span class="icon text-white-50"></span> <span class="text">제 출</span>
+						</a>
 					</div>
 
 					<!-- 
@@ -466,6 +465,39 @@
 	<!-- Page level custom scripts -->
 	<script src="js/demo/chart-area-demo.js"></script>
 	<script src="js/demo/chart-pie-demo.js"></script>
+	
+	<script type="text/javascript" th:inline = "javascript">
+		function fn_onclick_btn_submit() {
+			var formStr  = '[[${formList}]]';
+			var formList = JSON.parse(formStr);
+			
+			for(var i = 0; i <formList.length; i++){
+				/* if ( $('input:radio[name = '+ formList[i].id +']').is(":checked") == false) {
+					alert(formList[i].id+ "번이 선택되지 않았습니다. "); 
+					return; 
+				} */
+				formList[i].val = $('input:radio[name = '+ formList[i].id +']:checked').val(); 
+			}
+			console.log(JSON.stringify(formList));
+			$.ajax({
+		        type: "POST",
+		        url: "submit",
+		        data: JSON.stringify(formList),
+		        contentType:'application/json; charset=UTF-8',
+		        //dataType:"json",
+		        success: function(data) {
+		            console.log(" AJAX_SUCCESS ");
+		            //location.href="/";
+		        },
+		        error : function(request, status, error){
+		            console.log("AJAX_ERROR");
+		            console.log("code = "+ request.status + " error = " + error); // 실패 시 처리
+		        }
+		    }); 
+		    
+		}
+	
+	</script>
 </body>
 
 </html>

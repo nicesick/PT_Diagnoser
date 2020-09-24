@@ -7,11 +7,17 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>result</title>
 </head>
-<body>
+<body onload = "fn_onload()">
     <h1 th:text="${result.user_id}"></h1>
     <h1 th:text="${result.speechResult}"></h1>
     <h1 th:text="${result.presentationResult}"></h1>
     <h1 th:text="${result.unrestResult}"></h1>
     <h1 th:text="${result.evaluationResult}"></h1>
+	<script type="text/javascript" th:inline = "javascript" >
+		function fn_onload() {
+			
+			
+		}
+	</script>
 </body>
 </html>

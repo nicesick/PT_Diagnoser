@@ -1,15 +1,17 @@
 package com.example.demo.repository;
 
-import com.example.demo.dto.MemberResult;
-import com.example.demo.dto.MemberResultSum;
+import java.util.List;
+import java.util.Optional;
+
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
-import java.util.List;
-import java.util.Optional;
+import com.example.demo.dto.MemberResult;
+import com.example.demo.dto.MemberResultSum;
 
 @Repository
 public class JdbcTemplateMemberResultRepository implements MemberResultRepository {
@@ -56,6 +58,12 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 		return results;
 	}
 
+	@Override
+	public int saveResult(MemberResult result) {
+		int rslt = jdbcTemplate.update("Insert into RESULT (USER_ID, QUESTION_ID, SCORE) VALUES (?,?,?) ",result.getUser_id(), result.getQuestion_id(), result.getScore());
+		return rslt;
+	}
+	
 	private RowMapper<MemberResultSum> memberResultSumRowMapper() {
 		return (rs, rowNum) -> {
 			MemberResultSum item = new MemberResultSum();
@@ -69,4 +77,7 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 			return item;
 		};
 	}
+	
+	
+	
 }

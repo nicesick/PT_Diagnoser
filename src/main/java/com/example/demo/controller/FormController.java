@@ -25,12 +25,10 @@ public class FormController {
 
 		ModelAndView mv = new ModelAndView(); 
 		List<FormItem> formList = formService.findQuestions();
-		
-		for(int i =0 ;i<formList.size(); i++ ) {
-			System.out.println(formList.get(i).getId() + ", " + formList.get(i).getCategory() + ", "+ formList.get(i).getContent());
-		}
 		mv.addObject("formList", formList);
 		mv.setViewName("survey");
+		
 		return mv;
 	}
+	
 }
