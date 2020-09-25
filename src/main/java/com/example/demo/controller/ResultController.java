@@ -12,9 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
-
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class ResultController {
@@ -34,10 +32,15 @@ public class ResultController {
 //			return modelAndView;
 //		}
 
-		String userId = "test01";
-		Optional<MemberResultSum> results = memberResultService.findMemberResultSumById(userId);
+		String userId = "park";
+		List<MemberResultSum> results = memberResultService.findMemberResultSumById(userId);
 
-		modelAndView.addObject("result", results.get());
+		if (results.isEmpty()) {
+			modelAndView.addObject("result", "");
+		} else {
+			modelAndView.addObject("result", results);
+		}
+
 		modelAndView.setViewName("result");
 
 		return modelAndView;
@@ -49,8 +52,9 @@ public class ResultController {
 	{
 		System.out.println("survey/submit controller");
 		int rslt = memberResultService.saveMemberResult(allData);
+
 		if(rslt >=4) {
-			// 성공 
+			// 성공
 		} else {
 			// 실패
 		}

@@ -52,7 +52,6 @@ public class JdbcTemplateFormRepository implements FormRepository {
 			item.setId(rs.getInt("id"));
 			item.setCategory(rs.getString("category"));
 			item.setContent(rs.getString("content"));
-			item.setScore(rs.getInt("score"));
 			item.setUseYn(rs.getString("use_yn"));
 			return item;
 		};

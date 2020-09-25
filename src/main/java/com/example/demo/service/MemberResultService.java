@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -21,15 +20,15 @@ public class MemberResultService {
 		this.memberResultRepository = memberRepository;
 	}
 
-	public Optional<MemberResultSum> findMemberResultSumById(String id) {
+	public List<MemberResultSum> findMemberResultSumById(String id) {
 		return this.memberResultRepository.findById(id);
 	}
 
-	public Optional<MemberResultSum> findMemberResultSumByENum(String eNum) {
+	public List<MemberResultSum> findMemberResultSumByENum(String eNum) {
 		return this.memberResultRepository.findByENum(eNum);
 	}
 
-	public Optional<MemberResultSum> findMemberResultSumByEmail(String email) {
+	public List<MemberResultSum> findMemberResultSumByEmail(String email) {
 		return this.memberResultRepository.findByEmail(email);
 	}
 
@@ -63,22 +62,22 @@ public class MemberResultService {
  		memRlst = new MemberResult();
  		memRlst.setCategory("s");
  		memRlst.setScore(speech);
- 		memRlst.setUser_id("park@lotte.net"); // 세션 저장하면 세션에서 가져옴 
+ 		memRlst.setUser_id("park"); // 세션 저장하면 세션에서 가져옴
  		result += this.memberResultRepository.saveResult(memRlst);
  		
  		memRlst.setCategory("p");
  		memRlst.setScore(presentation);
- 		memRlst.setUser_id("park@lotte.net"); // 세션 저장하면 세션에서 가져옴 
+ 		memRlst.setUser_id("park"); // 세션 저장하면 세션에서 가져옴
  		result += this.memberResultRepository.saveResult(memRlst);
  		
  		memRlst.setCategory("u");
  		memRlst.setScore(unrest);
- 		memRlst.setUser_id("park@lotte.net"); // 세션 저장하면 세션에서 가져옴 
+ 		memRlst.setUser_id("park"); // 세션 저장하면 세션에서 가져옴
  		result += this.memberResultRepository.saveResult(memRlst);
 
  		memRlst.setCategory("e");
  		memRlst.setScore(evaluation);
- 		memRlst.setUser_id("park@lotte.net"); // 세션 저장하면 세션에서 가져옴 
+ 		memRlst.setUser_id("park"); // 세션 저장하면 세션에서 가져옴
  		result += this.memberResultRepository.saveResult(memRlst);
  		
 		return result; 

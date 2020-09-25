@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class JdbcTemplateMemberResultRepository implements MemberResultRepository {
@@ -26,7 +25,7 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 	}
 
 	@Override
-	public Optional<MemberResultSum> findById(String id) {
+	public List<MemberResultSum> findById(String id) {
 		List<MemberResultSum> result = jdbcTemplate.query("SELECT a.USER_ID        AS userId" +
 				", a.WORK_DTIM      AS workDtim" +
 				", SUM(CASE WHEN a.CATEGORY = 's' THEN a.SCORE ELSE 0 END) AS speechResult" +
@@ -34,14 +33,14 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 				", SUM(CASE WHEN a.CATEGORY = 'u' THEN a.SCORE ELSE 0 END) AS unrestResult" +
 				", SUM(CASE WHEN a.CATEGORY = 'e' THEN a.SCORE ELSE 0 END) AS evaluationResult" +
 				"  FROM RESULT a" +
-				"  AND a.USER_ID = ?" +
+				"  WHERE a.USER_ID = ?" +
 				"GROUP BY a.USER_ID, a.WORK_DTIM", memberResultSumRowMapper(), id);
 
-		return result.stream().findAny();
+		return result;
 	}
 
 	@Override
-	public Optional<MemberResultSum> findByENum(String eNum) {
+	public List<MemberResultSum> findByENum(String eNum) {
 		List<MemberResultSum> result = jdbcTemplate.query("SELECT a.USER_ID        AS userId" +
 				", a.WORK_DTIM      AS workDtim" +
 				", SUM(CASE WHEN a.CATEGORY = 's' THEN a.SCORE ELSE 0 END) AS speechResult" +
@@ -49,14 +48,14 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 				", SUM(CASE WHEN a.CATEGORY = 'u' THEN a.SCORE ELSE 0 END) AS unrestResult" +
 				", SUM(CASE WHEN a.CATEGORY = 'e' THEN a.SCORE ELSE 0 END) AS evaluationResult" +
 				"  FROM RESULT a" +
-				"  AND a.E_NUM = ?" +
+				"  WHERE a.E_NUM = ?" +
 				"GROUP BY a.USER_ID, a.WORK_DTIM", memberResultSumRowMapper(), eNum);
 
-		return result.stream().findAny();
+		return result;
 	}
 
 	@Override
-	public Optional<MemberResultSum> findByEmail(String email) {
+	public List<MemberResultSum> findByEmail(String email) {
 		List<MemberResultSum> result = jdbcTemplate.query("SELECT a.USER_ID        AS userId" +
 				", a.WORK_DTIM      AS workDtim" +
 				", SUM(CASE WHEN a.CATEGORY = 's' THEN a.SCORE ELSE 0 END) AS speechResult" +
@@ -64,10 +63,10 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 				", SUM(CASE WHEN a.CATEGORY = 'u' THEN a.SCORE ELSE 0 END) AS unrestResult" +
 				", SUM(CASE WHEN a.CATEGORY = 'e' THEN a.SCORE ELSE 0 END) AS evaluationResult" +
 				"  FROM RESULT a" +
-				"  AND a.EMAIL = ?" +
+				"  WHERE a.EMAIL = ?" +
 				"GROUP BY a.USER_ID, a.WORK_DTIM", memberResultSumRowMapper(), email);
 
-		return result.stream().findAny();
+		return result;
 	}
 
 	@Override
