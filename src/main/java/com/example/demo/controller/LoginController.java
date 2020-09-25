@@ -1,19 +1,14 @@
 package com.example.demo.controller;
 
-import java.util.Optional;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.example.demo.dto.Member;
@@ -38,7 +33,7 @@ public class LoginController extends HandlerInterceptorAdapter {
 
 	// 로그인 처리
 	@PostMapping("login")
-	public void getUsrChk(Model model, @RequestBody Member member) {
+	public void getUsrChk(HttpServletRequest request ,Model model, @RequestBody Member member) {
 		Member user = new Member(); 
 		user = memberService.findById(member.getId()).orElse(user);
 		System.out.println(user.getPwd() + user.getId());
@@ -47,6 +42,13 @@ public class LoginController extends HandlerInterceptorAdapter {
 		if(user.getPwd().equals(member.getPwd()) == false) {
 			return;
 		}
+		
+		HttpSession session = request.getSession(); 
+		session.setAttribute("user_id", user.getId());
+		session.setAttribute("user_name", user.getName());
+		session.setAttribute("user_enum", user.geteNum());
+		session.setAttribute("user_email", user.getEmail());
+		
 		System.out.println("login Controller END ");
 		
 	}
