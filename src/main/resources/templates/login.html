@@ -42,7 +42,7 @@
 
 <main class="login-body" data-vide-bg="img/login-bg.mp4">
     <!-- Login Admin -->
-    <form class="form-default" action="/" method="POST">
+    <form class="form-default" >
         
         <div class="login-form">
             <!-- logo-login -->
@@ -51,15 +51,15 @@
             </div>
             <h2>Login Here</h2>
             <div class="form-input">
-                <label for="name">Email</label>
-                <input  type="email" name="email" placeholder="Email">
+                <label for="ID">ID</label>
+                <input  type="text" id ="ibx_id" placeholder="ID">
             </div>
             <div class="form-input">
-                <label for="name">name</label>
-                <input placeholder="name">
+                <label for="PASSWORD">PASSWORD</label>
+                <input type = "password" id = "ibx_pwd" placeholder="PASSWORD">
             </div>
             <div class="form-input pt-30">
-                <input type="submit" name="submit" value="submit">
+                <input type="button" value="submit" onclick = "fn_onclick_submit()">
             </div>
             
             <!-- Forget Password -->
@@ -71,7 +71,38 @@
     <!-- /end login form -->
 </main>
 
+	<script type="text/javascript" th:inline = "javascript">
+		function fn_onclick_submit() {
+			var id = document.getElementById("ibx_id").value; 
+			var pwd = document.getElementById("ibx_pwd").value;
+			
+			if(id == null || pwd == null || id == "" || pwd == ""){
+				alert("ID  OR PWD IS NULL");
+				return ; 
+			}
+			var usr = {"id": id , "pwd": pwd}; 
+			
+			console.log(usr);
+			
+			$.ajax({
+		        type: "POST",
+		        url: "login",
+		        data: JSON.stringify(usr),
+		        contentType:'application/json; charset=UTF-8',
+		        //dataType:"json",
+		        success: function(data) {
+		            console.log(" AJAX_SUCCESS ");
+		             location.href = "/"; 
 
+		        },
+		        error : function(request, status, error){
+		            alert("PWD WRONG");
+		        	console.log("AJAX_ERROR");
+		            console.log("code = "+ request.status + " error = " + error); // 실패 시 처리
+		        }
+		    }); 
+		}
+	</script>
     <script src="./js/vendor/modernizr-3.5.0.min.js"></script>
     <!-- Jquery, Popper, Bootstrap -->
     <script src="./js/vendor/jquery-1.12.4.min.js"></script>
