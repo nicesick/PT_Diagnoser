@@ -25,14 +25,8 @@ public class ResultController {
 	@RequestMapping("result")
 	public ModelAndView home(HttpSession session, ModelAndView modelAndView) {
 		System.out.println("result controller");
-//		String userId = (String)session.getAttribute("id");
-//
-//		if (userId == null) {
-//			modelAndView.setViewName("login");
-//			return modelAndView;
-//		}
 
-		String userId = "park";
+		String userId = (String) session.getAttribute("user_id");
 		List<MemberResultSum> results = memberResultService.findMemberResultSumById(userId);
 
 		if (results.isEmpty()) {
