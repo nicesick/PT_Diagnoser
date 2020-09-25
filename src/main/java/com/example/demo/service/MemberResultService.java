@@ -44,17 +44,17 @@ public class MemberResultService {
 		int presentation = 0;
 		int unrest = 0;
 		int evaluation = 0;
-
+			
  		for(int i= 0 ; i <formItem.size(); i++ ) {
-			
-			
-			if(formItem.get(i).getCategory() == "s") {
-				speech += formItem.get(i).getScore(); 
-			} else if (formItem.get(i).getCategory() == "p" ) {
+ 			System.out.println("id : "+formItem.get(i).getId()+"," +formItem.get(i).getScore());
+ 			
+ 			if("s".equals(formItem.get(i).getCategory())){
+ 				speech += formItem.get(i).getScore(); 
+			} else if ("p".equals(formItem.get(i).getCategory())) {
 				presentation += formItem.get(i).getScore(); 
-			} else if (formItem.get(i).getCategory() == "u") {
+			} else if ("u".equals(formItem.get(i).getCategory())) {
 				unrest += formItem.get(i).getScore();
-			} else if (formItem.get(i).getCategory() == "e") {
+			} else if ("e".equals(formItem.get(i).getCategory())) {
 				evaluation = formItem.get(i).getScore(); 
 			}
 		}
@@ -65,16 +65,22 @@ public class MemberResultService {
  		memRlst.setUser_id("park"); // 세션 저장하면 세션에서 가져옴
  		result += this.memberResultRepository.saveResult(memRlst);
  		
+
+ 		memRlst = new MemberResult();
  		memRlst.setCategory("p");
  		memRlst.setScore(presentation);
  		memRlst.setUser_id("park"); // 세션 저장하면 세션에서 가져옴
  		result += this.memberResultRepository.saveResult(memRlst);
  		
+
+ 		memRlst = new MemberResult();
  		memRlst.setCategory("u");
  		memRlst.setScore(unrest);
  		memRlst.setUser_id("park"); // 세션 저장하면 세션에서 가져옴
  		result += this.memberResultRepository.saveResult(memRlst);
 
+
+ 		memRlst = new MemberResult();
  		memRlst.setCategory("e");
  		memRlst.setScore(evaluation);
  		memRlst.setUser_id("park"); // 세션 저장하면 세션에서 가져옴

@@ -1,11 +1,11 @@
 package com.example.demo;
 
-import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 @Component
 public class Interceptor extends HandlerInterceptorAdapter {
@@ -26,10 +26,13 @@ public class Interceptor extends HandlerInterceptorAdapter {
 	@SuppressWarnings("unused")
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		System.out.println("PreHandle interceptor start ");
-		HttpSession session = request.getSession();
+		System.out.println("PreHandle interceptor start "); 
+		HttpSession session = request.getSession(); 
 		
-		System.out.println(request.getServletPath() + " : user_id session - " + session.getAttribute("user_id"));
+		System.out.println(session.getAttribute("user_id"));
+		System.out.println(session.getAttribute("user_name"));
+		System.out.println(session.getAttribute("user_enum"));
+		System.out.println(session.getAttribute("user_email"));
 
 		if(session.getAttribute("user_id") == null ) {
 			response.sendRedirect("/login");

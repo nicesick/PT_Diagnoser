@@ -476,7 +476,7 @@
 					alert(formList[i].id+ "번이 선택되지 않았습니다. "); 
 					return; 
 				} */
-				formList[i].val = $('input:radio[name = '+ formList[i].id +']:checked').val(); 
+				formList[i].score = $('input:radio[name = '+ formList[i].id +']:checked').val(); 
 			}
 			console.log(JSON.stringify(formList));
 			$.ajax({
