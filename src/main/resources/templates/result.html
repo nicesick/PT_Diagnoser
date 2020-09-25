@@ -596,16 +596,46 @@
 <!-- Page level plugins -->
 <script src="vendor/chart.js/Chart.min.js"></script>
 
+<script th:inline="javascript">
+    var resultSet = [];
+
+    /*<![CDATA[*/
+    /*[# th:each="rslt : ${result}"]*/
+    createResultSet(/*[[${rslt.workDtim}]]*/
+        , /*[[${rslt.speechResult}]]*/
+        , /*[[${rslt.presentationResult}]]*/
+        , /*[[${rslt.unrestResult}]]*/
+        , /*[[${rslt.evaluationResult}]]*/);
+    /*[/]*/
+    /*]]>*/
+
+    function createResultSet(workDtim, speechResult, presentationResult, unrestResult, evaluationResult) {
+        if (workDtim != undefined) {
+            var result = {
+                workDtim : workDtim,
+                speechResult : speechResult,
+                presentationResult : presentationResult,
+                unrestResult : unrestResult,
+                evaluationResult : evaluationResult
+            };
+
+            resultSet.push(result);
+        }
+    }
+</script>
+
 <script>
     var raderChart;
 
     $(document).ready(function(){
-        var speechResult = $('#speech').attr('result');
-        var presentationResult = $('#presentation').attr('result');
-        var unrestResult = $('unrestResult').attr('result');
-        var evaluationResult = $('evaluationResult').attr('result');
+        radarChart = createRadarChart(resultSet[0].speechResult
+                    , resultSet[0].presentationResult
+                    , resultSet[0].unrestResult
+                    , resultSet[0].evaluationResult);
+    });
 
-        raderChart = new Chart($('#myPieChart'), {
+    function createRadarChart(speechResult, presentationResult, unrestResult, evaluationResult) {
+        var chart = new Chart($('#myPieChart'), {
             type    : 'radar',
             data    : {
                 labels : ['스피치진단', '프레젠테이션진단', '발표불안진단', '발표자평가항목'],
@@ -638,7 +668,9 @@
                 onClick : chartClickEvent
             }
         });
-    });
+
+        return chart;
+    }
 
     function chartClickEvent(e, legendItem) {
         /**
