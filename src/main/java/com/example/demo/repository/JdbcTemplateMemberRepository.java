@@ -1,16 +1,14 @@
 package com.example.demo.repository;
 
-import java.util.List;
-import java.util.Optional;
-
-import javax.sql.DataSource;
-
+import com.example.demo.dto.Member;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import com.example.demo.dto.Member;
+import javax.sql.DataSource;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class JdbcTemplateMemberRepository implements MemberRepository {
@@ -29,7 +27,7 @@ public class JdbcTemplateMemberRepository implements MemberRepository {
 	}
 
 	@Override
-	public Optional<Member> findById(Long id) {
+	public Optional<Member> findById(String id) {
 		List<Member> result = jdbcTemplate.query("select * from GUEST where id = ? ", memberRowMapper(), id);
 		return result.stream().findAny();
 	}
@@ -37,6 +35,18 @@ public class JdbcTemplateMemberRepository implements MemberRepository {
 	@Override
 	public Optional<Member> findByName(String name) {
 		List<Member> result = jdbcTemplate.query("select * from GUEST where name = ? ", memberRowMapper(), name);
+		return result.stream().findAny();
+	}
+
+	@Override
+	public Optional<Member> findByENum(String eNum) {
+		List<Member> result = jdbcTemplate.query("select * from GUEST where e_num = ? ", memberRowMapper(), eNum);
+		return result.stream().findAny();
+	}
+
+	@Override
+	public Optional<Member> findByEmail(String email) {
+		List<Member> result = jdbcTemplate.query("select * from GUEST where email = ? ", memberRowMapper(), email);
 		return result.stream().findAny();
 	}
 
@@ -50,6 +60,9 @@ public class JdbcTemplateMemberRepository implements MemberRepository {
 		return (rs, rowNum) -> {
 			Member item = new Member();
 			item.setId(rs.getString("id"));
+			item.setPwd(rs.getString("pwd"));
+			item.seteNum(rs.getString("e_num"));
+			item.setEmail(rs.getString("email"));
 			item.setName(rs.getString("name"));
 			return item;
 		};

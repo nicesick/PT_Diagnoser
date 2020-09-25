@@ -1,17 +1,15 @@
 package com.example.demo.repository;
 
-import java.util.List;
-import java.util.Optional;
-
-import javax.sql.DataSource;
-
+import com.example.demo.dto.FormItem;
+import com.example.demo.dto.Member;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import com.example.demo.dto.FormItem;
-import com.example.demo.dto.Member;
+import javax.sql.DataSource;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class JdbcTemplateFormRepository implements FormRepository {
@@ -31,20 +29,20 @@ public class JdbcTemplateFormRepository implements FormRepository {
 
 	@Override
 	public Optional<FormItem> findById(Long id) {
-		List<FormItem> result = jdbcTemplate.query("select * from QUESTION where id = ? ", formRowMapper(), id);
+		List<FormItem> result = jdbcTemplate.query("select * from QUESTION where id = ? and use_yn = 'Y'", formRowMapper(), id);
 		return result.stream().findAny();
 	}
 
 	@Override
 	public Optional<FormItem> findByCategory(String category) {
-		List<FormItem> result = jdbcTemplate.query("select * from QUESTION where category = ? ", formRowMapper(),
+		List<FormItem> result = jdbcTemplate.query("select * from QUESTION where category = ? and use_yn = 'Y'", formRowMapper(),
 				category);
 		return result.stream().findAny();
 	}
 
 	@Override
 	public List<FormItem> findAll() {
-		List<FormItem> result = jdbcTemplate.query("select * from QUESTION ", formRowMapper());
+		List<FormItem> result = jdbcTemplate.query("select * from QUESTION where use_yn = 'Y'", formRowMapper());
 		return result;
 	}
 
@@ -54,6 +52,8 @@ public class JdbcTemplateFormRepository implements FormRepository {
 			item.setId(rs.getInt("id"));
 			item.setCategory(rs.getString("category"));
 			item.setContent(rs.getString("content"));
+			item.setScore(rs.getInt("score"));
+			item.setUseYn(rs.getString("use_yn"));
 			return item;
 		};
 	}

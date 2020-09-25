@@ -2,8 +2,9 @@ package com.example.demo.dto;
 
 public class MemberResult {
 	private String user_id;
-	private String question_id;
+	private String category;
 	private int score;
+	private String workDtim;
 
 	public String getUser_id() {
 		return user_id;
@@ -13,12 +14,12 @@ public class MemberResult {
 		this.user_id = user_id;
 	}
 
-	public String getQuestion_id() {
-		return question_id;
+	public String getCategory() {
+		return category;
 	}
 
-	public void setQuestion_id(String question_id) {
-		this.question_id = question_id;
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 	public int getScore() {
@@ -27,5 +28,13 @@ public class MemberResult {
 
 	public void setScore(int score) {
 		this.score = score;
+	}
+
+	public String getWorkDtim() {
+		return workDtim;
+	}
+
+	public void setWorkDtim(String workDtim) {
+		this.workDtim = workDtim;
 	}
 }

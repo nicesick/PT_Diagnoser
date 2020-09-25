@@ -1,10 +1,8 @@
 package com.example.demo.dto;
 
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-@Entity
 public class FormItem {
 	@Id
 	@GeneratedValue(strategy = javax.persistence.GenerationType.IDENTITY)
@@ -12,15 +10,8 @@ public class FormItem {
 	private int id;
 	private String category;
 	private String content;
-	private int score; 
-
-	public int getScore() {
-		return score;
-	}
-
-	public void setScore(int score) {
-		this.score = score;
-	}
+	private int score;
+	private String useYn;
 
 	public int getId() {
 		return id;
@@ -42,8 +33,23 @@ public class FormItem {
 		return content;
 	}
 
-	public void setContent(String contentl) {
-		this.content = contentl;
+	public void setContent(String content) {
+		this.content = content;
 	}
 
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+	public String getUseYn() {
+		return useYn;
+	}
+
+	public void setUseYn(String useYn) {
+		this.useYn = useYn;
+	}
 }

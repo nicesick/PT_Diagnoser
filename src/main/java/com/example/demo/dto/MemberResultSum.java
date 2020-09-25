@@ -12,6 +12,7 @@ package com.example.demo.dto;
  */
 public class MemberResultSum {
 	private String user_id;
+	private String workDtim;
 	private int speechResult;
 	private int presentationResult;
 	private int unrestResult;
@@ -23,6 +24,14 @@ public class MemberResultSum {
 
 	public void setUser_id(String user_id) {
 		this.user_id = user_id;
+	}
+
+	public String getWorkDtim() {
+		return workDtim;
+	}
+
+	public void setWorkDtim(String workDtim) {
+		this.workDtim = workDtim;
 	}
 
 	public int getSpeechResult() {

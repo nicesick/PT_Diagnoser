@@ -25,6 +25,14 @@ public class MemberResultService {
 		return this.memberResultRepository.findById(id);
 	}
 
+	public Optional<MemberResultSum> findMemberResultSumByENum(String eNum) {
+		return this.memberResultRepository.findByENum(eNum);
+	}
+
+	public Optional<MemberResultSum> findMemberResultSumByEmail(String email) {
+		return this.memberResultRepository.findByEmail(email);
+	}
+
 	public List<MemberResultSum> findMemberResultSums() {
 		return this.memberResultRepository.findAll();
 	}
@@ -53,22 +61,22 @@ public class MemberResultService {
 		}
  		/*테이블 수정 필요 */
  		memRlst = new MemberResult();
- 		memRlst.setQuestion_id("1");
+ 		memRlst.setCategory("s");
  		memRlst.setScore(speech);
  		memRlst.setUser_id("park@lotte.net"); // 세션 저장하면 세션에서 가져옴 
  		result += this.memberResultRepository.saveResult(memRlst);
  		
- 		memRlst.setQuestion_id("2");
+ 		memRlst.setCategory("p");
  		memRlst.setScore(presentation);
  		memRlst.setUser_id("park@lotte.net"); // 세션 저장하면 세션에서 가져옴 
  		result += this.memberResultRepository.saveResult(memRlst);
  		
- 		memRlst.setQuestion_id("3");
+ 		memRlst.setCategory("u");
  		memRlst.setScore(unrest);
  		memRlst.setUser_id("park@lotte.net"); // 세션 저장하면 세션에서 가져옴 
  		result += this.memberResultRepository.saveResult(memRlst);
 
- 		memRlst.setQuestion_id("4");
+ 		memRlst.setCategory("e");
  		memRlst.setScore(evaluation);
  		memRlst.setUser_id("park@lotte.net"); // 세션 저장하면 세션에서 가져옴 
  		result += this.memberResultRepository.saveResult(memRlst);
