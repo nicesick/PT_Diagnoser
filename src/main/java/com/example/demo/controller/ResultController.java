@@ -36,11 +36,13 @@ public class ResultController {
 		List<MemberResultSum> results = memberResultService.findMemberResultSumById(userId);
 
 		if (results.isEmpty()) {
-			modelAndView.addObject("result", "");
-		} else {
-			modelAndView.addObject("result", results);
+			MemberResultSum emptyResult = new MemberResultSum();
+			emptyResult.setUser_id(userId);
+
+			results.add(emptyResult);
 		}
 
+		modelAndView.addObject("result", results);
 		modelAndView.setViewName("result");
 
 		return modelAndView;
@@ -58,7 +60,7 @@ public class ResultController {
 		} else {
 			// 실패
 		}
-		return "redirect:/"; 
+		return "redirect:/";
 	}
 	
 }

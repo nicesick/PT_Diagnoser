@@ -335,193 +335,205 @@
                 </div>
 
                 <!-- Content Row -->
-
                 <div class="row">
                     <!-- Pie Chart -->
                     <div class="col-xl-12 col-lg-12">
                         <div class="card shadow mb-4">
-                            <!-- Card Header - Dropdown -->
-                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary"><span th:text="${result.user_id}"></span> 님의 자가진단 결과입니다</h6>
-                            </div>
-                            <!-- Card Body -->
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="pt-4 pb-2">
-                                            <canvas id="myPieChart"></canvas>
-                                        </div>
-                                    </div>
+                            <div th:if="${result[0].getWorkDtim() == null}">
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary"><span th:text="${result[0].user_id}"></span> 님의 자가진단 결과입니다</h6>
                                 </div>
-                                <div class="row">
-                                    <div class="col font-weight-bold text-primary text-center">
-                                        각 항목의 포인트를 클릭하시면 결과분석을 하실 수 있습니다.
-                                    </div>
+                                <div class="card-body">
+                                    <h6 class="m-0 font-weight-bold text-primary">아직 진단결과가 없습니다.</h6>
                                 </div>
-                            </div>
-                            <div class="card-footer">
-                                <div id="speech" class="d-none" th:attr="result=|${result.speechResult}|">
-                                    <div class="row mb-2">
-                                        <div class="col">
-                                            스피치진단 점수는 <span class="font-weight-bold text-primary" th:text="${result.speechResult}"></span> 점 입니다.
-                                        </div>
-                                        <hr>
-                                    </div>
-                                    <div class="row mb-1">
-                                        <div class="col-md-3 col-lg-2 font-weight-bold text-info">
-                                            00 ~ 46
-                                        </div>
-                                        <div class="col">
-                                            직장인 평균에 미치지 못합니다. 기초훈련부터 하나씩 훈련을 시작하셔야 합니다.
-                                        </div>
-                                    </div>
-                                    <div class="row mb-1">
-                                        <div class="col-md-3 col-lg-2 font-weight-bold text-info">
-                                            47 ~ 53
-                                        </div>
-                                        <div class="col">
-                                            직장인 평균에 해당합니다. 성공적인 스피치를 위해 한발 도약하시기 바랍니다.
-                                        </div>
-                                    </div>
-                                    <div class="row mb-1">
-                                        <div class="col-md-3 col-lg-2 font-weight-bold text-info">
-                                            54 ~ 67
-                                        </div>
-                                        <div class="col">
-                                            조금만 더 훈련하신다면 탁월한 스피치를 할 수 있는 자질이 있습니다.
-                                        </div>
-                                    </div>
-                                    <div class="row mb-1">
-                                        <div class="col-md-3 col-lg-2 font-weight-bold text-info">
-                                            68 ~ 84
-                                        </div>
-                                        <div class="col">
-                                            훈련하지 않으신 분이라면 이미 스피치를 잘 하고 있습니다.
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="presentation" class="d-none" th:attr="result=|${result.presentationResult}|">
-                                    <div class="row mb-2">
-                                        <div class="col">
-                                            프레젠테이션진단 점수는 <span class="font-weight-bold text-primary" th:text="${result.presentationResult}"></span> 점 입니다.
-                                        </div>
-                                        <hr>
-                                    </div>
-                                    <div class="row mb-1">
-                                        <div class="col-md-3 col-lg-2 font-weight-bold text-info">
-                                            00 ~ 59
-                                        </div>
-                                        <div class="col">
-                                            직장인 평균 이하입니다. 전문가를 통한 지속적인 노력이 필요합니다.
-                                        </div>
-                                    </div>
-                                    <div class="row mb-1">
-                                        <div class="col-md-3 col-lg-2 font-weight-bold text-info">
-                                            60 ~ 69
-                                        </div>
-                                        <div class="col">
-                                            직장인 평균입니다. 많은 노력으로 훈련해 나가신다면 능숙한 프레젠터가 될 수 있습니다.
-                                        </div>
-                                    </div>
-                                    <div class="row mb-1">
-                                        <div class="col-md-3 col-lg-2 font-weight-bold text-info">
-                                            70 ~ 79
-                                        </div>
-                                        <div class="col">
-                                            기본적인 자질을 갖추고 계십니다만 좀 더 적극적 노력을 하신다면 탁월한 프레젠터가 되실 수 있습니다.
-                                        </div>
-                                    </div>
-                                    <div class="row mb-1">
-                                        <div class="col-md-3 col-lg-2 font-weight-bold text-info">
-                                            80 ~
-                                        </div>
-                                        <div class="col">
-                                            탁월한 프레젠터 입니다. 이미 탁월한 역량을 가지고 계십니다.
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="unrest" class="d-none" th:attr="result=|${result.unrestResult}|">
-                                    <div class="row mb-2">
-                                        <div class="col">
-                                            발표불안 점수는 <span class="font-weight-bold text-primary" th:text="${result.unrestResult}"></span> 점 입니다.
-                                        </div>
-                                        <hr>
-                                    </div>
-                                    <div class="row mb-1">
-                                        <div class="col-md-3 col-lg-2 font-weight-bold text-info">
-                                            00 ~ 37
-                                        </div>
-                                        <div class="col">
-                                            발표상황에서 불안 수준이 낮은 편으로서 그다지 불편감과 불안을 느끼지 않습니다.
-                                        </div>
-                                    </div>
-                                    <div class="row mb-1">
-                                        <div class="col-md-3 col-lg-2 font-weight-bold text-info">
-                                            38 ~ 84
-                                        </div>
-                                        <div class="col">
-                                            발표상황에서 중간 정도의 불안을 경험하고 때때로 발표상황을 회피하기도 합니다. 그러나 그렇게까지 문제되지는 않습니다.
-                                        </div>
-                                    </div>
-                                    <div class="row mb-1">
-                                        <div class="col-md-3 col-lg-2 font-weight-bold text-info">
-                                            85 ~ 97
-                                        </div>
-                                        <div class="col">
-                                            발표상황에서 상당한 정도로 불편감과 불안을 경험하고 있으며, 여러 발표상황들을 회피하기도 합니다. 이러한 불편감과 회피가 지속되면 전문가를 찾아 상담할 것을 권합니다.
-                                        </div>
-                                    </div>
-                                    <div class="row mb-1">
-                                        <div class="col-md-3 col-lg-2 font-weight-bold text-info">
-                                            98 ~
-                                        </div>
-                                        <div class="col">
-                                            심한 정도의 발표불안을 경험하면서, 수많은 발표상황을 회피하고 있으며, 이것이 스스로의 삶을 힘들게 하고 있습니다. 조속한 시일 내에 전문가를 통해 상담할 것을 권합니다.
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="evaluation" class="d-none" th:attr="result=|${result.evaluationResult}|">
-                                    <div class="row mb-2">
-                                        <div class="col">
-                                            발표자평가 점수는 <span class="font-weight-bold text-primary" th:text="${result.evaluationResult}"></span> 점 입니다.
-                                        </div>
-                                        <hr>
-                                    </div>
-                                    <div class="row mb-1">
-                                        <div class="col-md-3 col-lg-2 font-weight-bold text-info">
-                                            00 ~ 59
-                                        </div>
-                                        <div class="col">
-                                            직장인 평균 이하입니다. 전문가를 통한 지속적인 노력이 필요합니다.
-                                        </div>
-                                    </div>
-                                    <div class="row mb-1">
-                                        <div class="col-md-3 col-lg-2 font-weight-bold text-info">
-                                            60 ~ 69
-                                        </div>
-                                        <div class="col">
-                                            직장인 평균입니다. 많은 노력으로 훈련해 나가신다면 능숙한 프레젠터가 될 수 있습니다.
-                                        </div>
-                                    </div>
-                                    <div class="row mb-1">
-                                        <div class="col-md-3 col-lg-2 font-weight-bold text-info">
-                                            70 ~ 79
-                                        </div>
-                                        <div class="col">
-                                            기본적인 자질을 갖추고 계십니다만 좀 더 적극적 노력을 하신다면 탁월한 프레젠터가 되실 수 있습니다.
-                                        </div>
-                                    </div>
-                                    <div class="row mb-1">
-                                        <div class="col-md-3 col-lg-2 font-weight-bold text-info">
-                                            80 ~
-                                        </div>
-                                        <div class="col">
-                                            탁월한 프레젠터 입니다. 이미 탁월한 역량을 가지고 계십니다.
-                                        </div>
-                                    </div>
-                                </div>
+                                <div class="card-footer">
 
-                                <!--                                <h6 class="m-0 font-weight-bold text-primary d-none">Result</h6>-->
+                                </div>
+                            </div>
+                            <div th:unless="${result[0].getWorkDtim() == null}">
+                                <!-- Card Header - Dropdown -->
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary"><span th:text="${result[0].user_id}"></span> 님의 자가진단 결과입니다</h6>
+                                </div>
+                                <!-- Card Body -->
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="pt-4 pb-2">
+                                                <canvas id="myPieChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col font-weight-bold text-primary text-center">
+                                            각 항목의 포인트를 클릭하시면 결과분석을 하실 수 있습니다.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <div id="speech" class="d-none" th:attr="result=|${result[0].speechResult}|">
+                                        <div class="row mb-2">
+                                            <div class="col">
+                                                스피치진단 점수는 <span class="font-weight-bold text-primary" th:text="${result[0].speechResult}"></span> 점 입니다.
+                                            </div>
+                                            <hr>
+                                        </div>
+                                        <div class="row mb-1">
+                                            <div class="col-md-3 col-lg-2 font-weight-bold text-info">
+                                                00 ~ 46
+                                            </div>
+                                            <div class="col">
+                                                직장인 평균에 미치지 못합니다. 기초훈련부터 하나씩 훈련을 시작하셔야 합니다.
+                                            </div>
+                                        </div>
+                                        <div class="row mb-1">
+                                            <div class="col-md-3 col-lg-2 font-weight-bold text-info">
+                                                47 ~ 53
+                                            </div>
+                                            <div class="col">
+                                                직장인 평균에 해당합니다. 성공적인 스피치를 위해 한발 도약하시기 바랍니다.
+                                            </div>
+                                        </div>
+                                        <div class="row mb-1">
+                                            <div class="col-md-3 col-lg-2 font-weight-bold text-info">
+                                                54 ~ 67
+                                            </div>
+                                            <div class="col">
+                                                조금만 더 훈련하신다면 탁월한 스피치를 할 수 있는 자질이 있습니다.
+                                            </div>
+                                        </div>
+                                        <div class="row mb-1">
+                                            <div class="col-md-3 col-lg-2 font-weight-bold text-info">
+                                                68 ~ 84
+                                            </div>
+                                            <div class="col">
+                                                훈련하지 않으신 분이라면 이미 스피치를 잘 하고 있습니다.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="presentation" class="d-none" th:attr="result=|${result[0].presentationResult}|">
+                                        <div class="row mb-2">
+                                            <div class="col">
+                                                프레젠테이션진단 점수는 <span class="font-weight-bold text-primary" th:text="${result[0].presentationResult}"></span> 점 입니다.
+                                            </div>
+                                            <hr>
+                                        </div>
+                                        <div class="row mb-1">
+                                            <div class="col-md-3 col-lg-2 font-weight-bold text-info">
+                                                00 ~ 59
+                                            </div>
+                                            <div class="col">
+                                                직장인 평균 이하입니다. 전문가를 통한 지속적인 노력이 필요합니다.
+                                            </div>
+                                        </div>
+                                        <div class="row mb-1">
+                                            <div class="col-md-3 col-lg-2 font-weight-bold text-info">
+                                                60 ~ 69
+                                            </div>
+                                            <div class="col">
+                                                직장인 평균입니다. 많은 노력으로 훈련해 나가신다면 능숙한 프레젠터가 될 수 있습니다.
+                                            </div>
+                                        </div>
+                                        <div class="row mb-1">
+                                            <div class="col-md-3 col-lg-2 font-weight-bold text-info">
+                                                70 ~ 79
+                                            </div>
+                                            <div class="col">
+                                                기본적인 자질을 갖추고 계십니다만 좀 더 적극적 노력을 하신다면 탁월한 프레젠터가 되실 수 있습니다.
+                                            </div>
+                                        </div>
+                                        <div class="row mb-1">
+                                            <div class="col-md-3 col-lg-2 font-weight-bold text-info">
+                                                80 ~
+                                            </div>
+                                            <div class="col">
+                                                탁월한 프레젠터 입니다. 이미 탁월한 역량을 가지고 계십니다.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="unrest" class="d-none" th:attr="result=|${result[0].unrestResult}|">
+                                        <div class="row mb-2">
+                                            <div class="col">
+                                                발표불안 점수는 <span class="font-weight-bold text-primary" th:text="${result[0].unrestResult}"></span> 점 입니다.
+                                            </div>
+                                            <hr>
+                                        </div>
+                                        <div class="row mb-1">
+                                            <div class="col-md-3 col-lg-2 font-weight-bold text-info">
+                                                00 ~ 37
+                                            </div>
+                                            <div class="col">
+                                                발표상황에서 불안 수준이 낮은 편으로서 그다지 불편감과 불안을 느끼지 않습니다.
+                                            </div>
+                                        </div>
+                                        <div class="row mb-1">
+                                            <div class="col-md-3 col-lg-2 font-weight-bold text-info">
+                                                38 ~ 84
+                                            </div>
+                                            <div class="col">
+                                                발표상황에서 중간 정도의 불안을 경험하고 때때로 발표상황을 회피하기도 합니다. 그러나 그렇게까지 문제되지는 않습니다.
+                                            </div>
+                                        </div>
+                                        <div class="row mb-1">
+                                            <div class="col-md-3 col-lg-2 font-weight-bold text-info">
+                                                85 ~ 97
+                                            </div>
+                                            <div class="col">
+                                                발표상황에서 상당한 정도로 불편감과 불안을 경험하고 있으며, 여러 발표상황들을 회피하기도 합니다. 이러한 불편감과 회피가 지속되면 전문가를 찾아 상담할 것을 권합니다.
+                                            </div>
+                                        </div>
+                                        <div class="row mb-1">
+                                            <div class="col-md-3 col-lg-2 font-weight-bold text-info">
+                                                98 ~
+                                            </div>
+                                            <div class="col">
+                                                심한 정도의 발표불안을 경험하면서, 수많은 발표상황을 회피하고 있으며, 이것이 스스로의 삶을 힘들게 하고 있습니다. 조속한 시일 내에 전문가를 통해 상담할 것을 권합니다.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="evaluation" class="d-none" th:attr="result=|${result[0].evaluationResult}|">
+                                        <div class="row mb-2">
+                                            <div class="col">
+                                                발표자평가 점수는 <span class="font-weight-bold text-primary" th:text="${result[0].evaluationResult}"></span> 점 입니다.
+                                            </div>
+                                            <hr>
+                                        </div>
+                                        <div class="row mb-1">
+                                            <div class="col-md-3 col-lg-2 font-weight-bold text-info">
+                                                00 ~ 59
+                                            </div>
+                                            <div class="col">
+                                                직장인 평균 이하입니다. 전문가를 통한 지속적인 노력이 필요합니다.
+                                            </div>
+                                        </div>
+                                        <div class="row mb-1">
+                                            <div class="col-md-3 col-lg-2 font-weight-bold text-info">
+                                                60 ~ 69
+                                            </div>
+                                            <div class="col">
+                                                직장인 평균입니다. 많은 노력으로 훈련해 나가신다면 능숙한 프레젠터가 될 수 있습니다.
+                                            </div>
+                                        </div>
+                                        <div class="row mb-1">
+                                            <div class="col-md-3 col-lg-2 font-weight-bold text-info">
+                                                70 ~ 79
+                                            </div>
+                                            <div class="col">
+                                                기본적인 자질을 갖추고 계십니다만 좀 더 적극적 노력을 하신다면 탁월한 프레젠터가 되실 수 있습니다.
+                                            </div>
+                                        </div>
+                                        <div class="row mb-1">
+                                            <div class="col-md-3 col-lg-2 font-weight-bold text-info">
+                                                80 ~
+                                            </div>
+                                            <div class="col">
+                                                탁월한 프레젠터 입니다. 이미 탁월한 역량을 가지고 계십니다.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!--                                <h6 class="m-0 font-weight-bold text-primary d-none">Result</h6>-->
+                                </div>
                             </div>
                         </div>
                     </div>
