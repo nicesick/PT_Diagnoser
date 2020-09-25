@@ -7,6 +7,7 @@ import com.example.demo.repository.MemberResultRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -35,9 +36,11 @@ public class MemberResultService {
 	public List<MemberResultSum> findMemberResultSums() {
 		return this.memberResultRepository.findAll();
 	}
-	public int saveMemberResult(List<FormItem> formItem) {
+	public int saveMemberResult(HttpSession session, List<FormItem> formItem) {
+		String user_id = (String) session.getAttribute("user_id");
+
 		MemberResult memRlst;
-		int result = 0; 
+		int result = 0;
  		
 		// 's' : speech, 'p' : presentation, 'u' : unrest, 'e' : evaluation
 		int speech = 0; 
@@ -62,28 +65,28 @@ public class MemberResultService {
  		memRlst = new MemberResult();
  		memRlst.setCategory("s");
  		memRlst.setScore(speech);
- 		memRlst.setUser_id("park"); // 세션 저장하면 세션에서 가져옴
+ 		memRlst.setUser_id(user_id); // 세션 저장하면 세션에서 가져옴
  		result += this.memberResultRepository.saveResult(memRlst);
  		
 
  		memRlst = new MemberResult();
  		memRlst.setCategory("p");
  		memRlst.setScore(presentation);
- 		memRlst.setUser_id("park"); // 세션 저장하면 세션에서 가져옴
+ 		memRlst.setUser_id(user_id); // 세션 저장하면 세션에서 가져옴
  		result += this.memberResultRepository.saveResult(memRlst);
  		
 
  		memRlst = new MemberResult();
  		memRlst.setCategory("u");
  		memRlst.setScore(unrest);
- 		memRlst.setUser_id("park"); // 세션 저장하면 세션에서 가져옴
+ 		memRlst.setUser_id(user_id); // 세션 저장하면 세션에서 가져옴
  		result += this.memberResultRepository.saveResult(memRlst);
 
 
  		memRlst = new MemberResult();
  		memRlst.setCategory("e");
  		memRlst.setScore(evaluation);
- 		memRlst.setUser_id("park"); // 세션 저장하면 세션에서 가져옴
+ 		memRlst.setUser_id(user_id); // 세션 저장하면 세션에서 가져옴
  		result += this.memberResultRepository.saveResult(memRlst);
  		
 		return result; 

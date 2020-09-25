@@ -44,10 +44,11 @@ public class ResultController {
 	
 	@ResponseBody
 	@PostMapping("submit")
-	public String submit(Model model, @RequestBody List<FormItem> allData)
+	public String submit(HttpSession session, Model model, @RequestBody List<FormItem> allData)
 	{
+
 		System.out.println("survey/submit controller");
-		int rslt = memberResultService.saveMemberResult(allData);
+		int rslt = memberResultService.saveMemberResult(session, allData);
 
 		if(rslt >=4) {
 			// 성공
