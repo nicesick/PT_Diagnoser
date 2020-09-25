@@ -84,7 +84,8 @@
   
   <script type="text/javascript" th:inline = "javascript">
 		function fn_onclick_regist() {
-			var user = {"id":document.getElementById("ibx_id").value, 
+			var user = {
+						"id":document.getElementById("ibx_id").value, 
 					    "pwd": document.getElementById("ibx_pwd").value,
 					    "email":document.getElementById("ibx_email").value,
 					    "eNum":document.getElementById("ibx_eNum").value,
@@ -96,7 +97,6 @@
 			user.eNum = document.getElementById("ibx_eNum").value;
 			user.name= document.getElementById("ibx_name").value;
 			 */
-			console.log(user);
 			$.ajax({
 		        type: "POST",
 		        url: "register/submit",

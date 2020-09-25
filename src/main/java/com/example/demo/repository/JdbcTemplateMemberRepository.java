@@ -28,7 +28,7 @@ public class JdbcTemplateMemberRepository implements MemberRepository {
 
 	@Override
 	public Optional<Member> findById(String id) {
-		List<Member> result = jdbcTemplate.query("select * from GUEST where id = ? ", memberRowMapper(), id);
+		List<Member> result = jdbcTemplate.query("select * from GUEST where user_id = ? ", memberRowMapper(), id);
 		return result.stream().findAny();
 	}
 
@@ -59,7 +59,7 @@ public class JdbcTemplateMemberRepository implements MemberRepository {
 	private RowMapper<Member> memberRowMapper() {
 		return (rs, rowNum) -> {
 			Member item = new Member();
-			item.setId(rs.getString("id"));
+			item.setId(rs.getString("user_id"));
 			item.setPwd(rs.getString("pwd"));
 			item.seteNum(rs.getString("e_num"));
 			item.setEmail(rs.getString("email"));
