@@ -24,7 +24,7 @@ public class JdbcTemplateMemberRepository implements MemberRepository {
 
 	@Override
 	public int save(Member member) {
-		int rslt = jdbcTemplate.update("INSERT INTO  MEMBER (USER_ID, PWD, E_NUM, EMAIL , NAME) VALUES (?,?,?) ", member.getId(), member.getPwd(), member.geteNum(),member.getEmail(), member.getName());
+		int rslt = jdbcTemplate.update("INSERT INTO GUEST (USER_ID, PWD, E_NUM, EMAIL , NAME) VALUES (?,?,?,?,?) ", member.getId(), member.getPwd(), member.geteNum(),member.getEmail(), member.getName());
 		return rslt;
 	}
 
