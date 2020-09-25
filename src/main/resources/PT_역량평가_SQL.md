@@ -2,7 +2,10 @@
 
 -- CREATE GUEST
 CREATE TABLE GUEST (
-    ID VARCHAR(30) PRIMARY KEY,
+    USER_ID VARCHAR(30) PRIMARY KEY,
+    PWD VARCHAR(30) NOT NULL,
+    E_NUM VARCAHR(30) NOT NULL, 
+    EMAIL VARCHAR(50) NOT NULL,
     NAME VARCHAR(50) NOT NULL
 );
 
@@ -13,7 +16,8 @@ CREATE TABLE GUEST (
 CREATE TABLE QUESTION (
     ID INT(6) AUTO_INCREMENT PRIMARY KEY,
     CATEGORY VARCHAR(1) NOT NULL,
-    CONTENT VARCHAR(150) NOT NULL
+    CONTENT VARCHAR(150) NOT NULL,
+    USE_YN VARCHAR(1) NOT NULL 
 );
 
 
@@ -21,14 +25,12 @@ CREATE TABLE QUESTION (
 -- CREATE RESULT
 CREATE TABLE RESULT (
     USER_ID VARCHAR(30) NOT NULL,
-    QUESTION_ID INT(6) NOT NULL,
+    CATEGORY VARCHAR (1) NOT NULL,
     SCORE INT(3) NOT NULL,
+    WORK_DTIM VARCHAR(14) NOT NULL 
     
-
-​	FOREIGN KEY(USER_ID) REFERENCES GUEST(ID),
-​	FOREIGN KEY(QUESTION_ID) REFERENCES QUESTION(ID),
-
-​	PRIMARY KEY(USER_ID, QUESTION_ID)
+	FOREIGN KEY(USER_ID) REFERENCES GUEST(USER_ID),
+	PRIMARY KEY(USER_ID, CATEGORY , WORK_DTIM)
 
 );
 
@@ -46,43 +48,15 @@ SELECT ID          AS id
 ORDER BY ID;
 
 
-
+ 
 ## 결과 조회, 입력, 수정, 삭제
 
--- SELECT RESULT SUM EACH CATEGORY USING LISTAGG (LISTAGG is not supported in H2)
-SELECT a.USER_ID        AS userId
-      , SUM(CASE WHEN b.CATEGORY = 's' THEN a.SCORE ELSE 0 END) AS speechResult
-      , SUM(CASE WHEN b.CATEGORY = 'p' THEN a.SCORE ELSE 0 END) AS presentationResult
-      , SUM(CASE WHEN b.CATEGORY = 'u' THEN a.SCORE ELSE 0 END) AS unrestResult
-      , SUM(CASE WHEN b.CATEGORY = 'e' THEN a.SCORE ELSE 0 END) AS evaluationResult
-  FROM RESULT a
-      , QUESTION b
- WHERE a.QUESTION_ID = b.ID
---   AND a.USER_ID = #{user_id}
-  AND a.USER_ID = 'test01';
-
-
-
--- INSERT RESULT
-INSERT INTO RESULT VALUES('test01', '2', '5');
-
-
-
--- UPDATE RESULT
-UPDATE RESULT
-SET    SCORE = '99'
- WHERE USER_ID = 'test01'
-   AND QUESTION_ID = '1';
-
-
-
--- DELETE RESULT
-DELETE FROM RESULT WHERE USER_ID = 'test01';
 
 -- GUEST INSERT 
-INSERT INTO GUEST (ID, NAME) VALUES ('park@lotte.net', '박지성');
-INSERT INTO GUEST (ID, NAME) VALUES ('lee@lotte.net', '이수근');
-INSERT INTO GUEST (ID, NAME) VALUES ('kang@lotte.net', '강호동');
+INSERT INTO GUEST (USER_ID, PWD, E_NUM, EMAIL , NAME) VALUES (‘park’,’1111’,’0001’,'park@lotte.net', '박지성');
+INSERT INTO GUEST (USER_ID, PWD, E_NUM, EMAIL , NAME) VALUES (‘lee’,’1111’,’0002’, 'lee@lotte.net', '이수근');
+INSERT INTO GUEST (USER_ID, PWD, E_NUM, EMAIL , NAME) VALUES (‘kang’,’1111’,’0003’, 'kang@lotte.net', '강호동');
+
 
 --QUESTION INSERT
 INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('s', '도입부에서 청중의 주의를 끄는가');
@@ -114,5 +88,35 @@ INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('s', '준비는 충분하였�
 INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('s', '자신이 준비한 내용을 100% 전달하였는가');
 INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('s', '스피치 내용이 청중에게 적절한가');
 INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('s', '정해진 시간 안에 끝내는가');
+
+
+
+	
+ 
+
+-- UPDATE RESULT
+UPDATE RESULT
+SET    SCORE = '99'
+ WHERE USER_ID = 'test01'
+   AND QUESTION_ID = '1';
+
+
+
+-- DELETE RESULT
+DELETE FROM RESULT WHERE USER_ID = 'test01';
+
+
+-- SELECT RESULT SUM EACH CATEGORY USING LISTAGG (LISTAGG is not supported in H2)
+SELECT a.USER_ID        AS userId
+      , SUM(CASE WHEN b.CATEGORY = 's' THEN a.SCORE ELSE 0 END) AS speechResult
+      , SUM(CASE WHEN b.CATEGORY = 'p' THEN a.SCORE ELSE 0 END) AS presentationResult
+      , SUM(CASE WHEN b.CATEGORY = 'u' THEN a.SCORE ELSE 0 END) AS unrestResult
+      , SUM(CASE WHEN b.CATEGORY = 'e' THEN a.SCORE ELSE 0 END) AS evaluationResult
+  FROM RESULT a
+      , QUESTION b
+ WHERE a.QUESTION_ID = b.ID
+--   AND a.USER_ID = #{user_id}
+  AND a.USER_ID = 'test01';
+
 
 
