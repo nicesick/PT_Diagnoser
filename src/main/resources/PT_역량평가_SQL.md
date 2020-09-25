@@ -52,11 +52,10 @@ ORDER BY ID;
  
 ## 결과 조회, 입력, 수정, 삭제
 
-
 -- GUEST INSERT 
-INSERT INTO GUEST (USER_ID, PWD, E_NUM, EMAIL , NAME) VALUES (‘park’,’1111’,’0001’,'park@lotte.net', '박지성');
-INSERT INTO GUEST (USER_ID, PWD, E_NUM, EMAIL , NAME) VALUES (‘lee’,’1111’,’0002’, 'lee@lotte.net', '이수근');
-INSERT INTO GUEST (USER_ID, PWD, E_NUM, EMAIL , NAME) VALUES (‘kang’,’1111’,’0003’, 'kang@lotte.net', '강호동');
+INSERT INTO GUEST (USER_ID, PWD, E_NUM, EMAIL , NAME) VALUES ('park','1111','0001','park@lotte.net', '박지성');
+INSERT INTO GUEST (USER_ID, PWD, E_NUM, EMAIL , NAME) VALUES ('lee','1111','0002','lee@lotte.net', '이수근');
+INSERT INTO GUEST (USER_ID, PWD, E_NUM, EMAIL , NAME) VALUES ('kang','1111','0003','kang@lotte.net', '강호동');
 
 
 --QUESTION INSERT
@@ -89,8 +88,6 @@ INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('s', '준비는 충분하였�
 INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('s', '자신이 준비한 내용을 100% 전달하였는가');
 INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('s', '스피치 내용이 청중에게 적절한가');
 INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('s', '정해진 시간 안에 끝내는가');
-
-
 
 
  
