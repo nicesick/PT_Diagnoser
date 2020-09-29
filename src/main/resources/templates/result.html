@@ -371,10 +371,10 @@
                                     </div>
                                 </div>
                                 <div class="card-footer">
-                                    <div id="speech" class="d-none" th:attr="result=|${result[0].speechResult}|">
+                                    <div id="speech" class="d-none">
                                         <div class="row mb-2">
                                             <div class="col">
-                                                스피치진단 점수는 <span class="font-weight-bold text-primary" th:text="${result[0].speechResult}"></span> 점 입니다.
+                                                스피치진단 점수는 <span class="font-weight-bold text-primary" th:text="${result[result.size() - 1].speechResult}"></span> 점 입니다.
                                             </div>
                                             <hr>
                                         </div>
@@ -411,10 +411,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div id="presentation" class="d-none" th:attr="result=|${result[0].presentationResult}|">
+                                    <div id="presentation" class="d-none">
                                         <div class="row mb-2">
                                             <div class="col">
-                                                프레젠테이션진단 점수는 <span class="font-weight-bold text-primary" th:text="${result[0].presentationResult}"></span> 점 입니다.
+                                                프레젠테이션진단 점수는 <span class="font-weight-bold text-primary" th:text="${result[result.size() - 1].presentationResult}"></span> 점 입니다.
                                             </div>
                                             <hr>
                                         </div>
@@ -451,10 +451,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div id="unrest" class="d-none" th:attr="result=|${result[0].unrestResult}|">
+                                    <div id="unrest" class="d-none">
                                         <div class="row mb-2">
                                             <div class="col">
-                                                발표불안 점수는 <span class="font-weight-bold text-primary" th:text="${result[0].unrestResult}"></span> 점 입니다.
+                                                발표불안 점수는 <span class="font-weight-bold text-primary" th:text="${result[result.size() - 1].unrestResult}"></span> 점 입니다.
                                             </div>
                                             <hr>
                                         </div>
@@ -491,10 +491,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div id="evaluation" class="d-none" th:attr="result=|${result[0].evaluationResult}|">
+                                    <div id="evaluation" class="d-none">
                                         <div class="row mb-2">
                                             <div class="col">
-                                                발표자평가 점수는 <span class="font-weight-bold text-primary" th:text="${result[0].evaluationResult}"></span> 점 입니다.
+                                                발표자평가 점수는 <span class="font-weight-bold text-primary" th:text="${result[result.size() - 1].evaluationResult}"></span> 점 입니다.
                                             </div>
                                             <hr>
                                         </div>
@@ -628,10 +628,12 @@
     var raderChart;
 
     $(document).ready(function(){
-        radarChart = createRadarChart(resultSet[0].speechResult
-                    , resultSet[0].presentationResult
-                    , resultSet[0].unrestResult
-                    , resultSet[0].evaluationResult);
+        console.log(resultSet);
+
+        radarChart = createRadarChart(resultSet[resultSet.length - 1].speechResult
+                    , resultSet[resultSet.length - 1].presentationResult
+                    , resultSet[resultSet.length - 1].unrestResult
+                    , resultSet[resultSet.length - 1].evaluationResult);
     });
 
     function createRadarChart(speechResult, presentationResult, unrestResult, evaluationResult) {
