@@ -14,4 +14,8 @@ public class HomeController {
 
 		return modelAndView;
 	}
+	@RequestMapping("/content")
+	public String content() {
+		return "content";
+	}
 }
