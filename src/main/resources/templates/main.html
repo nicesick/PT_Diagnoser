@@ -63,8 +63,8 @@
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Custom Components:</h6>
-            <a class="collapse-item" href="/survey">자가진단테스트</a>
-            <a class="collapse-item" href="/result">자가진단결과</a>
+            <a class="collapse-item" onclick="fn_onclick_nav('survey')" >자가진단테스트</a>
+            <a class="collapse-item" onclick="fn_onclick_nav('result')" >자가진단결과</a>
           </div>
         </div>
       </li>
@@ -329,8 +329,7 @@
         <!-- End of Topbar -->
 
         <!-- Begin Page Content -->
-        <iframe class="container-fluid" style="height: 100%" th:attr="src=${content}">
-
+        <iframe class = "container-fluid" style="height: 100%" id = "ifm_cont" src = "content">
         </iframe>
         <!-- /.container-fluid -->
 
@@ -393,7 +392,14 @@
   <!-- Page level custom scripts -->
   <script src="js/demo/chart-area-demo.js"></script>
   <script src="js/demo/chart-pie-demo.js"></script>
+  <script>
 
+    function fn_onclick_nav(content) {
+  /*    console.log(content);*/
+      document.getElementById("ifm_cont").src = content;
+    }
+
+  </script>
 </body>
 
 </html>
