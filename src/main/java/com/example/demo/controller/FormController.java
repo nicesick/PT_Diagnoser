@@ -1,14 +1,13 @@
 package com.example.demo.controller;
 
-import java.util.List;
-
+import com.example.demo.dto.FormItem;
+import com.example.demo.service.FormService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.example.demo.dto.FormItem;
-import com.example.demo.service.FormService;
+import java.util.List;
 
 @Controller
 public class FormController {
@@ -20,7 +19,7 @@ public class FormController {
 		this.formService = formService;
 	}
 	
-	@RequestMapping("survey")
+	@RequestMapping("/survey")
 	public ModelAndView surveyPost() {
 
 		ModelAndView mv = new ModelAndView(); 

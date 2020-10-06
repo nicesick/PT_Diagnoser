@@ -1,18 +1,17 @@
 package com.example.demo.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
+import com.example.demo.dto.Member;
+import com.example.demo.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import com.example.demo.dto.Member;
-import com.example.demo.service.MemberService;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class LoginController extends HandlerInterceptorAdapter {
@@ -26,13 +25,13 @@ public class LoginController extends HandlerInterceptorAdapter {
 	}
 
 	// 로그인페이지
-	@GetMapping("login")
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String loginGet() {
 		return "login";
 	}
 
 	// 로그인 처리
-	@PostMapping("login")
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public void getUsrChk(HttpServletRequest request ,Model model, @RequestBody Member member) {
 		Member user = new Member(); 
 		user = memberService.findById(member.getId()).orElse(user);

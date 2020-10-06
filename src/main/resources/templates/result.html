@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html xmlns:th="http://wwww.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
 
     <title>SB Admin 2 - Dashboard</title>
 
     <!-- Custom fonts for this template-->
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet" />
 
     <!-- Custom styles for this template-->
-    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="css/sb-admin-2.min.css" rel="stylesheet" />
 </head>
 
 <body id="page-top">
@@ -38,7 +38,7 @@
                     <!-- Pie Chart -->
                     <div class="col-xl-12 col-lg-12">
                         <div class="card shadow mb-4">
-                            <div th:if="${result[0].getWorkDtim() == null}">
+                            <div th:if='${"".equals(result[0].getWorkDtim())}'>
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                     <h6 class="m-0 font-weight-bold text-primary"><span th:text="${result[0].user_id}"></span> 님의 자가진단 결과입니다</h6>
                                 </div>
@@ -49,7 +49,7 @@
 
                                 </div>
                             </div>
-                            <div th:unless="${result[0].getWorkDtim() == null}">
+                            <div th:unless='${"".equals(result[0].getWorkDtim())}'>
                                 <!-- Card Header - Dropdown -->
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                     <h6 class="m-0 font-weight-bold text-primary"><span th:text="${result[0].user_id}"></span> 님의 자가진단 결과입니다</h6>
@@ -75,7 +75,7 @@
                                             <div class="col">
                                                 스피치진단 점수는 <span class="font-weight-bold text-primary" th:text="${result[result.size() - 1].speechResult}"></span> 점 입니다.
                                             </div>
-                                            <hr>
+                                            <hr />
                                         </div>
                                         <div class="row mb-1">
                                             <div class="col-md-3 col-lg-2 font-weight-bold text-info">
@@ -115,7 +115,7 @@
                                             <div class="col">
                                                 프레젠테이션진단 점수는 <span class="font-weight-bold text-primary" th:text="${result[result.size() - 1].presentationResult}"></span> 점 입니다.
                                             </div>
-                                            <hr>
+                                            <hr />
                                         </div>
                                         <div class="row mb-1">
                                             <div class="col-md-3 col-lg-2 font-weight-bold text-info">
@@ -155,7 +155,7 @@
                                             <div class="col">
                                                 발표불안 점수는 <span class="font-weight-bold text-primary" th:text="${result[result.size() - 1].unrestResult}"></span> 점 입니다.
                                             </div>
-                                            <hr>
+                                            <hr />
                                         </div>
                                         <div class="row mb-1">
                                             <div class="col-md-3 col-lg-2 font-weight-bold text-info">
@@ -195,7 +195,7 @@
                                             <div class="col">
                                                 발표자평가 점수는 <span class="font-weight-bold text-primary" th:text="${result[result.size() - 1].evaluationResult}"></span> 점 입니다.
                                             </div>
-                                            <hr>
+                                            <hr />
                                         </div>
                                         <div class="row mb-1">
                                             <div class="col-md-3 col-lg-2 font-weight-bold text-info">
@@ -260,34 +260,7 @@
 <script src="vendor/chart.js/Chart.min.js"></script>
 
 <script th:inline="javascript">
-    var resultSet = [];
-
-    /*<![CDATA[*/
-    /*[# th:each="rslt : ${result}"]*/
-    createResultSet(/*[[${rslt.workDtim}]]*/
-        , /*[[${rslt.speechResult}]]*/
-        , /*[[${rslt.presentationResult}]]*/
-        , /*[[${rslt.unrestResult}]]*/
-        , /*[[${rslt.evaluationResult}]]*/);
-    /*[/]*/
-    /*]]>*/
-
-    function createResultSet(workDtim, speechResult, presentationResult, unrestResult, evaluationResult) {
-        if (workDtim != undefined) {
-            var result = {
-                workDtim : workDtim,
-                speechResult : speechResult,
-                presentationResult : presentationResult,
-                unrestResult : unrestResult,
-                evaluationResult : evaluationResult
-            };
-
-            resultSet.push(result);
-        }
-    }
-</script>
-
-<script>
+    var resultSet = /*[[${result}]]*/;
     var raderChart;
 
     $(document).ready(function(){

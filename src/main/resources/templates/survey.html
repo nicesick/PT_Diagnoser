@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"  lang= "en">
+<head>
 
-
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport"
-	content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="">
-<meta name="author" content="">
+	content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta name="description" content="" />
+<meta name="author" content="" />
 
 <!-- <title>SB Admin 2 - Dashboard</title> -->
 
 <!-- Custom fonts for this template-->
 <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet"
-	type="text/css">
+	type="text/css" />
 <link
 	href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-	rel="stylesheet">
+	rel="stylesheet" />
 
 <!-- Custom styles for this template-->
-<link href="css/sb-admin-2.min.css" rel="stylesheet">
+<link href="css/sb-admin-2.min.css" rel="stylesheet" />
 
 </head>
 
@@ -46,7 +46,7 @@
 			</a>
 
 			<!-- Divider -->
-			<hr class="sidebar-divider my-0">
+			<hr class="sidebar-divider my-0" />
 
 			<!-- Nav Item - Dashboard -->
 			<li class="nav-item active"><a class="nav-link"
@@ -54,7 +54,7 @@
 			</li>
 
 			<!-- Divider -->
-			<hr class="sidebar-divider">
+			<hr class="sidebar-divider" />
 
 			<!-- Heading -->
 			<div class="sidebar-heading">Mypage</div>
@@ -92,7 +92,7 @@
 				</div></li>
 
 			<!-- Divider -->
-			<hr class="sidebar-divider">
+			<hr class="sidebar-divider" />
 
 			<!-- Heading -->
 			<div class="sidebar-heading">Addons</div>
@@ -129,7 +129,7 @@
 			</a></li>
 
 			<!-- Divider -->
-			<hr class="sidebar-divider d-none d-md-block">
+			<hr class="sidebar-divider d-none d-md-block" />
 
 			<!-- Sidebar Toggler (Sidebar) -->
 			<div class="text-center d-none d-md-inline">
@@ -161,7 +161,7 @@
 						<div class="input-group">
 							<input type="text" class="form-control bg-light border-0 small"
 								placeholder="Search for..." aria-label="Search"
-								aria-describedby="basic-addon2">
+								aria-describedby="basic-addon2" />
 							<div class="input-group-append">
 								<button class="btn btn-primary" type="button">
 									<i class="fas fa-search fa-sm"></i>
@@ -187,7 +187,7 @@
 										<input type="text"
 											class="form-control bg-light border-0 small"
 											placeholder="Search for..." aria-label="Search"
-											aria-describedby="basic-addon2">
+											aria-describedby="basic-addon2" />
 										<div class="input-group-append">
 											<button class="btn btn-primary" type="button">
 												<i class="fas fa-search fa-sm"></i>
@@ -259,7 +259,7 @@
 								<a class="dropdown-item d-flex align-items-center" href="#">
 									<div class="dropdown-list-image mr-3">
 										<img class="rounded-circle"
-											src="https://source.unsplash.com/fn_BT9fwg_E/60x60" alt="">
+											src="https://source.unsplash.com/fn_BT9fwg_E/60x60" alt="" />
 										<div class="status-indicator bg-success"></div>
 									</div>
 									<div class="font-weight-bold">
@@ -270,7 +270,7 @@
 								</a> <a class="dropdown-item d-flex align-items-center" href="#">
 									<div class="dropdown-list-image mr-3">
 										<img class="rounded-circle"
-											src="https://source.unsplash.com/AU4VPcFN4LE/60x60" alt="">
+											src="https://source.unsplash.com/AU4VPcFN4LE/60x60" alt="" />
 										<div class="status-indicator"></div>
 									</div>
 									<div>
@@ -281,7 +281,7 @@
 								</a> <a class="dropdown-item d-flex align-items-center" href="#">
 									<div class="dropdown-list-image mr-3">
 										<img class="rounded-circle"
-											src="https://source.unsplash.com/CS2uCrpNzJY/60x60" alt="">
+											src="https://source.unsplash.com/CS2uCrpNzJY/60x60" alt="" />
 										<div class="status-indicator bg-warning"></div>
 									</div>
 									<div>
@@ -293,7 +293,7 @@
 								</a> <a class="dropdown-item d-flex align-items-center" href="#">
 									<div class="dropdown-list-image mr-3">
 										<img class="rounded-circle"
-											src="https://source.unsplash.com/Mv9hjnEUHR4/60x60" alt="">
+											src="https://source.unsplash.com/Mv9hjnEUHR4/60x60" alt="" />
 										<div class="status-indicator bg-success"></div>
 									</div>
 									<div>
@@ -315,7 +315,7 @@
 							aria-expanded="false"> <span
 								class="mr-2 d-none d-lg-inline text-gray-600 small">Valerie
 									Luna</span> <img class="img-profile rounded-circle"
-								src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
+								src="https://source.unsplash.com/QAB-WJcbgJk/60x60" />
 						</a> <!-- Dropdown - User Information -->
 							<div
 								class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -380,10 +380,10 @@
 											<td th:text="${item.id}"></td>
 											<td th:text="${item.content}"></td>
 											<td th:text="${item.category}" style ="display:none"></td>
-											<td><input type="radio" th:name="${item.id}" value="0"><label for="default-radio"></label></td>
-											<td><input type="radio" th:name="${item.id}" value="1"><label for="default-radio"></label></td>
-											<td><input type="radio" th:name="${item.id}" value="2"><label for="default-radio"></label></td>
-											<td><input type="radio" th:name="${item.id}" value="3"><label for="default-radio"></label></td>
+											<td><input type="radio" th:name="${item.id}" value="0" /><label for="default-radio"></label></td>
+											<td><input type="radio" th:name="${item.id}" value="1" /><label for="default-radio"></label></td>
+											<td><input type="radio" th:name="${item.id}" value="2" /><label for="default-radio"></label></td>
+											<td><input type="radio" th:name="${item.id}" value="3" /><label for="default-radio"></label></td>
 										</tr>
 									</tbody>
 								</table>
@@ -468,16 +468,26 @@
 	
 	<script type="text/javascript" th:inline = "javascript">
 		function fn_onclick_btn_submit() {
-			var formStr  = '[[${formList}]]';
-			var formList = JSON.parse(formStr);
-			
-			for(var i = 0; i <formList.length; i++){
+/*			var formStr  = /!*[[${formList}]]*!/;
+			var formList = JSON.parse(formStr);*/
+
+			var formList = /*[[${formList}]]*/;
+			var isPassed = true;
+
+			$(formList).each(function(index, form){
 				/* if ( $('input:radio[name = '+ formList[i].id +']').is(":checked") == false) {
-					alert(formList[i].id+ "번이 선택되지 않았습니다. "); 
-					return; 
+					alert(formList[i].id+ "번이 선택되지 않았습니다. ");
+					isPassed = false;
+
+					return;
 				} */
-				formList[i].score = $('input:radio[name = '+ formList[i].id +']:checked').val(); 
+				form.score = $('input:radio[name = '+ form.id +']:checked').val();
+			});
+
+			if (!isPassed) {
+				return;
 			}
+
 			console.log(JSON.stringify(formList));
 			$.ajax({
 		        type: "POST",
