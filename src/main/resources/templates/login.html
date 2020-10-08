@@ -89,10 +89,9 @@
 		        url: "login",
 		        data: JSON.stringify(usr),
 		        contentType:'application/json; charset=UTF-8',
-		        //dataType:"json",
 		        success: function(data) {
 		            console.log(" AJAX_SUCCESS ");
-		            location.href = "/"; 
+		            location.href = "/demo"; 
 		        },
 		        error : function(request, status, error){
 		            alert("PWD WRONG");
