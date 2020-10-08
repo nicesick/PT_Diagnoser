@@ -9,7 +9,7 @@ public class HomeController {
 
 	@RequestMapping("/")
 	public ModelAndView home(ModelAndView modelAndView) {
-		modelAndView.setViewName("main");
+		modelAndView.setViewName("content");
 		modelAndView.addObject("content", "content");
 
 		return modelAndView;

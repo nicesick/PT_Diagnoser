@@ -1,15 +1,17 @@
 package com.example.demo.service;
 
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.example.demo.dto.FormItem;
 import com.example.demo.dto.MemberResult;
 import com.example.demo.dto.MemberResultSum;
 import com.example.demo.repository.MemberResultRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import javax.servlet.http.HttpSession;
-import javax.transaction.Transactional;
-import java.util.List;
 
 @Service
 @Transactional
