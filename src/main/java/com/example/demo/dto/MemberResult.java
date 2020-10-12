@@ -3,7 +3,7 @@ package com.example.demo.dto;
 public class MemberResult {
 	private String user_id;
 	private String category;
-	private int score;
+	private String score;
 	private String workDtim;
 
 	public String getUser_id() {
@@ -22,11 +22,11 @@ public class MemberResult {
 		this.category = category;
 	}
 
-	public int getScore() {
+	public String getScore() {
 		return score;
 	}
 
-	public void setScore(int score) {
+	public void setScore(String score) {
 		this.score = score;
 	}
 

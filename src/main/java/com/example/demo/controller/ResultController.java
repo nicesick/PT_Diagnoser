@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -41,11 +42,14 @@ public class ResultController {
 		return modelAndView;
 	}
 	
+	
 	@ResponseBody
-	@RequestMapping(value = "submit", method = RequestMethod.POST)
-	public void submit(@RequestParam Map<String, Object> param)
+	@RequestMapping(value = "/submit", method = RequestMethod.POST)
+	public void submit(@RequestBody Map<String, Object> param)
 	{
 		System.out.println("survey/submit controller");
+		System.out.println(param.get("score"));
+		System.out.println(param.get("category"));
 		String user_id  = ""; 
 		
 		//세션값 가져오기 
@@ -57,14 +61,13 @@ public class ResultController {
 		
 		param.put("user_id", user_id);
 		
-		Iterator<String> keys = param.keySet().iterator();
-        while( keys.hasNext() ){
-            String key = keys.next();
-            String value = (String) param.get(key);
-            System.out.println("input : " +key+",  "+value);
-        }
+		/*
+		 * Iterator<String> keys = param.keySet().iterator(); while( keys.hasNext() ){
+		 * String key = keys.next(); String value = (String) param.get(key);
+		 * System.out.println("input : " +key+",  "+value); }
+		 */
         
-		//memberResultService.saveMemberResult(param);		
+		memberResultService.saveMemberResult(param);		
 	}
 
 

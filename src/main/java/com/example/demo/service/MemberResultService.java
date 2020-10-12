@@ -42,17 +42,9 @@ public class MemberResultService {
 		MemberResult memRlst;
 		int result = 0;
  		
-		List <FormItem> formItem = (List<FormItem>) param.get("formList");
-		
-		int score = 0;
-		for(int i= 0 ; i <formItem.size(); i++ ) {
- 			System.out.println("id : "+formItem.get(i).getId()+"," +formItem.get(i).getScore());
- 			score += formItem.get(i).getScore(); 
-		}
- 	
 		memRlst = new MemberResult();
  		memRlst.setCategory((String) param.get("category"));
- 		memRlst.setScore(score);
+ 		memRlst.setScore(param.get("score").toString());
  		memRlst.setUser_id((String) param.get("user_id")); // 세션 저장하면 세션에서 가져옴
  		result += this.memberResultRepository.saveResult(memRlst);
  		

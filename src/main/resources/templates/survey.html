@@ -160,7 +160,8 @@
 
 			var formList = /*[[${formList}]]*/;
 			var isPassed = true;
-
+			var score = 0; 
+			
 			$(formList).each(function(index, form){
 				/* if ( $('input:radio[name = '+ formList[i].id +']').is(":checked") == false) {
 					alert(formList[i].id+ "번이 선택되지 않았습니다. ");
@@ -169,16 +170,20 @@
 					return;
 				} */
 				form.score = $('input:radio[name = '+ form.id +']:checked').val();
+				if(typeof form.score !="undefined") {
+				 	score += Number(form.score); 	
+				}
 			});
 
 			if (!isPassed) {
 				return;
 			}
-
+			console.log(score);
+			var param = {"score" : score, "category" : formList[0].category};   
 			$.ajax({
 		        type: "POST",
 		        url: "submit",
-		        data: {"formList" : JSON.stringify(formList)},
+		        data: JSON.stringify(param),  
 		        contentType:'application/json; charset=UTF-8',
 		        success: function(data) {
 		            alert("제출되었습니다");
@@ -188,7 +193,7 @@
 		            console.log("AJAX_ERROR");
 		            console.log("code = "+ request.status + " error = " + error); // 실패 시 처리
 		        }
-		    }); 
+		    });    
 		    
 		};
 	
