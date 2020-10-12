@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.FormItem;
-import com.example.demo.dto.MemberResultSum;
 import com.example.demo.service.MemberResultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class ResultController {
@@ -29,15 +29,9 @@ public class ResultController {
 		System.out.println("result controller");
 
 		String userId = (String) session.getAttribute("user_id");
-		List<MemberResultSum> results = memberResultService.findMemberResultSumById(userId);
+		List<Map<String, Object>> results = memberResultService.findMemberResultSumById(userId);
 
-		if (results.isEmpty()) {
-			MemberResultSum emptyResult = new MemberResultSum();
-			emptyResult.setUser_id(userId);
-			emptyResult.setWorkDtim("");
-
-			results.add(emptyResult);
-		}
+		System.out.println(results);
 
 		modelAndView.addObject("result", results);
 		modelAndView.setViewName("result");

@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.List;
+import java.util.*;
 
 @Repository
 public class JdbcTemplateMemberResultRepository implements MemberResultRepository {
@@ -24,63 +24,219 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 		return null;
 	}
 
+	/**
+	 * makeScoreMap
+	 *
+	 * 조회한 결과를 가공합니다. 만약, 결과가 아무것도 없다면 workDtim 에 "" 값을 넣어 return 합니다.
+	 *
+	 * empty example
+	 *
+	 * result = [{
+	 *     user_id : park,
+	 *     data : [{
+	 *     		workDtim : "",
+	 *     		title : [],
+	 *     		score : []
+	 *     }]
+	 * }]
+	 *
+	 * before example
+	 *
+	 * result = [
+	 * 	{
+	 * 	    user_id : park,
+	 * 	    workDtim : 20201012112830,
+	 * 	    title : 스피치진단,
+	 * 	    score : 28
+	 * 	},
+	 * 	...
+	 * ]
+	 *
+	 * after example
+	 *
+	 * result = [
+	 * {
+	 *     user_id : park,
+	 *     data : [
+	 *     {
+	 *     		workDtim : 20201012112830,
+	 *     		title : [스피치진단, 프레젠테이션진단, 발표불안진단, ...],
+	 *     		score : [28, 49, 55, ...]
+	 *     },
+	 *     ...
+	 *     ]
+	 * },
+	 * ...
+	 * ]
+	 *
+	 * variables for result
+	 *
+	 * results
+	 * userScores
+	 * datas
+	 * data
+	 *
+	 * results = [
+	 * 		userScores = {
+	 * 		 	user_id : 'park',
+	 * 		 	datas : [
+	 * 		 		data = {
+	 * 		 		    workDtim : '20201012135319',
+	 * 		 		    title : [...],
+	 * 		 		    score : [...],
+	 * 		 		}, ...
+	 * 		 	]
+	 * 		}, ...
+	 * ]
+	 *
+	 * @param origResults
+	 * @param queryParam
+	 *
+	 * @return 가공된 결과 List
+	 */
+	private List<Map<String, Object>> makeScoreMap(List<MemberResultSum> origResults, String queryParam) {
+		Map<String, Map<String, Object>> 	userScores 	= new HashMap<>();
+
+		/*
+		 * origResult 값이 없다면 workDtim 에 빈값 입력
+		 */
+		if (origResults.size() == 0) {
+			Map<String, Object> 	userScore	= new HashMap<>();
+
+			List<Map<String, Object>> 	datas 	= new ArrayList<>();
+			Map<String, Object> 		data 	= new HashMap<>();
+
+			data.put("workDtim", "");
+			datas.add(data);
+
+			userScore.put("user_id", queryParam);
+			userScore.put("data", datas);
+
+			userScores.put(queryParam, userScore);
+		} else {
+			/*
+			 * 있다면, userScore 생성
+			 *
+			 * data > datas > userScore > userScores 순서로 입력
+			 */
+			for (MemberResultSum origResult : origResults) {
+				Map<String, Object> 		userScore 	= userScores.getOrDefault(origResult.getUser_id(), new HashMap<>());
+
+				if (userScore.containsValue(origResult.getUser_id())) {
+					List<Map<String, Object>> 	datas 	= (List<Map<String, Object>>) userScore.get("data");
+					boolean 					isFind 	= false;
+
+					for (Map<String, Object> data : datas) {
+						if (data.containsValue(origResult.getWorkDtim())) {
+							List<String> 		titles 	= (List<String>) data.get("title");
+							List<Integer> 		scores 	= (List<Integer>) data.get("score");
+
+							titles.add(origResult.getTitle());
+							scores.add(origResult.getScore());
+
+							isFind = true;
+							break;
+						}
+					}
+
+					if (!isFind) {
+						Map<String, Object> 	data 	= makeNewData(origResult);
+						datas.add(data);
+					}
+				} else {
+					List<Map<String, Object>> 	datas 	= new ArrayList<>();
+
+					Map<String, Object> 		data 	= makeNewData(origResult);
+					datas.add(data);
+
+					userScore.put("user_id", origResult.getUser_id());
+					userScore.put("data", datas);
+
+					userScores.put(origResult.getUser_id(), userScore);
+				}
+			}
+		}
+
+		List<Map<String, Object>> results = new ArrayList<>(userScores.values());
+		return results;
+	}
+
+	private Map<String, Object> makeNewData(MemberResultSum origResult) {
+		Map<String, Object> data 	= new HashMap<>();
+
+		List<String> 		titles 	= new ArrayList<>();
+		List<Integer> 		scores 	= new ArrayList<>();
+
+		titles.add(origResult.getTitle());
+		scores.add(origResult.getScore());
+
+		data.put("workDtim", origResult.getWorkDtim());
+		data.put("title", titles);
+		data.put("score", scores);
+
+		return data;
+	}
+
+	/*
+	 * TODO
+	 * CATEGORY 테이블 INSERT 가 안되는 이유로 CATEGORY b 제거, 이후에 INSERT 되면 추가필요
+	 */
 	@Override
-	public List<MemberResultSum> findById(String id) {
-		List<MemberResultSum> result = jdbcTemplate.query("SELECT a.USER_ID        AS userId" +
-				", a.WORK_DTIM      AS workDtim" +
-				", SUM(CASE WHEN a.CATEGORY = 's' THEN a.SCORE ELSE 0 END) AS speechResult" +
-				", SUM(CASE WHEN a.CATEGORY = 'p' THEN a.SCORE ELSE 0 END) AS presentationResult" +
-				", SUM(CASE WHEN a.CATEGORY = 'u' THEN a.SCORE ELSE 0 END) AS unrestResult" +
-				", SUM(CASE WHEN a.CATEGORY = 'e' THEN a.SCORE ELSE 0 END) AS evaluationResult" +
+	public List<Map<String, Object>> findById(String id) {
+		List<MemberResultSum> origResult = jdbcTemplate.query("SELECT a.USER_ID        AS userId" +
+				"      , a.WORK_DTIM     AS workDtim" +
+				"      , a.SCORE         AS score" +
+				"      , a.CATEGORY         AS title" +
 				"  FROM RESULT a" +
 				"  WHERE a.USER_ID = ?" +
-				"GROUP BY a.USER_ID, a.WORK_DTIM", memberResultSumRowMapper(), id);
+				"ORDER BY a.WORK_DTIM, a.CATEGORY", memberResultSumRowMapper(), id);
 
+		List<Map<String, Object>> result = makeScoreMap(origResult, id);
 		return result;
 	}
 
 	@Override
-	public List<MemberResultSum> findByENum(String eNum) {
-		List<MemberResultSum> result = jdbcTemplate.query("SELECT a.USER_ID        AS userId" +
-				", a.WORK_DTIM      AS workDtim" +
-				", SUM(CASE WHEN a.CATEGORY = 's' THEN a.SCORE ELSE 0 END) AS speechResult" +
-				", SUM(CASE WHEN a.CATEGORY = 'p' THEN a.SCORE ELSE 0 END) AS presentationResult" +
-				", SUM(CASE WHEN a.CATEGORY = 'u' THEN a.SCORE ELSE 0 END) AS unrestResult" +
-				", SUM(CASE WHEN a.CATEGORY = 'e' THEN a.SCORE ELSE 0 END) AS evaluationResult" +
-				"  FROM RESULT a" +
-				"  WHERE a.E_NUM = ?" +
-				"GROUP BY a.USER_ID, a.WORK_DTIM", memberResultSumRowMapper(), eNum);
+	public List<Map<String, Object>> findByENum(String eNum) {
+		List<MemberResultSum> origResult = jdbcTemplate.query("SELECT a.USER_ID        AS userId" +
+				"      , a.WORK_DTIM     AS workDtim" +
+				"      , a.SCORE         AS score" +
+				"      , b.TITLE         AS title" +
+				"  FROM RESULT a, CATEGORY b" +
+				" WHERE a.CATEGORY = b.ID" +
+				"   AND a.E_NUM = ?" +
+				"ORDER BY a.WORK_DTIM, a.CATEGORY", memberResultSumRowMapper(), eNum);
 
+		List<Map<String, Object>> result = makeScoreMap(origResult, eNum);
 		return result;
 	}
 
 	@Override
-	public List<MemberResultSum> findByEmail(String email) {
-		List<MemberResultSum> result = jdbcTemplate.query("SELECT a.USER_ID        AS userId" +
-				", a.WORK_DTIM      AS workDtim" +
-				", SUM(CASE WHEN a.CATEGORY = 's' THEN a.SCORE ELSE 0 END) AS speechResult" +
-				", SUM(CASE WHEN a.CATEGORY = 'p' THEN a.SCORE ELSE 0 END) AS presentationResult" +
-				", SUM(CASE WHEN a.CATEGORY = 'u' THEN a.SCORE ELSE 0 END) AS unrestResult" +
-				", SUM(CASE WHEN a.CATEGORY = 'e' THEN a.SCORE ELSE 0 END) AS evaluationResult" +
-				"  FROM RESULT a" +
-				"  WHERE a.EMAIL = ?" +
-				"GROUP BY a.USER_ID, a.WORK_DTIM", memberResultSumRowMapper(), email);
+	public List<Map<String, Object>> findByEmail(String email) {
+		List<MemberResultSum> origResult = jdbcTemplate.query("SELECT a.USER_ID        AS userId" +
+				"      , a.WORK_DTIM     AS workDtim" +
+				"      , a.SCORE         AS score" +
+				"      , b.TITLE         AS title" +
+				"  FROM RESULT a, CATEGORY b" +
+				" WHERE a.CATEGORY = b.ID" +
+				"   AND a.EMAIL = ?" +
+				"ORDER BY a.WORK_DTIM, a.CATEGORY", memberResultSumRowMapper(), email);
 
+		List<Map<String, Object>> result = makeScoreMap(origResult, email);
 		return result;
 	}
 
 	@Override
-	public List<MemberResultSum> findAll() {
-		List<MemberResultSum> results = jdbcTemplate.query("SELECT a.USER_ID        AS userId" +
-				", a.WORK_DTIM      AS workDtim" +
-				", SUM(CASE WHEN a.CATEGORY = 's' THEN a.SCORE ELSE 0 END) AS speechResult" +
-				", SUM(CASE WHEN a.CATEGORY = 'p' THEN a.SCORE ELSE 0 END) AS presentationResult" +
-				", SUM(CASE WHEN a.CATEGORY = 'u' THEN a.SCORE ELSE 0 END) AS unrestResult" +
-				", SUM(CASE WHEN a.CATEGORY = 'e' THEN a.SCORE ELSE 0 END) AS evaluationResult" +
-				"  FROM RESULT a" +
-				" GROUP BY a.USER_ID, a.WORK_DTIM", memberResultSumRowMapper());
+	public List<Map<String, Object>> findAll() {
+		List<MemberResultSum> origResult = jdbcTemplate.query("SELECT a.USER_ID        AS userId" +
+				"      , a.WORK_DTIM     AS workDtim" +
+				"      , b.TITLE         AS title" +
+				"      , a.SCORE         AS score" +
+				"  FROM RESULT a, CATEGORY b" +
+				" WHERE a.CATEGORY = b.ID" +
+				"ORDER BY a.WORK_DTIM, a.CATEGORY", memberResultSumRowMapper());
 
-		return results;
+		List<Map<String, Object>> result = makeScoreMap(origResult, "");
+		return result;
 	}
 
 	@Override
@@ -95,10 +251,8 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 
 			item.setUser_id(rs.getString("userId"));
 			item.setWorkDtim(rs.getString("workDtim"));
-			item.setSpeechResult(rs.getInt("speechResult"));
-			item.setPresentationResult(rs.getInt("presentationResult"));
-			item.setUnrestResult(rs.getInt("unrestResult"));
-			item.setEvaluationResult(rs.getInt("evaluationResult"));
+			item.setTitle(rs.getString("title"));
+			item.setScore(rs.getInt("score"));
 
 			return item;
 		};

@@ -37,6 +37,14 @@ CREATE TABLE RESULT (
 
 
 
+-- CREATE CATEGORY
+CREATE TABLE CATEGORY (
+	id VARCHAR(1) PRIMARY KEY,
+	title VARCHAR(50) NOT NULL 
+);
+
+
+
 ## 카테고리별 질문 조회
 
 -- SELECT QUESTION
@@ -52,7 +60,7 @@ ORDER BY ID;
  
 ## 결과 조회, 입력, 수정, 삭제
 
--- GUEST INSERT 
+-- GUEST INSERT
 INSERT INTO GUEST (USER_ID, PWD, E_NUM, EMAIL , NAME) VALUES ('park','1111','0001','park@lotte.net', '박지성');
 INSERT INTO GUEST (USER_ID, PWD, E_NUM, EMAIL , NAME) VALUES ('lee','1111','0002','lee@lotte.net', '이수근');
 INSERT INTO GUEST (USER_ID, PWD, E_NUM, EMAIL , NAME) VALUES ('kang','1111','0003','kang@lotte.net', '강호동');
@@ -167,6 +175,14 @@ INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('e', '시간 관리와 진행
 
 
 
+-- CATEGORY INSERT
+INSERT INTO CATEGORY VALUES('s', '스피치진단');
+INSERT INTO CATEGORY VALUES('p', '프레젠테이션진단');
+INSERT INTO CATEGORY VALUES('u', '발표불안진단');
+INSERT INTO CATEGORY VALUES('e', '발표평가진단');
+
+
+
 -- UPDATE RESULT
 UPDATE RESULT
 SET    SCORE = '99'
@@ -193,4 +209,17 @@ SELECT a.USER_ID        AS userId
 GROUP BY a.USER_ID;
 
 
+
+**-- SELECT RESULT SUM EACH CATEGORY 변경사항**
+-- 2020.10.12 repository 단에서 같은 workDtim 별 결과로 가공합니다.
+
+SELECT a.USER_ID        AS userId
+      , a.WORK_DTIM     AS workDtim
+      , a.SCORE         AS score
+      , b.TITLE         AS title
+  FROM RESULT a, CATEGORY b
+--   AND a.USER_ID = #{user_id}
+WHERE  a.CATEGORY = b.ID
+   AND a.USER_ID = 'park'
+ORDER BY a.WORK_DTIM DESC, a.CATEGORY;
 

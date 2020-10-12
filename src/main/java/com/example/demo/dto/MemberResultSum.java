@@ -13,10 +13,8 @@ package com.example.demo.dto;
 public class MemberResultSum {
 	private String user_id;
 	private String workDtim;
-	private int speechResult;
-	private int presentationResult;
-	private int unrestResult;
-	private int evaluationResult;
+	private String title;
+	private int score;
 
 	public String getUser_id() {
 		return user_id;
@@ -34,35 +32,19 @@ public class MemberResultSum {
 		this.workDtim = workDtim;
 	}
 
-	public int getSpeechResult() {
-		return speechResult;
+	public String getTitle() {
+		return title;
 	}
 
-	public void setSpeechResult(int speechResult) {
-		this.speechResult = speechResult;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
-	public int getPresentationResult() {
-		return presentationResult;
+	public int getScore() {
+		return score;
 	}
 
-	public void setPresentationResult(int presentationResult) {
-		this.presentationResult = presentationResult;
-	}
-
-	public int getUnrestResult() {
-		return unrestResult;
-	}
-
-	public void setUnrestResult(int unrestResult) {
-		this.unrestResult = unrestResult;
-	}
-
-	public int getEvaluationResult() {
-		return evaluationResult;
-	}
-
-	public void setEvaluationResult(int evaluationResult) {
-		this.evaluationResult = evaluationResult;
+	public void setScore(int score) {
+		this.score = score;
 	}
 }

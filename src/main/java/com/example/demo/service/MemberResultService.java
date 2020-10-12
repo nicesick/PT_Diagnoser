@@ -1,17 +1,15 @@
 package com.example.demo.service;
 
-import java.util.List;
-
-import javax.servlet.http.HttpSession;
-
+import com.example.demo.dto.FormItem;
+import com.example.demo.dto.MemberResult;
+import com.example.demo.repository.MemberResultRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.dto.FormItem;
-import com.example.demo.dto.MemberResult;
-import com.example.demo.dto.MemberResultSum;
-import com.example.demo.repository.MemberResultRepository;
+import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -23,21 +21,22 @@ public class MemberResultService {
 		this.memberResultRepository = memberRepository;
 	}
 
-	public List<MemberResultSum> findMemberResultSumById(String id) {
+	public List<Map<String, Object>> findMemberResultSumById(String id) {
 		return this.memberResultRepository.findById(id);
 	}
 
-	public List<MemberResultSum> findMemberResultSumByENum(String eNum) {
+	public List<Map<String, Object>> findMemberResultSumByENum(String eNum) {
 		return this.memberResultRepository.findByENum(eNum);
 	}
 
-	public List<MemberResultSum> findMemberResultSumByEmail(String email) {
+	public List<Map<String, Object>> findMemberResultSumByEmail(String email) {
 		return this.memberResultRepository.findByEmail(email);
 	}
 
-	public List<MemberResultSum> findMemberResultSums() {
+	public List<Map<String, Object>> findMemberResultSums() {
 		return this.memberResultRepository.findAll();
 	}
+
 	public int saveMemberResult(HttpSession session, List<FormItem> formItem) {
 		String user_id = (String) session.getAttribute("user_id");
 
