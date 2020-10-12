@@ -27,7 +27,8 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 	/**
 	 * makeScoreMap
 	 *
-	 * 조회한 결과를 가공합니다. 만약, 결과가 아무것도 없다면 workDtim 에 "" 값을 넣어 return 합니다.
+	 * 조회한 결과를 가공합니다.
+	 * 만약, 결과가 아무것도 없다면 workDtim 에 "" 값을 넣어 return 합니다.
 	 *
 	 * empty example
 	 *
@@ -186,10 +187,11 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 		List<MemberResultSum> origResult = jdbcTemplate.query("SELECT a.USER_ID        AS userId" +
 				"      , a.WORK_DTIM     AS workDtim" +
 				"      , a.SCORE         AS score" +
-				"      , a.CATEGORY         AS title" +
-				"  FROM RESULT a" +
-				"  WHERE a.USER_ID = ?" +
-				"ORDER BY a.WORK_DTIM, a.CATEGORY", memberResultSumRowMapper(), id);
+				"      , b.TITLE         AS title" +
+				"  FROM RESULT a, CATEGORY b" +
+				"  WHERE a.CATEGORY = b.ID" +
+				"    AND a.USER_ID = ?" +
+				"ORDER BY a.WORK_DTIM DESC, a.CATEGORY", memberResultSumRowMapper(), id);
 
 		List<Map<String, Object>> result = makeScoreMap(origResult, id);
 		return result;
@@ -204,7 +206,7 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 				"  FROM RESULT a, CATEGORY b" +
 				" WHERE a.CATEGORY = b.ID" +
 				"   AND a.E_NUM = ?" +
-				"ORDER BY a.WORK_DTIM, a.CATEGORY", memberResultSumRowMapper(), eNum);
+				"ORDER BY a.WORK_DTIM DESC, a.CATEGORY", memberResultSumRowMapper(), eNum);
 
 		List<Map<String, Object>> result = makeScoreMap(origResult, eNum);
 		return result;
@@ -219,7 +221,7 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 				"  FROM RESULT a, CATEGORY b" +
 				" WHERE a.CATEGORY = b.ID" +
 				"   AND a.EMAIL = ?" +
-				"ORDER BY a.WORK_DTIM, a.CATEGORY", memberResultSumRowMapper(), email);
+				"ORDER BY a.WORK_DTIM DESC, a.CATEGORY", memberResultSumRowMapper(), email);
 
 		List<Map<String, Object>> result = makeScoreMap(origResult, email);
 		return result;
@@ -233,7 +235,7 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 				"      , a.SCORE         AS score" +
 				"  FROM RESULT a, CATEGORY b" +
 				" WHERE a.CATEGORY = b.ID" +
-				"ORDER BY a.WORK_DTIM, a.CATEGORY", memberResultSumRowMapper());
+				"ORDER BY a.WORK_DTIM DESC, a.CATEGORY", memberResultSumRowMapper());
 
 		List<Map<String, Object>> result = makeScoreMap(origResult, "");
 		return result;
