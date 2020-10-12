@@ -1,19 +1,21 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.FormItem;
-import com.example.demo.service.MemberResultService;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpSession;
-import java.util.List;
-import java.util.Map;
+import com.example.demo.SessionUtil;
+import com.example.demo.service.MemberResultService;
 
 @Controller
 public class ResultController {
@@ -40,18 +42,29 @@ public class ResultController {
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/submit", method = RequestMethod.POST)
-	public String submit(HttpSession session, Model model, @RequestBody List<FormItem> allData)
+	@RequestMapping(value = "submit", method = RequestMethod.POST)
+	public void submit(@RequestParam Map<String, Object> param)
 	{
-
 		System.out.println("survey/submit controller");
-		int rslt = memberResultService.saveMemberResult(session, allData);
-
-		if(rslt >=4) {
-			// 성공
-		} else {
-			// 실패
+		String user_id  = ""; 
+		
+		//세션값 가져오기 
+		try {
+			user_id = (String)SessionUtil.getAttribute("user_id");
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		return "redirect:/";
+		
+		param.put("user_id", user_id);
+		Iterator<String> keys = param.keySet().iterator();
+        while( keys.hasNext() ){
+            String key = keys.next();
+            String value = (String) param.get(key);
+            System.out.println("input : " +key+",  "+value);
+        }
+        
+		//memberResultService.saveMemberResult(param);		
 	}
+
+
 }
