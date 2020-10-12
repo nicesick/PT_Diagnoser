@@ -1,10 +1,11 @@
 package com.example.demo.repository;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import com.example.demo.dto.FormItem;
 import com.example.demo.dto.Member;
-
-import java.util.List;
-import java.util.Optional;
 
 public interface FormRepository {
 	FormItem save(Member member);
@@ -12,4 +13,5 @@ public interface FormRepository {
 	Optional<FormItem> findById(Long id);
 	Optional<FormItem> findByCategory(String category);
 	List<FormItem> findAll();
+	List<FormItem> findByPage(Map<String, Object> param); 
 }

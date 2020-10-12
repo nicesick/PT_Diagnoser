@@ -56,6 +56,7 @@ public class ResultController {
 		}
 		
 		param.put("user_id", user_id);
+		
 		Iterator<String> keys = param.keySet().iterator();
         while( keys.hasNext() ){
             String key = keys.next();

@@ -1,15 +1,18 @@
 package com.example.demo.repository;
 
-import com.example.demo.dto.FormItem;
-import com.example.demo.dto.Member;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
-import java.util.List;
-import java.util.Optional;
+import com.example.demo.dto.FormItem;
+import com.example.demo.dto.Member;
 
 @Repository
 public class JdbcTemplateFormRepository implements FormRepository {
@@ -43,6 +46,27 @@ public class JdbcTemplateFormRepository implements FormRepository {
 	@Override
 	public List<FormItem> findAll() {
 		List<FormItem> result = jdbcTemplate.query("select * from QUESTION where use_yn = 'Y'", formRowMapper());
+		return result;
+	}
+	@Override
+	public List<FormItem> findByPage(Map<String, Object> param) {
+		
+		/*int pageNo = Integer.parseInt(param.get("pageNo").toString());
+		int pageCnt = Integer.parseInt(param.get("pageCnt").toString());
+		int startNo = pageNo*pageCnt+1; 
+		int endNo = pageNo*pageCnt +pageCnt+1; 
+		System.out.println(pageNo + ", " +pageCnt + ",  " + startNo +",  " +endNo);
+		*/
+		List<FormItem> result = jdbcTemplate.query(""
+				+ "SELECT * FROM QUESTION WHERE USE_YN = 'Y'"
+				+ "AND CATEGORY = ? "
+				//+ "AND ROWNUM BETWEEN ? AND ?"
+				+ "ORDER BY ID",formRowMapper(), param.get("category").toString().toLowerCase());
+		
+		for(int i = 0 ; i <result.size();  i++ ) {
+			System.out.println(result.get(i).getContent());
+		}
+		
 		return result;
 	}
 

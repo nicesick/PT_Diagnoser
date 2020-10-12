@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,10 @@ public class FormService {
 		return formRepository.findByCategory(category);
 	}
 	
-	public List<FormItem> findQuestions(){
+	public List<FormItem> findQuestions(Map<String, Object> param){
+		return formRepository.findByPage(param);
+	}
+	public List<FormItem> findAllQuestions(){
 		return formRepository.findAll();
 	}
 }
