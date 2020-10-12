@@ -15,6 +15,8 @@ public class MemberResultSum {
 	private String workDtim;
 	private String title;
 	private int score;
+	private String detail;
+	private String description;
 
 	public String getUser_id() {
 		return user_id;
@@ -46,5 +48,21 @@ public class MemberResultSum {
 
 	public void setScore(int score) {
 		this.score = score;
+	}
+
+	public String getDetail() {
+		return detail;
+	}
+
+	public void setDetail(String detail) {
+		this.detail = detail;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }

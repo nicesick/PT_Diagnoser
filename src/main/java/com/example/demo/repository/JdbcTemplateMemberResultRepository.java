@@ -46,9 +46,11 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 	 * result = [
 	 * 	{
 	 * 	    user_id : park,
-	 * 	    workDtim : 20201012112830,
+	 * 	    workDtim : 20201012,
 	 * 	    title : 스피치진단,
-	 * 	    score : 28
+	 * 	    score : 28,
+	 * 	    dedail : 훈련필요,
+	 * 	    description : ~~
 	 * 	},
 	 * 	...
 	 * ]
@@ -60,9 +62,11 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 	 *     user_id : park,
 	 *     data : [
 	 *     {
-	 *     		workDtim : 20201012112830,
+	 *     		workDtim : 20201012,
 	 *     		title : [스피치진단, 프레젠테이션진단, 발표불안진단, ...],
-	 *     		score : [28, 49, 55, ...]
+	 *     		score : [28, 49, 55, ...],
+	 *     		detail : [훈련필요, 보통, 보통, ...],
+	 *     		description : [~~, ~~, ~~, ...]
 	 *     },
 	 *     ...
 	 *     ]
@@ -82,9 +86,11 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 	 * 		 	user_id : 'park',
 	 * 		 	datas : [
 	 * 		 		data = {
-	 * 		 		    workDtim : '20201012135319',
+	 * 		 		    workDtim : '20201012',
 	 * 		 		    title : [...],
 	 * 		 		    score : [...],
+	 * 		 		    detail : [...],
+	 * 		 		    description : [...],
 	 * 		 		}, ...
 	 * 		 	]
 	 * 		}, ...
@@ -131,9 +137,13 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 						if (data.containsValue(origResult.getWorkDtim())) {
 							List<String> 		titles 	= (List<String>) data.get("title");
 							List<Integer> 		scores 	= (List<Integer>) data.get("score");
+							List<String> 	   details 	= (List<String>) data.get("detail");
+							List<String>  descriptions 	= (List<String>) data.get("description");
 
 							titles.add(origResult.getTitle());
 							scores.add(origResult.getScore());
+							details.add(origResult.getDetail());
+							descriptions.add(origResult.getDescription());
 
 							isFind = true;
 							break;
@@ -167,31 +177,49 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 
 		List<String> 		titles 	= new ArrayList<>();
 		List<Integer> 		scores 	= new ArrayList<>();
+		List<String>		details	= new ArrayList<>();
+		List<String>   descriptions	= new ArrayList<>();
 
 		titles.add(origResult.getTitle());
 		scores.add(origResult.getScore());
+		details.add(origResult.getDetail());
+		descriptions.add(origResult.getDescription());
 
 		data.put("workDtim", origResult.getWorkDtim());
 		data.put("title", titles);
 		data.put("score", scores);
+		data.put("detail", details);
+		data.put("description", descriptions);
 
 		return data;
 	}
 
-	/*
-	 * TODO
-	 * CATEGORY 테이블 INSERT 가 안되는 이유로 CATEGORY b 제거, 이후에 INSERT 되면 추가필요
-	 */
 	@Override
 	public List<Map<String, Object>> findById(String id) {
-		List<MemberResultSum> origResult = jdbcTemplate.query("SELECT a.USER_ID        AS userId" +
-				"      , a.WORK_DTIM     AS workDtim" +
-				"      , a.SCORE         AS score" +
-				"      , b.TITLE         AS title" +
-				"  FROM RESULT a, CATEGORY b" +
+		List<MemberResultSum> origResult = jdbcTemplate.query("SELECT userId" +
+				"       , workDtim" +
+				"       , score" +
+				"       , title" +
+				"       , detail" +
+				"       , description" +
+				" FROM" +
+				"(SELECT a.USER_ID        AS userId" +
+				"       , TO_CHAR(TO_DATE(a.WORK_DTIM, 'yyyyMMddhh24miss'), 'yyyy-MM-dd')     AS workDtim" +
+				"       , CASE WHEN a.SCORE > 100 THEN 100 ELSE a.SCORE END                   AS score" +
+				"       , b.TITLE         AS title" +
+				"       , c.DETAIL        AS detail" +
+				"       , c.DESCRIPTION   AS description" +
+				"       , ROW_NUMBER() OVER(PARTITION BY a.USER_ID, TO_CHAR(TO_DATE(a.WORK_DTIM, 'yyyyMMddhh24miss'),'yyyy-MM-dd'), a.CATEGORY ORDER BY a.SCORE DESC) AS row_num" +
+				"  FROM RESULT a" +
+				"       , CATEGORY b" +
+				"       , SCORE_DETAIL c" +
 				"  WHERE a.CATEGORY = b.ID" +
+				"    AND a.CATEGORY = c.ID" +
 				"    AND a.USER_ID = ?" +
-				"ORDER BY a.WORK_DTIM DESC, a.CATEGORY", memberResultSumRowMapper(), id);
+				"    AND a.SCORE BETWEEN c.FROM_SCORE AND c.TO_SCORE" +
+				" ORDER BY TO_CHAR(TO_DATE(a.WORK_DTIM, 'yyyyMMddhh24miss'), 'yyyy-MM-dd') DESC, a.CATEGORY" +
+				")" +
+				"  WHERE row_num = 1;", memberResultSumRowMapper(), id);
 
 		List<Map<String, Object>> result = makeScoreMap(origResult, id);
 		return result;
@@ -199,14 +227,30 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 
 	@Override
 	public List<Map<String, Object>> findByENum(String eNum) {
-		List<MemberResultSum> origResult = jdbcTemplate.query("SELECT a.USER_ID        AS userId" +
-				"      , a.WORK_DTIM     AS workDtim" +
-				"      , a.SCORE         AS score" +
-				"      , b.TITLE         AS title" +
-				"  FROM RESULT a, CATEGORY b" +
-				" WHERE a.CATEGORY = b.ID" +
-				"   AND a.E_NUM = ?" +
-				"ORDER BY a.WORK_DTIM DESC, a.CATEGORY", memberResultSumRowMapper(), eNum);
+		List<MemberResultSum> origResult = jdbcTemplate.query("SELECT userId" +
+				"       , workDtim" +
+				"       , score" +
+				"       , title" +
+				"       , detail" +
+				"       , description" +
+				" FROM" +
+				"(SELECT a.USER_ID        AS userId" +
+				"       , TO_CHAR(TO_DATE(a.WORK_DTIM, 'yyyyMMddhh24miss'), 'yyyy-MM-dd')     AS workDtim" +
+				"       , CASE WHEN a.SCORE > 100 THEN 100 ELSE a.SCORE END                   AS score" +
+				"       , b.TITLE         AS title" +
+				"       , c.DETAIL        AS detail" +
+				"       , c.DESCRIPTION   AS description" +
+				"       , ROW_NUMBER() OVER(PARTITION BY a.USER_ID, TO_CHAR(TO_DATE(a.WORK_DTIM, 'yyyyMMddhh24miss'),'yyyy-MM-dd'), a.CATEGORY ORDER BY a.SCORE DESC) AS row_num" +
+				"  FROM RESULT a" +
+				"       , CATEGORY b" +
+				"       , SCORE_DETAIL c" +
+				"  WHERE a.CATEGORY = b.ID" +
+				"    AND a.CATEGORY = c.ID" +
+				"    AND a.E_NUM = ?" +
+				"    AND a.SCORE BETWEEN c.FROM_SCORE AND c.TO_SCORE" +
+				" ORDER BY TO_CHAR(TO_DATE(a.WORK_DTIM, 'yyyyMMddhh24miss'), 'yyyy-MM-dd') DESC, a.CATEGORY" +
+				")" +
+				"  WHERE row_num = 1;", memberResultSumRowMapper(), eNum);
 
 		List<Map<String, Object>> result = makeScoreMap(origResult, eNum);
 		return result;
@@ -214,14 +258,30 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 
 	@Override
 	public List<Map<String, Object>> findByEmail(String email) {
-		List<MemberResultSum> origResult = jdbcTemplate.query("SELECT a.USER_ID        AS userId" +
-				"      , a.WORK_DTIM     AS workDtim" +
-				"      , a.SCORE         AS score" +
-				"      , b.TITLE         AS title" +
-				"  FROM RESULT a, CATEGORY b" +
-				" WHERE a.CATEGORY = b.ID" +
-				"   AND a.EMAIL = ?" +
-				"ORDER BY a.WORK_DTIM DESC, a.CATEGORY", memberResultSumRowMapper(), email);
+		List<MemberResultSum> origResult = jdbcTemplate.query("SELECT userId" +
+				"       , workDtim" +
+				"       , score" +
+				"       , title" +
+				"       , detail" +
+				"       , description" +
+				" FROM" +
+				"(SELECT a.USER_ID        AS userId" +
+				"       , TO_CHAR(TO_DATE(a.WORK_DTIM, 'yyyyMMddhh24miss'), 'yyyy-MM-dd')     AS workDtim" +
+				"       , CASE WHEN a.SCORE > 100 THEN 100 ELSE a.SCORE END                   AS score" +
+				"       , b.TITLE         AS title" +
+				"       , c.DETAIL        AS detail" +
+				"       , c.DESCRIPTION   AS description" +
+				"       , ROW_NUMBER() OVER(PARTITION BY a.USER_ID, TO_CHAR(TO_DATE(a.WORK_DTIM, 'yyyyMMddhh24miss'),'yyyy-MM-dd'), a.CATEGORY ORDER BY a.SCORE DESC) AS row_num" +
+				"  FROM RESULT a" +
+				"       , CATEGORY b" +
+				"       , SCORE_DETAIL c" +
+				"  WHERE a.CATEGORY = b.ID" +
+				"    AND a.CATEGORY = c.ID" +
+				"    AND a.EMAIL = ?" +
+				"    AND a.SCORE BETWEEN c.FROM_SCORE AND c.TO_SCORE" +
+				" ORDER BY TO_CHAR(TO_DATE(a.WORK_DTIM, 'yyyyMMddhh24miss'), 'yyyy-MM-dd') DESC, a.CATEGORY" +
+				")" +
+				"  WHERE row_num = 1;", memberResultSumRowMapper(), email);
 
 		List<Map<String, Object>> result = makeScoreMap(origResult, email);
 		return result;
@@ -229,13 +289,29 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 
 	@Override
 	public List<Map<String, Object>> findAll() {
-		List<MemberResultSum> origResult = jdbcTemplate.query("SELECT a.USER_ID        AS userId" +
-				"      , a.WORK_DTIM     AS workDtim" +
-				"      , b.TITLE         AS title" +
-				"      , a.SCORE         AS score" +
-				"  FROM RESULT a, CATEGORY b" +
-				" WHERE a.CATEGORY = b.ID" +
-				"ORDER BY a.WORK_DTIM DESC, a.CATEGORY", memberResultSumRowMapper());
+		List<MemberResultSum> origResult = jdbcTemplate.query("SELECT userId" +
+				"       , workDtim" +
+				"       , score" +
+				"       , title" +
+				"       , detail" +
+				"       , description" +
+				" FROM" +
+				"(SELECT a.USER_ID        AS userId" +
+				"       , TO_CHAR(TO_DATE(a.WORK_DTIM, 'yyyyMMddhh24miss'), 'yyyy-MM-dd')     AS workDtim" +
+				"       , CASE WHEN a.SCORE > 100 THEN 100 ELSE a.SCORE END                   AS score" +
+				"       , b.TITLE         AS title" +
+				"       , c.DETAIL        AS detail" +
+				"       , c.DESCRIPTION   AS description" +
+				"       , ROW_NUMBER() OVER(PARTITION BY a.USER_ID, TO_CHAR(TO_DATE(a.WORK_DTIM, 'yyyyMMddhh24miss'),'yyyy-MM-dd'), a.CATEGORY ORDER BY a.SCORE DESC) AS row_num" +
+				"  FROM RESULT a" +
+				"       , CATEGORY b" +
+				"       , SCORE_DETAIL c" +
+				"  WHERE a.CATEGORY = b.ID" +
+				"    AND a.CATEGORY = c.ID" +
+				"    AND a.SCORE BETWEEN c.FROM_SCORE AND c.TO_SCORE" +
+				" ORDER BY TO_CHAR(TO_DATE(a.WORK_DTIM, 'yyyyMMddhh24miss'), 'yyyy-MM-dd') DESC, a.CATEGORY" +
+				")" +
+				"  WHERE row_num = 1;", memberResultSumRowMapper());
 
 		List<Map<String, Object>> result = makeScoreMap(origResult, "");
 		return result;
@@ -255,6 +331,8 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 			item.setWorkDtim(rs.getString("workDtim"));
 			item.setTitle(rs.getString("title"));
 			item.setScore(rs.getInt("score"));
+			item.setDetail(rs.getString("detail"));
+			item.setDescription(rs.getString("description"));
 
 			return item;
 		};

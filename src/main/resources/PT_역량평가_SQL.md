@@ -251,13 +251,28 @@ GROUP BY a.USER_ID;
 **-- SELECT RESULT SUM EACH CATEGORY 변경사항**
 -- 2020.10.12 repository 단에서 같은 workDtim 별 결과로 가공합니다.
 
-SELECT a.USER_ID        AS userId
-      , a.WORK_DTIM     AS workDtim
-      , a.SCORE         AS score
-      , b.TITLE         AS title
-  FROM RESULT a, CATEGORY b
---   AND a.USER_ID = #{user_id}
-WHERE  a.CATEGORY = b.ID
-   AND a.USER_ID = 'park'
-ORDER BY a.WORK_DTIM DESC, a.CATEGORY;
+SELECT userId
+       , workDtim
+       , score
+       , title
+       , detail
+       , description
+FROM
+(SELECT a.USER_ID        AS userId
+       , TO_CHAR(TO_DATE(a.WORK_DTIM, 'yyyyMMddhh24miss'), 'yyyy-MM-dd')     AS workDtim
+       , CASE WHEN a.SCORE > 100 THEN 100 ELSE a.SCORE END    AS score
+       , b.TITLE         AS title
+	   , c.DETAIL		 AS detail
+	   , c.DESCRIPTION	 AS description
+	   , ROW_NUMBER() OVER(PARTITION BY a.USER_ID, TO_CHAR(TO_DATE(a.WORK_DTIM, 'yyyyMMddhh24miss'),'yyyy-MM-dd'), a.CATEGORY ORDER BY a.SCORE DESC) AS row_num
+  FROM RESULT a
+	   , CATEGORY b
+	   , SCORE_DETAIL c
+  WHERE a.CATEGORY = b.ID
+	AND a.CATEGORY = c.ID
+    AND a.USER_ID = 'park'
+	AND a.SCORE BETWEEN c.FROM_SCORE AND c.TO_SCORE
+ORDER BY TO_CHAR(TO_DATE(a.WORK_DTIM, 'yyyyMMddhh24miss'), 'yyyy-MM-dd') DESC, a.CATEGORY
+)
+WHERE row_num = 1;
 

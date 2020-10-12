@@ -1,23 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://wwww.thymeleaf.org">
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-
-    <title>SB Admin 2 - Dashboard</title>
-
-    <!-- Custom fonts for this template-->
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css" />
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet" />
-
-    <!-- Custom styles for this template-->
-    <link href="css/sb-admin-2.min.css" rel="stylesheet" />
-</head>
-
-<div>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="main">
+<th:block layout:fragment="content">
 
 <!-- Page Wrapper -->
 <div id="wrapper">
@@ -38,7 +23,7 @@
                 </div>
                 <div th:unless='${"".equals(result[0].data[0].workDtim)}'>
                     <div class="row mb-3">
-                        <div class="col-sm-12 col-md-6">
+                        <div class="col-md-12 col-lg-6">
                             <!-- Rader Chart -->
                             <div class="card shadow mb-4 h-100">
                                 <div class="card-header py-3">
@@ -67,7 +52,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-12 col-md-6">
+                        <div class="col-md-12 col-lg-6">
                             <!-- Horizontal Bar Chart -->
                             <div class="card shadow mb-4 h-100">
                                 <div class="card-header py-3">
@@ -91,7 +76,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col-12">
                             <div class="card shadow h-100">
                                 <div class="card-header py-3">
@@ -102,7 +87,29 @@
                                     </div>
                                 </div>
                                 <div class="card-body mb-4">
-                                    teest
+                                    <div class="table-responsive">
+                                        <table class="table" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>등급</th>
+                                                    <th>교육과정</th>
+                                                    <th>비고</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr id="edu_begin">
+                                                    <td>초, 중급</td>
+                                                    <td>PT 기초 입문</td>
+                                                    <td>PT 공통 및 기본 사항</td>
+                                                </tr>
+                                                <tr id="edu_expert">
+                                                    <td>고급</td>
+                                                    <td>PT 발표 전문가 양성 과정</td>
+                                                    <td>숙련자가 되기 위해 놓치지 말아야 할 내용 기술</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -115,21 +122,11 @@
     </div>
     <!-- End of Content Wrapper -->
 </div>
-    <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
-    <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin-2.min.js"></script>
-
-    <!-- Page level plugins -->
-    <script src="vendor/chart.js/Chart.min.js"></script>
-
 <!-- End of Page Wrapper -->
-    <script th:inline="javascript">
+</th:block>
+
+<th:block layout:fragment="script">
+    <script type="text/javascript" th:inline="javascript">
         var resultSet = /*[[${result}]]*/;
         var radarChart;
         var barCharts;
@@ -153,10 +150,10 @@
         $('.dropdown-workDtim').click(function(){
             var targetWorkDtim = $(this).text();
 
-            console.log(targetWorkDtim);
-
-            var targetWorkDtimTitle = findTitle(targetWorkDtim);
-            var targetWorkDtimScore = findScore(targetWorkDtim);
+            var targetWorkDtimTitle     = findValue(targetWorkDtim, 'title');
+            var targetWorkDtimScore     = findValue(targetWorkDtim, 'score');
+            var targetWorkDtimDetail    = findValue(targetWorkDtim, 'detail');
+            var targetWorkDtimDesc      = findValue(targetWorkDtim, 'description');
 
             /*
              * dropdown 현행화
@@ -164,7 +161,7 @@
             $('#current-workDtim').text(targetWorkDtim);
 
             /*
-             * 차트 현행화
+             * 차트 제거
              */
             if (radarChart != null) {
                 radarChart.destroy();
@@ -176,44 +173,66 @@
                 });
             }
 
-            radarChart = createRadarChart(targetWorkDtimTitle, targetWorkDtimScore);
+            /*
+             * 차트 현행화
+             */
+            radarChart = createRadarChart(targetWorkDtimTitle
+                , targetWorkDtimScore
+                , targetWorkDtimDetail
+                , targetWorkDtimDesc);
             barCharts = [];
 
             $(targetWorkDtimTitle).each(function(index) {
-                barCharts.push(createHorizontalBarChart(targetWorkDtimTitle[index], targetWorkDtimScore[index]));
+                barCharts.push(createHorizontalBarChart(targetWorkDtimTitle[index]
+                    , targetWorkDtimScore[index]
+                    , targetWorkDtimDetail[index]
+                    , targetWorkDtimDesc[index]));
             });
+
+            /*
+             * 교육과정 현행화
+             */
+            setEduLevel(targetWorkDtimTitle);
         });
+
+        /**
+         * setEduLevel
+         */
+        function setEduLevel(titles) {
+            var isBeginner = true;
+
+            $(titles).each(function(index, title){
+                if (title.indexOf('필요') == -1) {
+                    isBeginner = false;
+                    return;
+                }
+            });
+
+            if (isBeginner) {
+                $('#edu_begin').addClass('table-success');
+                $('#edu_expert').removeClass('table-success');
+            } else {
+                $('#edu_begin').removeClass('table-success');
+                $('#edu_expert').addClass('table-success');
+            }
+        }
 
         /**
          * Utils
          *
-         * findTitle
-         * findScore
+         * findValue
          */
-        function findTitle(workDtim) {
-            var title;
+        function findValue(workDtim, keyParam) {
+            var value;
 
             $(resultSet[0].data).each(function(index, data){
                 if (data.workDtim == workDtim) {
-                    title = data.title;
+                    value = data[keyParam];
                     return;
                 }
             });
 
-            return title;
-        }
-
-        function findScore(workDtim) {
-            var score;
-
-            $(resultSet[0].data).each(function(index, data){
-                if (data.workDtim == workDtim) {
-                    score = data.score;
-                    return;
-                }
-            });
-
-            return score;
+            return value;
         }
 
         /**
@@ -222,14 +241,13 @@
          * createRaderChart
          * createHorizontalBarChart
          */
-        function createRadarChart(title, score) {
+        function createRadarChart(title, score, detail, description) {
             var chart = new Chart($('#mainChart'), {
                 type    : 'radar',
                 data    : {
                     labels : title,
                     datasets : [{
-                        fill : false,
-                        backgroundColor : 'rgba(200, 0, 0, 0.2)',
+                        backgroundColor : 'rgba(255, 99, 132, 0.5)',
                         pointRadius : 5,
                         pointHoverRadius : 7,
                         data : score
@@ -246,6 +264,18 @@
                             max : 100,
                             stepSize : 20
                         }
+                    },
+                    tooltips : {
+                        callbacks : {
+                            title : function(tooltipItem, data) {
+                                return data['datasets'][0]['data'][tooltipItem[0]['index']] +
+                                    "점 : " +
+                                    detail[tooltipItem[0]['index']];
+                            },
+                            label : function (tooltipItem, data) {
+                                return description[tooltipItem['index']];
+                            }
+                        }
                     }
                 }
             });
@@ -253,14 +283,14 @@
             return chart;
         }
 
-        function createHorizontalBarChart(title, score) {
+        function createHorizontalBarChart(title, score, detail, description) {
             var chart = new Chart($('#barChart_' + title), {
                 type : 'horizontalBar',
                 data : {
                     labels : [title],
                     datasets : [{
                         fill : false,
-                        backgroundColor : ['rgba(255, 99, 132, 0.2)'],
+                        backgroundColor : ['rgba(255, 99, 132, 0.5)'],
                         borderColor : ['rgb(255, 159, 64)'],
                         data : [score]
                     }]
@@ -280,9 +310,21 @@
                         }],
                         yAxes : [{
                             afterFit: function(scaleInstance) {
-                                scaleInstance.width = 150; // sets the width to 100px
+                                scaleInstance.width = 125; // sets the width to 100px
                             }
                         }]
+                    },
+                    tooltips : {
+                        callbacks : {
+                            title : function(tooltipItem, data) {
+                                return data['datasets'][0]['data'][tooltipItem[0]['index']] +
+                                    "점 : " +
+                                    detail;
+                            },
+                            label : function (tooltipItem, data) {
+                                return description;
+                            }
+                        }
                     }
                 }
             });
@@ -290,5 +332,5 @@
             return chart;
         }
     </script>
-</div>
+</th:block>
 </html>
