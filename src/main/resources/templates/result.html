@@ -17,7 +17,7 @@
     <link href="css/sb-admin-2.min.css" rel="stylesheet" />
 </head>
 
-<body id="page-top">
+<div>
 
 <!-- Page Wrapper -->
 <div id="wrapper">
@@ -29,209 +29,80 @@
             <div class="container-fluid">
 
                 <!-- Page Heading -->
-                <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">RESULT</h1>
+                <div class="d-sm-flex align-items-center justify-content-between mb-2">
+                    <h1 class="h3 text-gray-800"><span th:text="${result[0].user_id}"></span>님의 PT역량 결과입니다.</h1>
                 </div>
 
-                <!-- Content Row -->
-                <div class="row">
-                    <!-- Pie Chart -->
-                    <div class="col-xl-12 col-lg-12">
-                        <div class="card shadow mb-4">
-                            <div th:if='${"".equals(result[0].getWorkDtim())}'>
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary"><span th:text="${result[0].user_id}"></span> 님의 자가진단 결과입니다</h6>
+                <div th:if='${"".equals(result[0].data[0].workDtim)}'>
+                    검사결과가 없습니다.
+                </div>
+                <div th:unless='${"".equals(result[0].data[0].workDtim)}'>
+                    <div class="row mb-3">
+                        <div class="col-sm-12 col-md-6">
+                            <!-- Rader Chart -->
+                            <div class="card shadow mb-4 h-100">
+                                <div class="card-header py-3">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="dropdown">
+                                                <button class="btn btn-primary btn-block dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <span id="current-workDtim"></span>
+                                                </button>
+                                                <div class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
+                                                    <!--<a class="dropdown-item" href="#">Action</a>
+                                                    <a class="dropdown-item" href="#">Another action</a>
+                                                    <a class="dropdown-item" href="#">Something else here</a>-->
+                                                    <div th:each="data : ${result[0].data}">
+                                                        <a class="text-center dropdown-item dropdown-workDtim" th:text="${data.workDtim}"></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="card-body">
-                                    <h6 class="m-0 font-weight-bold text-primary">아직 진단결과가 없습니다.</h6>
-                                </div>
-                                <div class="card-footer">
-
+                                <div class="card-body mb-4">
+                                    <div class="chart-bar">
+                                        <canvas id="mainChart"></canvas>
+                                    </div>
                                 </div>
                             </div>
-                            <div th:unless='${"".equals(result[0].getWorkDtim())}'>
-                                <!-- Card Header - Dropdown -->
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary"><span th:text="${result[0].user_id}"></span> 님의 자가진단 결과입니다</h6>
-                                </div>
-                                <!-- Card Body -->
-                                <div class="card-body">
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+                            <!-- Horizontal Bar Chart -->
+                            <div class="card shadow mb-4 h-100">
+                                <div class="card-header py-3">
                                     <div class="row">
-                                        <div class="col">
-                                            <div class="pt-4 pb-2">
-                                                <canvas id="myPieChart"></canvas>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col font-weight-bold text-primary text-center">
-                                            각 항목의 포인트를 클릭하시면 결과분석을 하실 수 있습니다.
+                                        <div class="col-12">
+                                            <h6 class="font-weight-bold text-primary">점검결과</h6>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card-footer">
-                                    <div id="speech" class="d-none">
-                                        <div class="row mb-2">
-                                            <div class="col">
-                                                스피치진단 점수는 <span class="font-weight-bold text-primary" th:text="${result[result.size() - 1].speechResult}"></span> 점 입니다.
-                                            </div>
-                                            <hr />
-                                        </div>
-                                        <div class="row mb-1">
-                                            <div class="col-md-3 col-lg-2 font-weight-bold text-info">
-                                                00 ~ 46
-                                            </div>
-                                            <div class="col">
-                                                직장인 평균에 미치지 못합니다. 기초훈련부터 하나씩 훈련을 시작하셔야 합니다.
-                                            </div>
-                                        </div>
-                                        <div class="row mb-1">
-                                            <div class="col-md-3 col-lg-2 font-weight-bold text-info">
-                                                47 ~ 53
-                                            </div>
-                                            <div class="col">
-                                                직장인 평균에 해당합니다. 성공적인 스피치를 위해 한발 도약하시기 바랍니다.
-                                            </div>
-                                        </div>
-                                        <div class="row mb-1">
-                                            <div class="col-md-3 col-lg-2 font-weight-bold text-info">
-                                                54 ~ 67
-                                            </div>
-                                            <div class="col">
-                                                조금만 더 훈련하신다면 탁월한 스피치를 할 수 있는 자질이 있습니다.
-                                            </div>
-                                        </div>
-                                        <div class="row mb-1">
-                                            <div class="col-md-3 col-lg-2 font-weight-bold text-info">
-                                                68 ~ 84
-                                            </div>
-                                            <div class="col">
-                                                훈련하지 않으신 분이라면 이미 스피치를 잘 하고 있습니다.
+                                <div class="card-body mb-4">
+                                    <div th:each="title : ${result[0].data[0].title}">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div>
+                                                    <canvas th:attr="id=|barChart_${title}|" height="37"></canvas>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div id="presentation" class="d-none">
-                                        <div class="row mb-2">
-                                            <div class="col">
-                                                프레젠테이션진단 점수는 <span class="font-weight-bold text-primary" th:text="${result[result.size() - 1].presentationResult}"></span> 점 입니다.
-                                            </div>
-                                            <hr />
-                                        </div>
-                                        <div class="row mb-1">
-                                            <div class="col-md-3 col-lg-2 font-weight-bold text-info">
-                                                00 ~ 59
-                                            </div>
-                                            <div class="col">
-                                                직장인 평균 이하입니다. 전문가를 통한 지속적인 노력이 필요합니다.
-                                            </div>
-                                        </div>
-                                        <div class="row mb-1">
-                                            <div class="col-md-3 col-lg-2 font-weight-bold text-info">
-                                                60 ~ 69
-                                            </div>
-                                            <div class="col">
-                                                직장인 평균입니다. 많은 노력으로 훈련해 나가신다면 능숙한 프레젠터가 될 수 있습니다.
-                                            </div>
-                                        </div>
-                                        <div class="row mb-1">
-                                            <div class="col-md-3 col-lg-2 font-weight-bold text-info">
-                                                70 ~ 79
-                                            </div>
-                                            <div class="col">
-                                                기본적인 자질을 갖추고 계십니다만 좀 더 적극적 노력을 하신다면 탁월한 프레젠터가 되실 수 있습니다.
-                                            </div>
-                                        </div>
-                                        <div class="row mb-1">
-                                            <div class="col-md-3 col-lg-2 font-weight-bold text-info">
-                                                80 ~
-                                            </div>
-                                            <div class="col">
-                                                탁월한 프레젠터 입니다. 이미 탁월한 역량을 가지고 계십니다.
-                                            </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card shadow h-100">
+                                <div class="card-header py-3">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h6 class="font-weight-bold text-primary">교육과정</h6>
                                         </div>
                                     </div>
-                                    <div id="unrest" class="d-none">
-                                        <div class="row mb-2">
-                                            <div class="col">
-                                                발표불안 점수는 <span class="font-weight-bold text-primary" th:text="${result[result.size() - 1].unrestResult}"></span> 점 입니다.
-                                            </div>
-                                            <hr />
-                                        </div>
-                                        <div class="row mb-1">
-                                            <div class="col-md-3 col-lg-2 font-weight-bold text-info">
-                                                00 ~ 37
-                                            </div>
-                                            <div class="col">
-                                                발표상황에서 불안 수준이 낮은 편으로서 그다지 불편감과 불안을 느끼지 않습니다.
-                                            </div>
-                                        </div>
-                                        <div class="row mb-1">
-                                            <div class="col-md-3 col-lg-2 font-weight-bold text-info">
-                                                38 ~ 84
-                                            </div>
-                                            <div class="col">
-                                                발표상황에서 중간 정도의 불안을 경험하고 때때로 발표상황을 회피하기도 합니다. 그러나 그렇게까지 문제되지는 않습니다.
-                                            </div>
-                                        </div>
-                                        <div class="row mb-1">
-                                            <div class="col-md-3 col-lg-2 font-weight-bold text-info">
-                                                85 ~ 97
-                                            </div>
-                                            <div class="col">
-                                                발표상황에서 상당한 정도로 불편감과 불안을 경험하고 있으며, 여러 발표상황들을 회피하기도 합니다. 이러한 불편감과 회피가 지속되면 전문가를 찾아 상담할 것을 권합니다.
-                                            </div>
-                                        </div>
-                                        <div class="row mb-1">
-                                            <div class="col-md-3 col-lg-2 font-weight-bold text-info">
-                                                98 ~
-                                            </div>
-                                            <div class="col">
-                                                심한 정도의 발표불안을 경험하면서, 수많은 발표상황을 회피하고 있으며, 이것이 스스로의 삶을 힘들게 하고 있습니다. 조속한 시일 내에 전문가를 통해 상담할 것을 권합니다.
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="evaluation" class="d-none">
-                                        <div class="row mb-2">
-                                            <div class="col">
-                                                발표자평가 점수는 <span class="font-weight-bold text-primary" th:text="${result[result.size() - 1].evaluationResult}"></span> 점 입니다.
-                                            </div>
-                                            <hr />
-                                        </div>
-                                        <div class="row mb-1">
-                                            <div class="col-md-3 col-lg-2 font-weight-bold text-info">
-                                                00 ~ 59
-                                            </div>
-                                            <div class="col">
-                                                직장인 평균 이하입니다. 전문가를 통한 지속적인 노력이 필요합니다.
-                                            </div>
-                                        </div>
-                                        <div class="row mb-1">
-                                            <div class="col-md-3 col-lg-2 font-weight-bold text-info">
-                                                60 ~ 69
-                                            </div>
-                                            <div class="col">
-                                                직장인 평균입니다. 많은 노력으로 훈련해 나가신다면 능숙한 프레젠터가 될 수 있습니다.
-                                            </div>
-                                        </div>
-                                        <div class="row mb-1">
-                                            <div class="col-md-3 col-lg-2 font-weight-bold text-info">
-                                                70 ~ 79
-                                            </div>
-                                            <div class="col">
-                                                기본적인 자질을 갖추고 계십니다만 좀 더 적극적 노력을 하신다면 탁월한 프레젠터가 되실 수 있습니다.
-                                            </div>
-                                        </div>
-                                        <div class="row mb-1">
-                                            <div class="col-md-3 col-lg-2 font-weight-bold text-info">
-                                                80 ~
-                                            </div>
-                                            <div class="col">
-                                                탁월한 프레젠터 입니다. 이미 탁월한 역량을 가지고 계십니다.
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!--                                <h6 class="m-0 font-weight-bold text-primary d-none">Result</h6>-->
+                                </div>
+                                <div class="card-body mb-4">
+                                    teest
                                 </div>
                             </div>
                         </div>
@@ -244,116 +115,180 @@
     </div>
     <!-- End of Content Wrapper -->
 </div>
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="vendor/chart.js/Chart.min.js"></script>
+
 <!-- End of Page Wrapper -->
+    <script th:inline="javascript">
+        var resultSet = /*[[${result}]]*/;
+        var radarChart;
+        var barCharts;
 
-<!-- Bootstrap core JavaScript-->
-<script src="vendor/jquery/jquery.min.js"></script>
-<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        /**
+         * 처음 페이지 초기화
+         */
+        $(document).ready(function(){
+            console.log(resultSet);
 
-<!-- Core plugin JavaScript-->
-<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
-<!-- Custom scripts for all pages-->
-<script src="js/sb-admin-2.min.js"></script>
-
-<!-- Page level plugins -->
-<script src="vendor/chart.js/Chart.min.js"></script>
-
-<script th:inline="javascript">
-    var resultSet = /*[[${result}]]*/;
-    var raderChart;
-
-    $(document).ready(function(){
-        console.log(resultSet);
-
-        radarChart = createRadarChart(resultSet[resultSet.length - 1].speechResult
-                    , resultSet[resultSet.length - 1].presentationResult
-                    , resultSet[resultSet.length - 1].unrestResult
-                    , resultSet[resultSet.length - 1].evaluationResult);
-    });
-
-    function createRadarChart(speechResult, presentationResult, unrestResult, evaluationResult) {
-        var chart = new Chart($('#myPieChart'), {
-            type    : 'radar',
-            data    : {
-                labels : ['스피치진단', '프레젠테이션진단', '발표불안진단', '발표자평가항목'],
-                datasets : [{
-                    label : '진단결과',
-                    backgroundColor : 'rgba(200, 0, 0, 0.2)',
-                    pointRadius : 5,
-                    pointHoverRadius : 7,
-                    data : [
-                        speechResult,
-                        presentationResult,
-                        unrestResult,
-                        evaluationResult
-                    ]
-                }]
-            },
-            options : {
-                scale : {
-                    ticks : {
-                        beginAtZero : true,
-                        min : 0,
-                        max : 100,
-                        stepSize : 20
-                    },
-                    pointLabels : {
-                        fontSize : 15
-                    }
-                },
-
-                onClick : chartClickEvent
+            if (resultSet[0].data[0].workDtim != "") {
+                $('.dropdown-workDtim:first').trigger('click');
             }
         });
 
-        return chart;
-    }
-
-    function chartClickEvent(e, legendItem) {
         /**
-         * index
+         * Button Event
          *
-         * 0 : speech
-         * 1 : presentation
-         * 2 : unrest
-         * 3 : evaluation
+         * .dropdown-workDtim.click
          */
-        if (legendItem[0] != undefined) {
-            var index = legendItem[0]._index;
+        $('.dropdown-workDtim').click(function(){
+            var targetWorkDtim = $(this).text();
 
-            switch (index) {
-                case 0:
-                    $('#speech').removeClass('d-none');
-                    $('#presentation').addClass('d-none');
-                    $('#unrest').addClass('d-none');
-                    $('#evaluation').addClass('d-none');
+            console.log(targetWorkDtim);
 
-                    break;
-                case 1:
-                    $('#speech').addClass('d-none');
-                    $('#presentation').removeClass('d-none');
-                    $('#unrest').addClass('d-none');
-                    $('#evaluation').addClass('d-none');
+            var targetWorkDtimTitle = findTitle(targetWorkDtim);
+            var targetWorkDtimScore = findScore(targetWorkDtim);
 
-                    break;
-                case 2:
-                    $('#speech').addClass('d-none');
-                    $('#presentation').addClass('d-none');
-                    $('#unrest').removeClass('d-none');
-                    $('#evaluation').addClass('d-none');
+            /*
+             * dropdown 현행화
+             */
+            $('#current-workDtim').text(targetWorkDtim);
 
-                    break;
-                case 3:
-                    $('#speech').addClass('d-none');
-                    $('#presentation').addClass('d-none');
-                    $('#unrest').addClass('d-none');
-                    $('#evaluation').removeClass('d-none');
-
-                    break;
+            /*
+             * 차트 현행화
+             */
+            if (radarChart != null) {
+                radarChart.destroy();
             }
+
+            if (barCharts != null) {
+                $(barCharts).each(function(index, barChart){
+                    barChart.destroy();
+                });
+            }
+
+            radarChart = createRadarChart(targetWorkDtimTitle, targetWorkDtimScore);
+            barCharts = [];
+
+            $(targetWorkDtimTitle).each(function(index) {
+                barCharts.push(createHorizontalBarChart(targetWorkDtimTitle[index], targetWorkDtimScore[index]));
+            });
+        });
+
+        /**
+         * Utils
+         *
+         * findTitle
+         * findScore
+         */
+        function findTitle(workDtim) {
+            var title;
+
+            $(resultSet[0].data).each(function(index, data){
+                if (data.workDtim == workDtim) {
+                    title = data.title;
+                    return;
+                }
+            });
+
+            return title;
         }
-    }
-</script>
-</body>
+
+        function findScore(workDtim) {
+            var score;
+
+            $(resultSet[0].data).each(function(index, data){
+                if (data.workDtim == workDtim) {
+                    score = data.score;
+                    return;
+                }
+            });
+
+            return score;
+        }
+
+        /**
+         * createCharts
+         *
+         * createRaderChart
+         * createHorizontalBarChart
+         */
+        function createRadarChart(title, score) {
+            var chart = new Chart($('#mainChart'), {
+                type    : 'radar',
+                data    : {
+                    labels : title,
+                    datasets : [{
+                        fill : false,
+                        backgroundColor : 'rgba(200, 0, 0, 0.2)',
+                        pointRadius : 5,
+                        pointHoverRadius : 7,
+                        data : score
+                    }]
+                },
+                options : {
+                    legend : {
+                        display : false
+                    },
+                    scale : {
+                        ticks : {
+                            beginAtZero : true,
+                            min : 0,
+                            max : 100,
+                            stepSize : 20
+                        }
+                    }
+                }
+            });
+
+            return chart;
+        }
+
+        function createHorizontalBarChart(title, score) {
+            var chart = new Chart($('#barChart_' + title), {
+                type : 'horizontalBar',
+                data : {
+                    labels : [title],
+                    datasets : [{
+                        fill : false,
+                        backgroundColor : ['rgba(255, 99, 132, 0.2)'],
+                        borderColor : ['rgb(255, 159, 64)'],
+                        data : [score]
+                    }]
+                },
+                options : {
+                    legend : {
+                        display : false
+                    },
+                    scales : {
+                        xAxes : [{
+                            ticks : {
+                                beginAtZero : true,
+                                min : 0,
+                                max : 100,
+                                stepSize : 20
+                            }
+                        }],
+                        yAxes : [{
+                            afterFit: function(scaleInstance) {
+                                scaleInstance.width = 150; // sets the width to 100px
+                            }
+                        }]
+                    }
+                }
+            });
+
+            return chart;
+        }
+    </script>
+</div>
 </html>

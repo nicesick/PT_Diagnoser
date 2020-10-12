@@ -45,6 +45,22 @@ CREATE TABLE CATEGORY (
 
 
 
+-- CREATE SCORE_DETAIL
+
+CREATE TABLE SCORE_DETAIL (
+	ID VARCHAR(1),
+	FROM_SCORE NUMBER(3),
+	TO_SCORE NUMBER(3),
+	DETAIL VARCHAR(50) NOT NULL,
+	DESCRIPTION VARCHAR(500) NOT NULL,
+	
+
+	PRIMARY KEY(ID, FROM_SCORE)
+
+);
+
+
+
 ## 카테고리별 질문 조회
 
 -- SELECT QUESTION
@@ -180,6 +196,28 @@ INSERT INTO CATEGORY VALUES('s', '스피치진단');
 INSERT INTO CATEGORY VALUES('p', '프레젠테이션진단');
 INSERT INTO CATEGORY VALUES('u', '발표불안진단');
 INSERT INTO CATEGORY VALUES('e', '발표평가진단');
+
+
+
+-- SCORE_DETAIL INSERT
+INSERT INTO SCORE_DETAIL VALUES('s', 0, 45, '훈련필요', '직장인 평균에 미치지 못합니다. 기초훈련부터 하나씩 훈련을 시작하셔야 합니다.');
+INSERT INTO SCORE_DETAIL VALUES('s', 46, 53, '보통', '직장인 평균에 해당합니다. 성공적인 스피치를 위해 한발 도약하시기 바랍니다.');
+INSERT INTO SCORE_DETAIL VALUES('s', 54, 67, '우수', '조금만 더 훈련하신다면 탁월한 스피치를 할 수 있는 자질이 있습니다.');
+INSERT INTO SCORE_DETAIL VALUES('s', 68, 100, '탁월', '훈련하지 않으신 분이라면 이미 스피치를 잘 하고 있습니다.');
+
+INSERT INTO SCORE_DETAIL VALUES('p', 0, 59, '훈련필요', '직장인 평균 이하입니다. 전문가를 통한 지속적인 노력이 필요합니다.');
+INSERT INTO SCORE_DETAIL VALUES('p', 60, 69, '보통', '직장인 평균입니다. 많은 노력으로 훈련해 나가신다면 능숙한 프레젠터가 될 수 있습니다.');
+INSERT INTO SCORE_DETAIL VALUES('p', 70, 79, '우수', '기본적인 자질을 갖추고 계십니다만 좀 더 적극적인 노력을 하신다면 탁월한 프레젠터가 되실 수 있습니다.');
+INSERT INTO SCORE_DETAIL VALUES('p', 80, 100, '탁월', '탁월한 프레젠터입니다. 이미 탁월한 역량을 가지고 계십니다.');
+
+INSERT INTO SCORE_DETAIL VALUES('u', 85, 100, '상담필요', '발표상황에서 상당한 정도로 불편감과 불안을 경험하고 있으며, 여러 발표상황들을 회피하기도 합니다. 이러한 불편감과 회피가 지속되면 전문가를 찾아 상담할 것을 권합니다.');
+INSERT INTO SCORE_DETAIL VALUES('u', 38, 84, '보통', '발표상황에서 중간 정도의 불안을 경험하고 때때로 발표상황을 회피하기도 합니다. 그러나 그렇게까지 문제되지는 않습니다.');
+INSERT INTO SCORE_DETAIL VALUES('u', 0, 37, '좋음', '발표상황에서 불안 수준이 낮은 편으로서 그다지 불편감과 불안을 느끼지 않습니다.');
+
+INSERT INTO SCORE_DETAIL VALUES('e', 0, 59, '훈련필요', '직장인 평균 이하입니다. 전문가를 통한 지속적인 노력이 필요합니다.');
+INSERT INTO SCORE_DETAIL VALUES('e', 60, 69, '보통', '직장인 평균입니다. 많은 노력으로 훈련해 나가신다면 능숙한 프레젠터가 될 수 있습니다.');
+INSERT INTO SCORE_DETAIL VALUES('e', 70, 79, '우수', '기본적인 자질을 갖추고 계십니다만 좀 더 적극적인 노력을 하신다면 탁월한 프레젠터가 되실 수 있습니다.');
+INSERT INTO SCORE_DETAIL VALUES('e', 80, 100, '탁월', '탁월한 프레젠터입니다. 내용전달 및 플랫폼 스킬에 탁월한 역량을 가지고 계십니다.');
 
 
 
