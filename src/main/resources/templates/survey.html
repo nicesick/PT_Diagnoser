@@ -178,7 +178,7 @@
 			$.ajax({
 		        type: "POST",
 		        url: "submit",
-		        data: JSON.stringify(formList),
+		        data: {"formList" : JSON.stringify(formList)},
 		        contentType:'application/json; charset=UTF-8',
 		        success: function(data) {
 		            alert("제출되었습니다");
