@@ -168,26 +168,27 @@ INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('u', '나는 청중 앞에 �
 
 
 
-INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('e', '고객 니즈의 표현 여부는?');
-INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('e', '솔루션과 고객의 효용 표현 여부는?');
-INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('e', '차별화 전략의 명확성은 어떠한가?');
-INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('e', '서론에서 관심 유도 동기부여, 개관 여부는?');
-INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('e', '본론 내용의 논리성, 설득력 표현은?');
-INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('e', '본론 내용의 리뷰, 재동기부여, 마무리는 어떠한가?');
-INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('e', '슬라이드 간결하여 알아보기 쉬운가?');
-INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('e', '디자인과 스토리라인 콘셉트가 조화로운가?');
-INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('e', '그래픽의 핵심 차별화 요소 전달력은 어떠한가?');
-INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('e', '흥미와 설득력 있는가?');
-INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('e', '자신감 있고 열정적인 어조인가?');
-INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('e', '시선처리와 손동작 움직임은 어떠한가?');
-INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('e', '내용 숙지 후 고객을 보며 진행하는가?');
-INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('e', '말하는 태도와 발음의 명확성은 있는가?');
-INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('e', '발표 내용의 길이가 간결한가?');
-INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('e', '간결하고 명확한 답변을 하는가?');
-INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('e', '질문에 적절한 대응(보조슬라이드 준비 여부, 성실성 여부)하는가?');
-INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('e', '신뢰감을 주기에 충분한 발표 내용과 논조있게 하는가?');
-INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('e', '고객 관점의 진행과 태도는 어떠한가?');
-INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('e', '시간 관리와 진행 능력은 있는가?');
+INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('c', '고객 니즈의 표현 여부는?');
+INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('c', '솔루션과 고객의 효용 표현 여부는?');
+INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('c', '차별화 전략의 명확성은 어떠한가?');
+INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('c', '서론에서 관심 유도 동기부여, 개관 여부는?');
+INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('c', '본론 내용의 논리성, 설득력 표현은?');
+INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('c', '본론 내용의 리뷰, 재동기부여, 마무리는 어떠한가?');
+INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('c', '슬라이드 간결하여 알아보기 쉬운가?');
+INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('c', '디자인과 스토리라인 콘셉트가 조화로운가?');
+INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('c', '그래픽의 핵심 차별화 요소 전달력은 어떠한가?');
+INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('c', '흥미와 설득력 있는가?');
+
+INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('f', '자신감 있고 열정적인 어조인가?');
+INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('f', '시선처리와 손동작 움직임은 어떠한가?');
+INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('f', '내용 숙지 후 고객을 보며 진행하는가?');
+INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('f', '말하는 태도와 발음의 명확성은 있는가?');
+INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('f', '발표 내용의 길이가 간결한가?');
+INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('f', '간결하고 명확한 답변을 하는가?');
+INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('f', '질문에 적절한 대응(보조슬라이드 준비 여부, 성실성 여부)하는가?');
+INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('f', '신뢰감을 주기에 충분한 발표 내용과 논조있게 하는가?');
+INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('f', '고객 관점의 진행과 태도는 어떠한가?');
+INSERT INTO Question (CATEGORY , CONTENT ) VALUES ('f', '시간 관리와 진행 능력은 있는가?');
 
 
 
