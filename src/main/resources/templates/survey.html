@@ -169,12 +169,13 @@
 			var score = 0; 
 			
 			$(formList).each(function(index, form){
-				if ( $('input:radio[name = '+ formList[i].id +']').is(":checked") == false) {
-					alert(formList[i].id+ "번이 선택되지 않았습니다. ");
+				if ( $('input:radio[name = '+ formList[index].id +']').is(":checked") == false) {
+					alert(formList[index].id+ "번이 선택되지 않았습니다. ");
 					isPassed = false;
 
 					return;
-				} 
+				}
+
 				form.score = $('input:radio[name = '+ form.id +']:checked').val();
 				if(typeof form.score !="undefined") {
 				 	score += Number(form.score); 	
