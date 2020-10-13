@@ -23,7 +23,6 @@ public class Interceptor extends HandlerInterceptorAdapter {
 	 * member); response.sendRedirect("/"); } }
 	 */
 	
-	@SuppressWarnings("unused")
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		System.out.println("PreHandle interceptor start ");
@@ -35,6 +34,7 @@ public class Interceptor extends HandlerInterceptorAdapter {
 		System.out.println(session.getAttribute("user_email"));
 
 		if(session.getAttribute("user_id") == null ) {
+			System.out.println("session is null");
 			response.sendRedirect("login");
 		}
 		return true;

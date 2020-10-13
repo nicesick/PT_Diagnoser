@@ -1,17 +1,13 @@
 package com.example.demo.controller;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -26,12 +22,18 @@ public class ResultController {
 	public ResultController(MemberResultService memberResultService) {
 		this.memberResultService = memberResultService;
 	}
-
+	
 	@RequestMapping("/result")
-	public ModelAndView home(HttpSession session, ModelAndView modelAndView) {
+	public ModelAndView home(ModelAndView modelAndView) {
 		System.out.println("result controller");
 
-		String userId = (String) session.getAttribute("user_id");
+		String userId= "";
+		try {
+			userId = SessionUtil.getAttribute("user_id").toString();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		List<Map<String, Object>> results = memberResultService.findMemberResultSumById(userId);
 
 		System.out.println(results);
@@ -40,6 +42,11 @@ public class ResultController {
 		modelAndView.setViewName("result");
 
 		return modelAndView;
+	}
+	
+	@RequestMapping("/")
+	public ModelAndView homePost(ModelAndView modelAndView) {
+		return home(modelAndView);
 	}
 	
 	

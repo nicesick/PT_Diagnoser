@@ -42,13 +42,13 @@ public class FormController {
 
 		String category = "";
 		if("S".equals( param.get("category").toString()) ) {
-			category = "(스피치 진단)";
+			category = "(스피치 진단) - 1/4";
 		} else if ( "P".equals( param.get("category").toString())) {
-			category = "(프레젠테이션 진단)";
+			category = "(프레젠테이션 진단) - 2/4";
 		} else if ( "E".equals( param.get("category").toString()) ) {
-			category = "(발표평가 진단)";
+			category = "(발표평가 진단) - 3/4";
 		} else if ("U".equals( param.get("category").toString())) {
-			category = "(발표불안진단 진단)";
+			category = "(발표불안진단 진단) - 4/4";
 		}
 		modelAndView.addObject("category" ,param.get("category"));
 		modelAndView.addObject("categoryNm", category);

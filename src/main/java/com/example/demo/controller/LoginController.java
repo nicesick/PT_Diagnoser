@@ -32,7 +32,7 @@ public class LoginController extends HandlerInterceptorAdapter {
 
 	// 로그인 처리
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public void getUsrChk(HttpServletRequest request ,Model model, @RequestBody Member member) {
+	public void getUsrChk(HttpServletRequest request, @RequestBody Member member) {
 		Member user = new Member(); 
 		user = memberService.findById(member.getId()).orElse(user);
 		System.out.println(user.getPwd() + user.getId());

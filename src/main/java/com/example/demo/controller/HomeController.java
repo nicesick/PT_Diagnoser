@@ -2,18 +2,17 @@ package com.example.demo.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class HomeController {
 
-	@RequestMapping("/")
-	public ModelAndView home(ModelAndView modelAndView) {
-		modelAndView.setViewName("content");
-		modelAndView.addObject("content", "content");
-
-		return modelAndView;
-	}
+	/*
+	 * @RequestMapping("/") public ModelAndView home(ModelAndView modelAndView) {
+	 * modelAndView.addObject("content", "content");
+	 * modelAndView.setViewName("content");
+	 * 
+	 * return modelAndView; }
+	 */
 	@RequestMapping("/content")
 	public String content() {
 		return "content";
