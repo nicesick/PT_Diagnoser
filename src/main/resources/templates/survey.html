@@ -45,7 +45,7 @@
 
 				<div class="card shadow mb-4">
 					<div class="card-header py-3">
-						<h6 class="m-0 font-weight-bold text-primary">자가진단테스트</h6>
+						<h6 class="m-0 font-weight-bold text-primary">자가진단테스트<span th:text="${categoryNm}"></span> </h6>
 					</div>
 					<div class="card-body">
 						<div class="table-responsive">
@@ -81,12 +81,11 @@
 								</tbody>
 							</table>
 						</div>
-						<!-- <a href="#" class="btn btn-success btn-icon-split" onclick = "fn_onclick_btn_next()"> <span
+						 <a href="#" class="btn btn-success btn-icon-split" onclick = "fn_onclick_btn_submit()"> <span
 							class="icon text-white-50"> <i class="fas fa-check"></i>
 						</span> <span class="text">다	 음</span>
 						</a>
-						 -->
-						<a href="#" class="btn btn-success btn-icon-split hide"
+						<a href="#" class="btn btn-success btn-icon-split hide"  style="display: none"
 							onclick="fn_onclick_btn_submit()"> <span
 							class="icon text-white-50"> <i class="fas fa-check"></i>
 						</span> <span class="text">제 출</span>
@@ -187,7 +186,17 @@
 		        contentType:'application/json; charset=UTF-8',
 		        success: function(data) {
 		            alert("제출되었습니다");
-		            location.href ="/";
+		            //location.href ="/";
+					console.log([[${category}]]);
+					if([[${category}]] == 'S') {
+						location.href ="survey?category=P";
+					} else if([[${category}]] == 'P') {
+						location.href ="survey?category=E";
+					} else if([[${category}]] == 'E') {
+						location.href ="survey?category=U";
+					} else if([[${category}]] == 'U') {
+						location.href ="/";
+					}
 		        },
 		        error : function(request, status, error){
 		            console.log("AJAX_ERROR");
