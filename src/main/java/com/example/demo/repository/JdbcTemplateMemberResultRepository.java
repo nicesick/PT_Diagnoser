@@ -319,10 +319,38 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 
 	@Override
 	public int saveResult(MemberResult result) {
-		int rslt = jdbcTemplate.update("Insert into RESULT (USER_ID, CATEGORY, SCORE) VALUES (?,?,?) ",result.getUser_id(), result.getCategory(), result.getScore());
+		int rslt = jdbcTemplate.update("Insert into RESULT (USER_ID, CATEGORY, SCORE, WORK_DTIM) VALUES (?,?,?,?) ",
+				result.getUser_id(), result.getCategory(), result.getScore(),result.getWorkDtim());
 		return rslt;
 	}
 	
+	@Override
+	public int saveTotresult(MemberResult result) {
+		
+		int rslt = jdbcTemplate.update( "INSERT INTO RESULT (USER_ID," +
+		"        CATEGORY, "+
+		"        WORK_DTIM, "+
+		"        SCORE) "+
+		" VALUES(?, "+
+		"        't', "+
+		"        ?, "+
+		"        ( SELECT SUM(SCORE) " +
+	    "          FROM (SELECT A.USER_ID, "+
+		"                  A.CATEGORY, " +
+		"                 B.SCORE AS SCORE  "+
+		"             FROM RESULT A, "+
+		"                 SCORE_DETAIL B, "+
+		"                  CATEGORY C "+
+		"            WHERE A.CATEGORY = B.ID "+
+		"              AND A.SCORE BETWEEN B.FROM_SCORE AND B.TO_SCORE "+
+		"              AND B.ID = C.ID "+
+		"              AND C.USE_YN = 'Y' "+
+		"              AND A.USER_ID = ? "+
+		"              AND A.WORK_DTIM = ?)))", result.getUser_id(), result.getWorkDtim(), result.getUser_id(), result.getWorkDtim());
+				
+		
+		return rslt;
+	}
 	private RowMapper<MemberResultSum> memberResultSumRowMapper() {
 		return (rs, rowNum) -> {
 			MemberResultSum item = new MemberResultSum();
@@ -337,7 +365,5 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 			return item;
 		};
 	}
-	
-	
 	
 }

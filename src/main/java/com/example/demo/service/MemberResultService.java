@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.dto.FormItem;
 import com.example.demo.dto.MemberResult;
 import com.example.demo.repository.MemberResultRepository;
 
@@ -46,8 +45,24 @@ public class MemberResultService {
  		memRlst.setCategory((String) param.get("category"));
  		memRlst.setScore(param.get("score").toString());
  		memRlst.setUser_id((String) param.get("user_id")); // 세션 저장하면 세션에서 가져옴
+ 		memRlst.setWorkDtim(param.get("workDtim").toString());
  		result += this.memberResultRepository.saveResult(memRlst);
  		
  		return result; 
+	}
+	
+	public int saveMemberTotResult(Map<String,Object> param) {
+		System.out.println("save Member TOT Result service start");
+		
+		MemberResult memRlst;
+		int result = 0;
+ 		
+		memRlst = new MemberResult(); 
+		memRlst.setUser_id((String) param.get("user_id")); // 세션 저장하면 세션에서 가져옴
+ 		memRlst.setWorkDtim(param.get("workDtim").toString());
+ 		
+ 		result += this.memberResultRepository.saveTotresult(memRlst); 
+ 		
+ 		return result;  		
 	}
 }

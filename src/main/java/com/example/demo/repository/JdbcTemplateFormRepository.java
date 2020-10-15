@@ -39,7 +39,14 @@ public class JdbcTemplateFormRepository implements FormRepository {
 
 	@Override
 	public List<FormItem> findByCategory(String category) {
-		List<FormItem> result = jdbcTemplate.query("select * from QUESTION where category = ? and use_yn = 'Y'", formRowMapper(),category);
+		List<FormItem> result = jdbcTemplate.query(""
+				+ "select A.* "
+				+ "from QUESTION A,"
+				+ "     CATEGORY B "
+				+ "where A.CATEGORY = B.ID "
+				+ "AND A.category = ? "
+				+ "AND A.use_yn = 'Y' "
+				+ "AND B.USE_YN = 'Y'", formRowMapper(),category);
 		return result;
 	}
 
@@ -58,7 +65,7 @@ public class JdbcTemplateFormRepository implements FormRepository {
 		System.out.println(pageNo + ", " +pageCnt + ",  " + startNo +",  " +endNo);
 		*/
 		List<FormItem> result = jdbcTemplate.query(""
-				+ "SELECT * FROM QUESTION WHERE USE_YN = 'Y'"
+				+ "SELECT * FROM QUESTION WHERE USE_YN = 'Y' "
 				+ "AND CATEGORY = ? "
 				//+ "AND ROWNUM BETWEEN ? AND ?"
 				+ "ORDER BY ID",formRowMapper(), param.get("category_id").toString().toLowerCase());
@@ -74,7 +81,8 @@ public class JdbcTemplateFormRepository implements FormRepository {
 	public List<Category> getCategory() {
 		List<Category> result = jdbcTemplate.query(""
 				+ "SELECT ID, TITLE FROM CATEGORY "
-				+ "ORDER BY ID",categoryRowMapper());  
+				+ "WHERE USE_YN = 'Y' "
+				+ "ORDER BY ID ",categoryRowMapper());  
 		return result;
 	}
 

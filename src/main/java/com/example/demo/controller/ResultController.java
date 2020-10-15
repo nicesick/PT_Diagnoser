@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,6 +64,11 @@ public class ResultController {
 	{
 		System.out.println("survey/submit controller");
 		System.out.println(param);
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+		Date date = new Date();
+		
+		String workDtim = dateFormat.format(date);
 		String user_id  = ""; 
 		
 		//세션값 가져오기 
@@ -73,16 +80,19 @@ public class ResultController {
 		
 		ObjectMapper mapper = new ObjectMapper();
 		String json = param.get("result").toString();
-
 		List<Map<String, Object>> list = mapper.readValue(json, new TypeReference<ArrayList<Map<String, Object>>>(){});
 		
 		Map<String,Object> input = new HashMap<String,Object> (); 
+		input.put("user_id", user_id);
+		input.put("workDtim", workDtim);
+		
 		for (int i = 0; i < list.size(); i++) {
-			input.put("user_id", user_id);
 			input.put("category", list.get(i).get("id"));
 			input.put("score", list.get(i).get("score"));
 			memberResultService.saveMemberResult(input);
 		}
+		
+		memberResultService.saveMemberTotResult(input);
 	}
 
 
