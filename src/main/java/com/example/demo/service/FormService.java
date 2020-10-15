@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.dto.Category;
 import com.example.demo.dto.FormItem;
 import com.example.demo.repository.FormRepository;
 
@@ -25,8 +27,9 @@ public class FormService {
 		return formRepository.findById(id); 
 	}
 	
-	public Optional<FormItem> findQuestionByCategory(String category){
-		return formRepository.findByCategory(category);
+	public List<FormItem> findQuestionByCategory(String category){
+		List<FormItem> formList = formRepository.findByCategory(category);
+		return formList;
 	}
 	
 	public List<FormItem> findQuestions(Map<String, Object> param){
@@ -34,5 +37,8 @@ public class FormService {
 	}
 	public List<FormItem> findAllQuestions(){
 		return formRepository.findAll();
+	}
+	public List<Category> getCategory() {
+		return formRepository.getCategory();
 	}
 }

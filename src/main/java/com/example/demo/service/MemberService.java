@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.SessionUtil;
 import com.example.demo.dto.Member;
 import com.example.demo.repository.MemberRepository;
 
@@ -43,5 +44,15 @@ public class MemberService {
 	public int registMember(Member member) {
 		return memberRepository.save(member);
 	}
-	
+	public int modifyMember(Member member) throws Exception {
+		
+		Optional<Member> user = memberRepository.findById(SessionUtil.getAttribute("user_id").toString()); 
+		
+		 if( user.get().getPwd() == member.getPwd() ) {
+			 return memberRepository.modifyUserInfo(member);
+		 } else {
+			 return 0; 
+		 }
+		
+	}
 }

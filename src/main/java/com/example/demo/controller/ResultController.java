@@ -1,5 +1,8 @@
 package com.example.demo.controller;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +16,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.SessionUtil;
 import com.example.demo.service.MemberResultService;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 public class ResultController {
@@ -21,6 +28,10 @@ public class ResultController {
 	@Autowired
 	public ResultController(MemberResultService memberResultService) {
 		this.memberResultService = memberResultService;
+	}
+	@RequestMapping("/")
+	public ModelAndView getMain(ModelAndView modelAndView) {
+		return home(modelAndView);
 	}
 	
 	@RequestMapping("/result")
@@ -44,19 +55,13 @@ public class ResultController {
 		return modelAndView;
 	}
 	
-	@RequestMapping("/")
-	public ModelAndView homePost(ModelAndView modelAndView) {
-		return home(modelAndView);
-	}
-	
 	
 	@ResponseBody
 	@RequestMapping(value = "/submit", method = RequestMethod.POST)
-	public void submit(@RequestBody Map<String, Object> param)
+	public void submit(@RequestBody Map<String, Object> param) throws JsonParseException, JsonMappingException, IOException
 	{
 		System.out.println("survey/submit controller");
-		System.out.println(param.get("score"));
-		System.out.println(param.get("category"));
+		System.out.println(param);
 		String user_id  = ""; 
 		
 		//세션값 가져오기 
@@ -66,15 +71,18 @@ public class ResultController {
 			e.printStackTrace();
 		}
 		
-		param.put("user_id", user_id);
+		ObjectMapper mapper = new ObjectMapper();
+		String json = param.get("result").toString();
+
+		List<Map<String, Object>> list = mapper.readValue(json, new TypeReference<ArrayList<Map<String, Object>>>(){});
 		
-		/*
-		 * Iterator<String> keys = param.keySet().iterator(); while( keys.hasNext() ){
-		 * String key = keys.next(); String value = (String) param.get(key);
-		 * System.out.println("input : " +key+",  "+value); }
-		 */
-        
-		memberResultService.saveMemberResult(param);		
+		Map<String,Object> input = new HashMap<String,Object> (); 
+		for (int i = 0; i < list.size(); i++) {
+			input.put("user_id", user_id);
+			input.put("category", list.get(i).get("id"));
+			input.put("score", list.get(i).get("score"));
+			memberResultService.saveMemberResult(input);
+		}
 	}
 
 

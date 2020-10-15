@@ -38,7 +38,7 @@ public class MemberResultService {
 	}
 
 	public int saveMemberResult(Map<String, Object> param) {
-		
+		System.out.println("save Member Result service start");
 		MemberResult memRlst;
 		int result = 0;
  		

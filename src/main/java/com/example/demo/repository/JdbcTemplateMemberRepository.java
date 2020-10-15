@@ -55,6 +55,14 @@ public class JdbcTemplateMemberRepository implements MemberRepository {
 		List<Member> result = jdbcTemplate.query("select * from GUEST ", memberRowMapper());
 		return result;
 	}
+	
+	@Override
+	public int modifyUserInfo(Member member) {
+		int result = jdbcTemplate.update(""
+				+ "UPDATE GUEST SET PWD = ?, EMAIL=? WHERE USER_ID = ?",
+				member.getPwd(), member.getEmail());
+		return result;
+	}
 
 	private RowMapper<Member> memberRowMapper() {
 		return (rs, rowNum) -> {

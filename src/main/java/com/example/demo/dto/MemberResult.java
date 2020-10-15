@@ -4,6 +4,15 @@ public class MemberResult {
 	private String user_id;
 	private String category;
 	private String score;
+	private String score_100;
+	public String getScore_100() {
+		return score_100;
+	}
+
+	public void setScore_100(String score_100) {
+		this.score_100 = score_100;
+	}
+
 	private String workDtim;
 
 	public String getUser_id() {

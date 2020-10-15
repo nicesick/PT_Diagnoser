@@ -16,7 +16,6 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class LoginController extends HandlerInterceptorAdapter {
 
-	// 구현 필요
 	private final MemberService memberService;
 
 	@Autowired
@@ -32,7 +31,7 @@ public class LoginController extends HandlerInterceptorAdapter {
 
 	// 로그인 처리
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public void getUsrChk(HttpServletRequest request, @RequestBody Member member) {
+	public void getUsrChk(HttpServletRequest request,@RequestBody Member member) {
 		Member user = new Member(); 
 		user = memberService.findById(member.getId()).orElse(user);
 		System.out.println(user.getPwd() + user.getId());

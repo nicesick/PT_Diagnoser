@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import com.example.demo.dto.Category;
 import com.example.demo.dto.FormItem;
 import com.example.demo.dto.Member;
 
@@ -37,10 +38,9 @@ public class JdbcTemplateFormRepository implements FormRepository {
 	}
 
 	@Override
-	public Optional<FormItem> findByCategory(String category) {
-		List<FormItem> result = jdbcTemplate.query("select * from QUESTION where category = ? and use_yn = 'Y'", formRowMapper(),
-				category);
-		return result.stream().findAny();
+	public List<FormItem> findByCategory(String category) {
+		List<FormItem> result = jdbcTemplate.query("select * from QUESTION where category = ? and use_yn = 'Y'", formRowMapper(),category);
+		return result;
 	}
 
 	@Override
@@ -61,12 +61,20 @@ public class JdbcTemplateFormRepository implements FormRepository {
 				+ "SELECT * FROM QUESTION WHERE USE_YN = 'Y'"
 				+ "AND CATEGORY = ? "
 				//+ "AND ROWNUM BETWEEN ? AND ?"
-				+ "ORDER BY ID",formRowMapper(), param.get("category").toString().toLowerCase());
+				+ "ORDER BY ID",formRowMapper(), param.get("category_id").toString().toLowerCase());
 		
 		for(int i = 0 ; i <result.size();  i++ ) {
 			System.out.println(result.get(i).getContent());
 		}
 		
+		return result;
+	}
+	
+	@Override
+	public List<Category> getCategory() {
+		List<Category> result = jdbcTemplate.query(""
+				+ "SELECT ID, TITLE FROM CATEGORY "
+				+ "ORDER BY ID",categoryRowMapper());  
 		return result;
 	}
 
@@ -80,4 +88,14 @@ public class JdbcTemplateFormRepository implements FormRepository {
 			return item;
 		};
 	}
+	
+	private RowMapper<Category> categoryRowMapper() {
+		return (rs, rowNum) -> {
+			Category item = new Category();
+			item.setId(rs.getString("id"));
+			item.setTitle(rs.getString("title"));
+			return item;
+		};
+	}
+
 }

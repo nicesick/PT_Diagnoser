@@ -2,29 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorator="main">
-<head>
 
-
-<meta charset="utf-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport"
-	content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-<meta name="description" content="" />
-<meta name="author" content="" />
-
-<title>SB Admin 2 - Dashboard</title>
-
-<!-- Custom fonts for this template-->
-<link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet"
-	type="text/css" />
-<link
-	href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-	rel="stylesheet" />
-
-<!-- Custom styles for this template-->
-<link href="css/sb-admin-2.min.css" rel="stylesheet" />
-
-</head>
 <th:block layout:fragment="content">
 	<div id="wrapper">
 
@@ -33,19 +11,12 @@
 		<div id="content-wrapper" class="d-flex flex-column">
 			<!-- Begin Page Content -->
 			<div class="container-fluid">
-
-				<!-- Page Heading -->
-				<div
-					class="d-sm-flex align-items-center justify-content-between mb-4">
-					<!-- 	<a href="#"
-							class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-							class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-						-->
-				</div>
-
-				<div class="card shadow mb-4">
-					<div class="card-header py-3">
-						<h6 class="m-0 font-weight-bold text-primary">자가진단테스트<span th:text="${categoryNm}"></span> </h6>
+				<div class="card shadow mb-4" id = "surveypage">
+					<th:block th:if="${formList !=null}">
+					<div class="card-header py-3" >
+						<h6 class="m-0 font-weight-bold text-primary">
+							자가진단테스트<span th:text="${category_title}"></span>
+						</h6>
 					</div>
 					<div class="card-body">
 						<div class="table-responsive">
@@ -55,7 +26,8 @@
 										<th class="text-center" rowspan="2">No</th>
 										<th class="text-center" rowspan="2">평가기술</th>
 										<th class="d-none" rowspan="2">Category</th>
-										<th width="11%" class="text-center">전혀 <br/>그렇지 않다</th>
+										<th width="11%" class="text-center">전혀 <br />그렇지 않다
+										</th>
 										<th width="11%" class="text-center">그렇지 않다</th>
 										<th width="11%" class="text-center">보통이다</th>
 										<th width="11%" class="text-center">그렇다</th>
@@ -72,35 +44,33 @@
 								<tbody id="surveyTable_tbody">
 									<tr th:each="item : ${formList}">
 										<td class="text-center" th:text="${itemStat.count}"></td>
-										<td th:text="${item.content}"></td>
+ 										<td th:text="${item.content}"></td>
 										<td th:text="${item.category}" style="display: none"></td>
-										<td class = "text-center"><input type="radio" th:name="${item.id}" value="0" /><label
+										<td class="text-center"><input type="radio"
+											th:name="${item.id}" value="0" /><label for="default-radio"></label></td>
+										<td class="text-center"><input type="radio"
+											th:name="${item.id}" value="1" /><label for="default-radio"></label></td>
+										<td class="text-center"><input type="radio"
+											th:name="${item.id}" value="2"  /><label
 											for="default-radio"></label></td>
-										<td class = "text-center"><input type="radio" th:name="${item.id}" value="1" /><label
-											for="default-radio"></label></td>
-										<td class = "text-center"><input type="radio" th:name="${item.id}" value="2"   th:checked = "true"/><label
-											for="default-radio"></label></td>
-										<td class = "text-center"><input type="radio" th:name="${item.id}" value="3" /><label
-											for="default-radio"></label></td>
-										<td class = "text-center"><input type="radio" th:name="${item.id}" value="4" /><label
-											for="default-radio"></label></td>
+										<td class="text-center"><input type="radio"
+											th:name="${item.id}" value="3" /><label for="default-radio"></label></td>
+										<td class="text-center"><input type="radio"
+											th:name="${item.id}" value="4" /><label for="default-radio"></label></td> 
 									</tr>
 								</tbody>
 							</table>
 						</div>
-						 <a href="#" class="btn btn-success btn-icon-split" onclick = "fn_onclick_btn_submit()"> <span
-							class="icon text-white-50"> <i class="fas fa-check"></i>
-						</span> <span class="text">다	 음</span>
-						</a>
-						<a href="#" class="btn btn-success btn-icon-split hide"  style="display: none"
+						<a href="#" class="btn btn-success btn-icon-split"
 							onclick="fn_onclick_btn_submit()"> <span
 							class="icon text-white-50"> <i class="fas fa-check"></i>
-						</span> <span class="text">제	출</span>
-						</a>
+						</span> <span class="text">다 음</span>
+						</a> 
+						
 					</div>
-
+				</th:block>
 				</div>
-
+				
 			</div>
 			<!-- End of Main Content -->
 
@@ -114,105 +84,121 @@
 	<a class="scroll-to-top rounded" href="#page-top"> <i
 		class="fas fa-angle-up"></i>
 	</a>
-
-	<!-- Logout Modal-->
-	<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog"
-		aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-					<button class="close" type="button" data-dismiss="modal"
-						aria-label="Close">
-						<span aria-hidden="true">×</span>
-					</button>
-				</div>
-				<div class="modal-body">Select "Logout" below if you are ready
-					to end your current session.</div>
-				<div class="modal-footer">
-					<button class="btn btn-secondary" type="button"
-						data-dismiss="modal">Cancel</button>
-					<a class="btn btn-primary" href="login.html">Logout</a>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!-- Bootstrap core JavaScript-->
-	<script src="vendor/jquery/jquery.min.js"></script>
-	<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-	<!-- Core plugin JavaScript-->
-	<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
-	<!-- Custom scripts for all pages-->
-	<script src="js/sb-admin-2.min.js"></script>
-
-	<!-- Page level plugins -->
-	<script src="vendor/chart.js/Chart.min.js"></script>
-
-	<!-- Page level custom scripts -->
-	<script src="js/demo/chart-area-demo.js"></script>
-	<script src="js/demo/chart-pie-demo.js"></script>
-
+</th:block>
+<th:block layout:fragment="script">
 	<script type="text/javascript" th:inline="javascript">
 	var pageCnt = 10;
 	var pageNo  = 1; 
-
+	var survey_result = []; 
+	var index = 0; 
+	var categoryList = {};
+	
+	/*
+	* 화면 초최로드시 실행
+	*/
+	$(document).ready(function(){
+    	console.log("page load"); 
+    	categoryList  = [[${categoryList}]];
+    	console.log(categoryList);
+    	
+    	fn_getSurveyList(categoryList[index].id, categoryList[index].title, categoryList.length );
+	});
+	
+	/*
+	*  자가진단 리스트 조회 함수 
+	*/
+	function fn_getSurveyList(category_id, category_title) {
+		
+		var param = {
+				"category_id" : category_id,
+				"category_title" : category_title,
+				"category_Totcnt" : categoryList.length,
+				"category_num"  : index+1 }; 
+		
+		$.ajax({
+	        type: "POST",
+	        url: "surveyList",
+	        data: JSON.stringify(param),  
+	        contentType:'application/json; charset=UTF-8',
+	        success: function(data) {
+	            console.log("AJAX SUCCESS");
+	            
+	            // 통신 후 화면 매핑 
+	            $("#surveypage").replaceWith(data);
+	        },
+	        error : function(request, status, error){
+	            console.log("AJAX_ERROR");
+	            console.log("code = "+ request.status + " error = " + error); // 실패 시 처리
+	        }
+	    });  
+		
+	};
+	
+	/*
+	*  자가진단 결과저장 함수  
+	*/
+	function fn_submit_result() {
+		console.log(survey_result);
+		var param = { 
+			"result" :JSON.stringify(survey_result)
+		}; 
+		
+		
+		$.ajax({
+	        type: "POST",
+	        url: "submit",
+	        data: JSON.stringify(param),  
+	        contentType:'application/json; charset=UTF-8',
+	        success: function(data) {
+	            console.log("AJAX SUCCESS");
+				location.href = "/";	            
+	        },
+	        error : function(request, status, error){
+	            console.log("AJAX_ERROR");
+	            console.log("code = "+ request.status + " error = " + error); // 실패 시 처리
+	        }
+	    });  
+	}	
+	/*
+	*  다음 버튼 클릭 이벤트 
+	*/
 	function fn_onclick_btn_submit() {
-		console.log("submit");
-/*			var formStr  = /!*[[${formList}]]*!/;
-			var formList = JSON.parse(formStr);*/
+		console.log("btn onclick"); 
+		
+		/*			var formStr  = /!*[[${formList}]]*!/;
+					var formList = JSON.parse(formStr);*/
 
-			var formList = /*[[${formList}]]*/;
-			var isPassed = true;
-			var score = 0; 
-			
-			$(formList).each(function(index, form){
-				if ( $('input:radio[name = '+ formList[index].id +']').is(":checked") == false) {
-					alert(formList[index].id+ "번이 선택되지 않았습니다. ");
-					isPassed = false;
-
-					return;
-				}
-
-				form.score = $('input:radio[name = '+ form.id +']:checked').val();
-				if(typeof form.score !="undefined") {
-				 	score += Number(form.score); 	
-				}
-			});
-
-			if (!isPassed) {
+		var formList = /*[[${formList}]]*/;
+		var isPassed = true;
+		var score = 0; 
+					
+		$(formList).each(function(index, form){
+			if ( $('input:radio[name = '+ formList[index].id +']').is(":checked") == false) {
+				alert(formList[index].id+ "번이 선택되지 않았습니다. ");
+				isPassed = false;
 				return;
 			}
-			console.log(score);
-			var param = {"score" : score, "category" : formList[0].category};   
-			$.ajax({
-		        type: "POST",
-		        url: "submit",
-		        data: JSON.stringify(param),  
-		        contentType:'application/json; charset=UTF-8',
-		        success: function(data) {
-		            console.log([[${category}]]);
-					if([[${category}]] == 'S') {
-						location.href ="survey?category=P";
-					} else if([[${category}]] == 'P') {
-						location.href ="survey?category=E";
-					} else if([[${category}]] == 'E') {
-						location.href ="survey?category=U";
-					} else if([[${category}]] == 'U') {
-						alert("제출되었습니다");
-						location.href ="/";
-					}
-		        },
-		        error : function(request, status, error){
-		            console.log("AJAX_ERROR");
-		            console.log("code = "+ request.status + " error = " + error); // 실패 시 처리
-		        }
-		    });    
-		    
-		};
-	
+
+			form.score = $('input:radio[name = '+ form.id +']:checked').val();
+			if(typeof form.score !="undefined") {
+			 	score += Number(form.score); 	
+			}
+		});
+
+		
+		survey_result.push({"id" : categoryList[index].id, "score" : score});
+		index++; 
+        
+        console.log(categoryList,score, index, survey_result);	
+        if(categoryList.length == index) {
+        	fn_submit_result();
+        } else {
+        	fn_getSurveyList(categoryList[index].id, categoryList[index].title);
+        }
+        
+	};
+
+ 
 	</script>
 </th:block>
 </html>

@@ -1,16 +1,23 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.FormItem;
-import com.example.demo.service.FormService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
-
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Supplier;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.example.demo.dto.Category;
+import com.example.demo.dto.FormItem;
+import com.example.demo.service.FormService;
 
 @Controller
 public class FormController {
@@ -26,8 +33,9 @@ public class FormController {
 	public ModelAndView surveyPost( ModelAndView modelAndView , @RequestParam Map<String, Object> param) {
 
 		System.out.println("surveyPost controller start ");
-
-		Iterator<String> keys = param.keySet().iterator();
+		List<Category> categoryList = formService.getCategory();
+		
+		/*Iterator<String> keys = param.keySet().iterator();
         while( keys.hasNext() ){
             String key = keys.next();
             String value = (String) param.get(key);
@@ -55,7 +63,36 @@ public class FormController {
 		modelAndView.addObject("formList",formList);
 		modelAndView.setViewName("survey");
 
+		return modelAndView;*/
+		modelAndView.addObject("categoryList",categoryList);
+		modelAndView.setViewName("survey");
+
 		return modelAndView;
 	}
-
+	
+	@ResponseBody
+	@RequestMapping(value =  "/surveyList")
+	public ModelAndView getSurveyList(ModelAndView modelAndView, @RequestBody Map<String, Object> param) {
+		System.out.println("surveyList controller start"); 
+		
+		Iterator<String> keys = param.keySet().iterator();
+        while( keys.hasNext() ){
+            String key = keys.next();
+            System.out.println("input : " +key+",  "+ param.get(key));
+        }
+        
+		List<FormItem> formList = formService.findQuestionByCategory(param.get("category_id").toString());
+		for(int i = 0 ; i <formList.size(); i ++ ) {
+			System.out.println(formList.get(i).getContent());
+		}
+		
+		String category_title = "(" + param.get("category_title").toString() + ")" + " - " + param.get("category_num").toString() + "/" + param.get("category_Totcnt").toString();   
+		
+		modelAndView.addObject("category_title", category_title);
+		modelAndView.addObject("category_id", param.get("category_id"));
+		modelAndView.addObject("formList", formList);
+		modelAndView.setViewName("survey :: #surveypage");
+		
+		return modelAndView; 
+	}
 }
