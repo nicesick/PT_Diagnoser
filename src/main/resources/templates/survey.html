@@ -12,7 +12,7 @@
 			<!-- Begin Page Content -->
 			<div class="container-fluid">
 				<div class="card shadow mb-4" id = "surveypage">
-					<th:block th:if="${formList !=null}">
+					<!-- <th:block th:if="${formList !=null}"> -->
 					<div class="card-header py-3" >
 						<h6 class="m-0 font-weight-bold text-primary">
 							자가진단테스트<span th:text="${category_title}"></span>
@@ -45,18 +45,18 @@
 									<tr th:each="item : ${formList}">
 										<td class="text-center" th:text="${itemStat.count}"></td>
  										<td th:text="${item.content}"></td>
-										<td th:text="${item.category}" style="display: none"></td>
+										<td th:text="${item.category}" style="display: none" ></td>
 										<td class="text-center"><input type="radio"
-											th:name="${item.id}" value="0" /><label for="default-radio"></label></td>
+											th:name="${itemStat.count}" value="0"  /><label for="default-radio"></label></td>
 										<td class="text-center"><input type="radio"
-											th:name="${item.id}" value="1" /><label for="default-radio"></label></td>
+											th:name="${itemStat.count}" value="1" /><label for="default-radio"></label></td>
 										<td class="text-center"><input type="radio"
-											th:name="${item.id}" value="2"  /><label
+											th:name="${itemStat.count}" value="2" th:checked ="true" /><label
 											for="default-radio"></label></td>
 										<td class="text-center"><input type="radio"
-											th:name="${item.id}" value="3" /><label for="default-radio"></label></td>
+											th:name="${itemStat.count}" value="3" /><label for="default-radio"></label></td>
 										<td class="text-center"><input type="radio"
-											th:name="${item.id}" value="4" /><label for="default-radio"></label></td> 
+											th:name="${itemStat.count}" value="4" /><label for="default-radio"></label></td> 
 									</tr>
 								</tbody>
 							</table>
@@ -68,7 +68,7 @@
 						</a> 
 						
 					</div>
-				</th:block>
+<!-- 				</th:block>-->
 				</div>
 				
 			</div>
@@ -87,6 +87,8 @@
 </th:block>
 <th:block layout:fragment="script">
 	<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+
 	var pageCnt = 10;
 	var pageNo  = 1; 
 	var survey_result = []; 
@@ -162,43 +164,33 @@
 	/*
 	*  다음 버튼 클릭 이벤트 
 	*/
+	
 	function fn_onclick_btn_submit() {
-		console.log("btn onclick"); 
+		console.log("btn onclick !"); 
 		
-		/*			var formStr  = /!*[[${formList}]]*!/;
-					var formList = JSON.parse(formStr);*/
-
-		var formList = /*[[${formList}]]*/;
-		var isPassed = true;
+		var length = $('#surveyTable tbody tr').length; 
 		var score = 0; 
-					
-		$(formList).each(function(index, form){
-			if ( $('input:radio[name = '+ formList[index].id +']').is(":checked") == false) {
-				alert(formList[index].id+ "번이 선택되지 않았습니다. ");
-				isPassed = false;
-				return;
+		for ( var i = 0; i < length ; i++ ) {
+			if($('input:radio[name ='+(i+1)+']').is(":checked") == false) {
+				alert((i+1) + "번이 선택되지 않았습니다.");
+				return; 
 			}
-
-			form.score = $('input:radio[name = '+ form.id +']:checked').val();
-			if(typeof form.score !="undefined") {
-			 	score += Number(form.score); 	
-			}
-		});
-
+			score += Number($('input:radio[name ='+(i+1)+']:checked').val());
+			console.log(score);
+		}
 		
 		survey_result.push({"id" : categoryList[index].id, "score" : score});
 		index++; 
         
-        console.log(categoryList,score, index, survey_result);	
         if(categoryList.length == index) {
         	fn_submit_result();
         } else {
         	fn_getSurveyList(categoryList[index].id, categoryList[index].title);
         }
-        
 	};
 
- 
+
+    /*]]>*/
 	</script>
 </th:block>
 </html>
