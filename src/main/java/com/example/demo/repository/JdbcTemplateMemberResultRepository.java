@@ -319,8 +319,8 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 
 	@Override
 	public int saveResult(MemberResult result) {
-		int rslt = jdbcTemplate.update("Insert into RESULT (USER_ID, CATEGORY, SCORE, WORK_DTIM) VALUES (?,?,?,?) ",
-				result.getUser_id(), result.getCategory(), result.getScore(),result.getWorkDtim());
+		int rslt = jdbcTemplate.update("Insert into RESULT (USER_ID, CATEGORY, SCORE, WORK_DTIM, SCORE_100) VALUES (?,?,?,?,?) ",
+				result.getUser_id(), result.getCategory(), result.getScore(),result.getWorkDtim(), result.getScore_100());
 		return rslt;
 	}
 	

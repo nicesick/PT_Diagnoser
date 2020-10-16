@@ -43,8 +43,9 @@ public class MemberResultService {
  		
 		memRlst = new MemberResult();
  		memRlst.setCategory((String) param.get("category"));
- 		memRlst.setScore(param.get("score").toString());
  		memRlst.setUser_id((String) param.get("user_id")); // 세션 저장하면 세션에서 가져옴
+ 		memRlst.setScore(param.get("score").toString());
+ 		memRlst.setScore_100(param.get("score_100").toString());
  		memRlst.setWorkDtim(param.get("workDtim").toString());
  		result += this.memberResultRepository.saveResult(memRlst);
  		

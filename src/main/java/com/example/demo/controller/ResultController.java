@@ -1,9 +1,7 @@
 package com.example.demo.controller;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.SessionUtil;
+import com.example.demo.Util;
 import com.example.demo.service.MemberResultService;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -65,10 +64,8 @@ public class ResultController {
 		System.out.println("survey/submit controller");
 		System.out.println(param);
 		
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-		Date date = new Date();
 		
-		String workDtim = dateFormat.format(date);
+		String workDtim = Util.getToDay("yyyyMMddHHmmss");
 		String user_id  = ""; 
 		
 		//세션값 가져오기 
@@ -89,6 +86,7 @@ public class ResultController {
 		for (int i = 0; i < list.size(); i++) {
 			input.put("category", list.get(i).get("id"));
 			input.put("score", list.get(i).get("score"));
+			input.put("score_100",list.get(i).get("score_100"));
 			memberResultService.saveMemberResult(input);
 		}
 		

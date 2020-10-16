@@ -26,19 +26,11 @@
 										<th class="text-center" rowspan="2">No</th>
 										<th class="text-center" rowspan="2">평가기술</th>
 										<th class="d-none" rowspan="2">Category</th>
-										<th width="11%" class="text-center">전혀 <br />그렇지 않다
-										</th>
-										<th width="11%" class="text-center">그렇지 않다</th>
-										<th width="11%" class="text-center">보통이다</th>
-										<th width="11%" class="text-center">그렇다</th>
-										<th width="11%" class="text-center">매우 그렇다</th>
-									</tr>
-									<tr>
-										<th width="11%" class="text-center">0</th>
-										<th width="11%" class="text-center">1</th>
-										<th width="11%" class="text-center">2</th>
-										<th width="11%" class="text-center">3</th>
-										<th width="11%" class="text-center">4</th>
+										<th width="11%" class="text-center" id = "col1"></th>
+										<th width="11%" class="text-center" id = "col2"></th>
+										<th width="11%" class="text-center" id = "col3"></th>
+										<th width="11%" class="text-center" id = "col4"></th>
+										<th width="11%" class="text-center" id = "col5"></th>
 									</tr>
 								</thead>
 								<tbody id="surveyTable_tbody">
@@ -55,7 +47,7 @@
 											for="default-radio"></label></td>
 										<td class="text-center"><input type="radio"
 											th:name="${itemStat.count}" value="3" /><label for="default-radio"></label></td>
-										<td class="text-center"><input type="radio"
+										<td class="text-center" ><input type="radio"
 											th:name="${itemStat.count}" value="4" /><label for="default-radio"></label></td> 
 									</tr>
 								</tbody>
@@ -103,7 +95,7 @@
     	categoryList  = [[${categoryList}]];
     	console.log(categoryList);
     	
-    	fn_getSurveyList(categoryList[index].id, categoryList[index].title, categoryList.length );
+    	fn_getSurveyList(categoryList[index].id, categoryList[index].title);
 	});
 	
 	/*
@@ -127,6 +119,22 @@
 	            
 	            // 통신 후 화면 매핑 
 	            $("#surveypage").replaceWith(data);
+	            if(categoryList[index].surveyTyp == "4"){
+	            	document.getElementById("col1").innerHTML =  "아니다<br/>( 0 )";
+	            	document.getElementById("col2").innerHTML =  "그저그렇다<br/>( 1 )";
+	            	document.getElementById("col3").innerHTML=  "그렇다<br/>( 2 )";
+	            	document.getElementById("col4").innerHTML=  "매우그렇다<br/>( 3 )";
+	            	$('td:nth-child(8), th:nth-child(8)').hide();
+	            	 
+	            } else if (categoryList[index].surveyTyp == "5") {
+	            	document.getElementById("col1").innerHTML =  "아니다<br/>( 0 )";
+	            	document.getElementById("col2").innerHTML=  "그저그렇다<br/>( 1 )";
+	            	document.getElementById("col3").innerHTML=  "보통이다<br/>( 2 )";
+	            	document.getElementById("col4").innerHTML=  "그렇다<br/>( 3 )";
+	            	document.getElementById("col5").innerHTML=  "매우그렇다<br/>( 4 )";
+	            	$('td:nth-child(8), th:nth-child(8)').show();
+
+	            }
 	        },
 	        error : function(request, status, error){
 	            console.log("AJAX_ERROR");
@@ -170,23 +178,26 @@
 		
 		var length = $('#surveyTable tbody tr').length; 
 		var score = 0; 
+		var score_100 = 0;
+		
 		for ( var i = 0; i < length ; i++ ) {
 			if($('input:radio[name ='+(i+1)+']').is(":checked") == false) {
 				alert((i+1) + "번이 선택되지 않았습니다.");
 				return; 
 			}
 			score += Number($('input:radio[name ='+(i+1)+']:checked').val());
-			console.log(score);
 		}
 		
-		survey_result.push({"id" : categoryList[index].id, "score" : score});
+		score_100 = score/(length*(categoryList[index].surveyTyp-1))*100;
+		survey_result.push({"id" : categoryList[index].id, "score" : score, "score_100": score_100});
+		
 		index++; 
-        
-        if(categoryList.length == index) {
+		if(categoryList.length == index) {
         	fn_submit_result();
         } else {
         	fn_getSurveyList(categoryList[index].id, categoryList[index].title);
         }
+		
 	};
 
 

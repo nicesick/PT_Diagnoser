@@ -9,6 +9,15 @@ public class Category {
 
 	private String id;
 	private String title;
+	private String surveyTyp; 
+	
+	
+	public String getSurveyTyp() {
+		return surveyTyp;
+	}
+	public void setSurveyTyp(String surveyTyp) {
+		this.surveyTyp = surveyTyp;
+	}
 	public String getId() {
 		return id;
 	}

@@ -80,9 +80,12 @@ public class JdbcTemplateFormRepository implements FormRepository {
 	@Override
 	public List<Category> getCategory() {
 		List<Category> result = jdbcTemplate.query(""
-				+ "SELECT ID, TITLE FROM CATEGORY "
+				+ "SELECT ID,"
+				+ " TITLE,"
+				+ " SURVEY_TYP AS surveyTyp "
+				+ " FROM CATEGORY "
 				+ "WHERE USE_YN = 'Y' "
-				+ "ORDER BY ID ",categoryRowMapper());  
+				+ "ORDER BY SEQ ",categoryRowMapper());  
 		return result;
 	}
 
@@ -102,6 +105,7 @@ public class JdbcTemplateFormRepository implements FormRepository {
 			Category item = new Category();
 			item.setId(rs.getString("id"));
 			item.setTitle(rs.getString("title"));
+			item.setSurveyTyp(rs.getString("surveyTyp"));
 			return item;
 		};
 	}
