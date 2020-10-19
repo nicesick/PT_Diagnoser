@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlnm="http://www.thymeleaf.org">
 
 <head>
 
@@ -34,31 +34,32 @@
               <div class="text-center">
                 <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
               </div>
-              <form class="user">
+              <form id="registerForm">
                 <div class="form-group">
-                  <input type="text" class="form-control form-control-user" id="ibx_id" placeholder="ID" />
+                  <input type="text" class="form-control form-control-user" id="ibx_id" placeholder="ID" required="true"/>
                 </div>
                 <div class="form-group">
-                  <input type="text" class="form-control form-control-user" id="ibx_name" placeholder="이름" />
+                  <input type="text" class="form-control form-control-user" id="ibx_name" placeholder="이름" required="true"/>
                 </div>
                 <div class="form-group">
-                  <input type="text" class="form-control form-control-user" id="ibx_eNum" placeholder="사번" />
+                  <input type="text" class="form-control form-control-user" id="ibx_eNum" placeholder="사번" required="true"/>
                 </div>
                 
                 <div class="form-group">
-                  <input type="email" class="form-control form-control-user" id="ibx_email" placeholder="Email Address" />
+                  <input type="email" class="form-control form-control-user" id="ibx_email" placeholder="Email Address" required="true"/>
                 </div>
                 <div class="form-group row">
                   <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input type="password" class="form-control form-control-user" id="ibx_pwd" placeholder="Password" />
+                    <input type="password" class="form-control form-control-user" id="ibx_pwd" placeholder="Password" required="true"/>
                   </div>
                   <div class="col-sm-6">
-                    <input type="password" class="form-control form-control-user" id="ibz_pwd2" placeholder="Repeat Password" />
+                    <input type="password" class="form-control form-control-user" id="ibz_pwd2" placeholder="Repeat Password" required="true"/>
                   </div>
                 </div>
-                <a class="btn btn-primary btn-user btn-block" onclick = "fn_onclick_regist()">
+                <button type="submit" class="btn btn-primary btn-user btn-block">Register Account</button>
+<!--                <a class="btn btn-primary btn-user btn-block" onclick = "fn_onclick_regist()">
                   Register Account
-                </a>                
+                </a>-->
               </form>
               <hr />
               <div class="text-center">
@@ -82,7 +83,12 @@
   <!-- Custom scripts for all pages-->
   <script src="js/sb-admin-2.min.js"></script>
   
-  <script type="text/javascript" th:inline = "javascript">
+  <script type="text/javascript">
+        $('#registerForm').submit(function(event){
+            event.preventDefault();
+            fn_onclick_regist();
+        });
+
 		function fn_onclick_regist() {
 			var user = {
 						"id":document.getElementById("ibx_id").value, 
@@ -106,7 +112,6 @@
 		        success: function(data) {
 		            console.log(" AJAX_SUCCESS ");
 		            location.href = "login";
-
 		        },
 		        error : function(request, status, error){
 		            console.log("AJAX_ERROR");
