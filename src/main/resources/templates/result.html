@@ -69,6 +69,7 @@
                                                     <a class="dropdown-item" href="#">Another action</a>
                                                     <a class="dropdown-item" href="#">Something else here</a>-->
                                                     <a class="text-center dropdown-item dropdown-workDtim">없음</a>
+                                                    <a class="text-center dropdown-item dropdown-workDtim">전 인원</a>
                                                     <div th:each="compareResult : ${allResult}">
                                                         <a class="text-center dropdown-item dropdown-workDtim" th:text="${compareResult.user_id}"></a>
                                                     </div>
@@ -122,7 +123,7 @@
                                             <thead>
                                                 <tr>
                                                     <th>등급</th>
-                                                    <th>점수</th>
+                                                    <!-- <th>점수</th> -->
                                                     <th>설명</th>
                                                 </tr>
                                             </thead>
@@ -152,9 +153,12 @@
          * allResultSet         : 모든 사용자(현 사용자 포함) 모든 자가진단 결과
          * dataCategory         : 서버로 받은 데이터 키
          *
-         * radarChart           : 레이더차트의 인스턴스
-         * barCharts            : 바차트들의 인스턴스
+         * FILE_PATH            : 종합점수 등급 파일 다운로드 경로
+         * FILE_NM              : 파일 다운로드 명
+         * TOTAL_RESULT_KEY     : 종합점수 구분 키
          *
+         * radarChart           : 레이더차트의 인스턴스
+         * barCharts            : 바차트의 인스턴스
          *
          * currentResultData    : 현재 보여주는 현 사용자의 데이터(총합점수 제외)
          * currentResultTotal   : 현재 보여주는 현 사용자의 총합점수데이터
@@ -165,6 +169,10 @@
         var resultSet = /*[[${result}]]*/;
         var allResultSet = /*[[${allResult}]]*/;
         var dataCategory = /*[[${dataCategory}]]*/;
+
+        var FILE_PATH = /*[[${filePath}]]*/;
+        var FILE_NM = /*[[${fileNm}]]*/;
+        var TOTAL_RESULT_KEY = /*[[${totalResultKey}]]*/;
 
         var radarChart;
         var barCharts;
@@ -183,6 +191,10 @@
 
             if (resultSet[0].data[0].workDtim != "") {
                 $('#dropdownMenu .dropdown-workDtim:first').trigger('click');
+                $('#dropdownComp .dropdown-workDtim:eq(1)').trigger('click');
+
+                $('#dropdownStandard').addClass('d-none');
+                $('#dropdownComp').addClass('d-none');
             }
         });
 
@@ -197,7 +209,7 @@
          */
         $('#dropdownMenu .dropdown-workDtim').click(function(){
             var workDtim = $(this).text();
-            var targetData;
+            var targetData = [];
 
             /*
              * dropdown 현행화
@@ -218,6 +230,7 @@
              * 현 사용자 데이터, 총합점수 분리
              */
             var dataResult      = createCurrentResultData(targetData);
+
             currentResultData   = dataResult[0];
             currentResultTotal  = dataResult[1];
 
@@ -233,24 +246,7 @@
              */
             $('#compare-standard').text(standard);
 
-            /*
-             * targetData 검출
-             */
-            var targetComp;
-
-            $(allResultSet).each(function(index, result){
-                if (compUserId == result.user_id) {
-                    targetComp = result;
-                    return;
-                }
-            });
-
-            /*
-             * targetData 평균, 최댓값 계산
-             * targetData 데이터, 종합점수 분리
-             */
-            var newTargetComp   = createCompResultData(standard, targetComp);
-            var dataResult      = createCurrentResultData(newTargetComp);
+            var dataResult = getCompResultData(standard, compUserId);
 
             currentCompResultData   = dataResult[0];
             currentCompResultTotal  = dataResult[1];
@@ -271,24 +267,7 @@
                 currentCompResultData   = null;
                 currentCompResultTotal  = null;
             } else {
-                /*
-                 * targetData 검출
-                 */
-                var targetComp;
-
-                $(allResultSet).each(function(index, result){
-                    if (compUserId == result.user_id) {
-                        targetComp = result;
-                        return;
-                    }
-                });
-
-                /*
-                 * targetData 평균, 최댓값 계산
-                 * targetData 데이터, 종합점수 분리
-                 */
-                var newTargetComp   = createCompResultData(standard, targetComp);
-                var dataResult      = createCurrentResultData(newTargetComp);
+                var dataResult = getCompResultData(standard, compUserId);
 
                 currentCompResultData   = dataResult[0];
                 currentCompResultTotal  = dataResult[1];
@@ -316,7 +295,7 @@
             barCharts   = createHorizontalBarChart(currentResultData, currentCompResultData);
 
             /*
-             * 총합결과 현행화
+             * 종합결과 현행화
              */
             createTotalTable();
         }
@@ -324,25 +303,65 @@
         /**
          * creates
          *
-         * createTotalTable
+         * createTotalTable         : 종합점수 테이블 생성
+         *
+         * getCompResultData        : 평균, 최댓값 기준에 따라 비교 데이터 생성 및 사용자 데이터, 종합점수 데이터 분리
          *
          * createCompResultData     : 평균, 최댓값 기준에 따라 비교 데이터 생성
-         * createCurrentResultData  : 사용자 데이터, 총합점수 데이터 분리
+         * createCurrentResultData  : 사용자 데이터, 종합점수 데이터 분리
          *
-         * createRaderChart
-         * createHorizontalBarChart
+         * createRaderChart         : 레이더차트 생성
+         * createHorizontalBarChart : 바 차트 생성
          */
         function createTotalTable() {
-            console.log(currentResultTotal);
+            /*
+             * ToDo : 등급 별 FILE_PATH, FILE_NM - data dictionary 에 추가예정
+             */
 
-            var tdRankTag   = '<td>' + currentResultTotal.detail + '</td>';
-            var tdScoreTag  = '<td>' + currentResultTotal.score + '</td>';
+            var tdRankTag   = '<td>' + '<a href="' + FILE_PATH + '" download="' + FILE_NM + '">' + currentResultTotal.detail + '</a>' + '</td>';
+            //var tdScoreTag  = '<td>' + currentResultTotal.score + '</td>';
             var tdDescTag   = '<td>' + currentResultTotal.description + '</td>';
 
-            var trTag       = '<tr>' + tdRankTag + tdScoreTag + tdDescTag + '</tr>';
+            var trTag       = '<tr>' + tdRankTag + tdDescTag + '</tr>';
 
             $('#total-result-table tbody tr').remove();
             $('#total-result-table tbody').append(trTag);
+        }
+
+        function getCompResultData(standard, compUserId) {
+            /*
+             * targetData 검출
+             */
+            var targetComp = {};
+
+            if (compUserId == '전 인원') {
+                $(allResultSet).each(function(allResultIdx, result){
+                    if (targetComp.hasOwnProperty('user_id')) {
+                        $(result.data).each(function(resultIdx, data){
+                            targetComp.data.push(data);
+                        });
+                    } else {
+                        targetComp = result;
+                        targetComp.user_id = compUserId;
+                    }
+                });
+            } else {
+                $(allResultSet).each(function(index, result){
+                    if (compUserId == result.user_id) {
+                        targetComp = result;
+                        return;
+                    }
+                });
+            }
+
+            /*
+             * targetData 평균, 최댓값 계산
+             * targetData 데이터, 종합점수 분리
+             */
+            var newTargetComp   = createCompResultData(standard, targetComp);
+            var dataResult      = createCurrentResultData(newTargetComp);
+
+            return dataResult;
         }
 
         function createCompResultData(standard, compData) {
@@ -384,7 +403,7 @@
             resultTotal['workDtim'] = currentData.workDtim;
 
             $(currentData.title).each(function(titleIdx, data){
-                if (data == '종합점수') {
+                if (data == TOTAL_RESULT_KEY) {
                     if (resultTotal.hasOwnProperty(dataCategory[0])) {
                         $(dataCategory).each(function(index, category){
                             resultTotal[category].push(currentData[category][titleIdx]);

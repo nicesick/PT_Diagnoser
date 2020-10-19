@@ -39,9 +39,13 @@ public class ResultController {
 		try {
 			userId = SessionUtil.getAttribute("user_id").toString();
 
-			List<Map<String, Object>> results 		= memberResultService.findMemberResultSumById(userId);
-			List<Map<String, Object>> allResults 	= memberResultService.findMemberResultSums();
-			List<String>              dataCategory 	= Arrays.asList(new String[]{"title","score","detail", "description"});
+			List<Map<String, Object>> results 			= memberResultService.findMemberResultSumById(userId);
+			List<Map<String, Object>> allResults 		= memberResultService.findMemberResultSums();
+			List<String>              dataCategory 		= Arrays.asList(new String[]{"title","score","detail", "description"});
+
+			String					  filePath			= "file/프레젠테이션가이드북.pptx";
+			String					  fileNm			= "프레젠테이션가이드북.pptx";
+			String					  totalResultKey	= "종합점수";
 
 			System.out.println(results);
 			System.out.println(allResults);
@@ -50,6 +54,9 @@ public class ResultController {
 			modelAndView.addObject("result", results);
 			modelAndView.addObject("allResult", allResults);
 			modelAndView.addObject("dataCategory", dataCategory);
+			modelAndView.addObject("filePath", filePath);
+			modelAndView.addObject("fileNm", fileNm);
+			modelAndView.addObject("totalResultKey", totalResultKey);
 
 			modelAndView.setViewName("result");
 		} catch (Exception e) {
