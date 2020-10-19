@@ -19,7 +19,9 @@
                 </div>
 
                 <div th:if='${"".equals(result[0].data[0].workDtim)}'>
-                    검사결과가 없습니다.
+                    <div class="alert alert-danger">
+                        검사결과가 없습니다.
+                    </div>
                 </div>
                 <div th:unless='${"".equals(result[0].data[0].workDtim)}'>
                     <div class="row mb-3">
@@ -421,6 +423,15 @@
                     }
                 });
             });
+
+            /*
+             * 평균일 경우, 소수점 1자리 반올림
+             */
+            if (standard == '평균') {
+                $(newCompData.score).each(function(scoreIdx, score){
+                    newCompData.score[scoreIdx] = score.toFixed(1);
+                });
+            }
 
             return newCompData;
         }

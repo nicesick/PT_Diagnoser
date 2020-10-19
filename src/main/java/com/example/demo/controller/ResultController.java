@@ -30,9 +30,43 @@ public class ResultController {
 	public ResultController(MemberResultService memberResultService) {
 		this.memberResultService = memberResultService;
 	}
+
 	@RequestMapping("/")
 	public ModelAndView getMain(ModelAndView modelAndView) {
-		return home(modelAndView);
+		System.out.println("getMain controller");
+
+		String userId= "";
+
+		try {
+			userId = SessionUtil.getAttribute("user_id").toString();
+
+			List<Map<String, Object>> results = memberResultService.findMemberResultSumById(userId);
+
+			/*
+			 * result 결과가 있는지 판별
+			 */
+			Map<String, Object> result = results.get(0);
+			List<Map<String, Object>> datas = (List<Map<String, Object>>) result.get("data");
+			Map<String, Object> data = datas.get(0);
+			String workDtim = (String) data.get("workDtim");
+
+			System.out.println("result : " + results);
+			System.out.println("workDtim : " + workDtim);
+
+			/*
+			 * results 결과가 있다면
+			 */
+			if (!"".equals(workDtim)) {
+				System.out.println("result exist");
+				return home(modelAndView);
+			} else {
+				System.out.println("result not exist");
+				return new ModelAndView("redirect:guide");
+			}
+		} catch (Exception e) {
+			modelAndView.setViewName("guide");
+			return modelAndView;
+		}
 	}
 	
 	@RequestMapping("/result")
@@ -69,12 +103,11 @@ public class ResultController {
 
 			modelAndView.setViewName("result");
 		} catch (Exception e) {
-			modelAndView.setViewName("content");
+			modelAndView.setViewName("guide");
 		} finally {
 			return modelAndView;
 		}
 	}
-	
 	
 	@ResponseBody
 	@RequestMapping(value = "/submit", method = RequestMethod.POST)

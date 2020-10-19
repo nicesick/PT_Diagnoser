@@ -2,9 +2,6 @@ package com.example.demo.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
-
-import com.example.demo.SessionUtil;
 
 @Controller
 public class HomeController {
@@ -20,5 +17,10 @@ public class HomeController {
 	@RequestMapping("/content")
 	public String content() {
 		return "content";
+	}
+
+	@RequestMapping("/guide")
+	public String guide() {
+		return "guide";
 	}
 }

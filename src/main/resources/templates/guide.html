@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="main">
+
+<th:block layout:fragment="content">
+    <div id="wrapper">
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12 mb-2">
+                        <span class="font-weight-bold">
+                            <i class="fas fa-angle-double-right"></i>
+                            PT수준 자가진단이란?
+                        </span>
+                    </div>
+                    <div class="col-12">
+                        <div class="alert alert-success border border-dark rounded shadow">
+                            <span>
+                                개인의 PT수준을 진단 할 수 있는 도구로 스피치, 프레젠테이션, 발표불안감 영역에서 총 76개 항목을 제공한다.
+                                <br/>
+                                본인 스스로 항목을 평가하면 합산된 점수에 따라 초급, 중급, 고급으로 결과를 보여주고 등급에 맞는 PT 향상 가이드북을 제공한다.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 mb-2">
+                        <span class="font-weight-bold">
+                            <i class="fas fa-angle-double-right"></i>
+                            자가진단영역
+                        </span>
+                    </div>
+                    <div class="col-12">
+                        <table class="table table-bordered shadow">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th>영역</th>
+                                    <th>항목수</th>
+                                    <th>주요 항목</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>스피치 진단</td>
+                                    <td>28</td>
+                                    <td>용모와 자세, 제스처, 언어와 목소리 등</td>
+                                </tr>
+                                <tr>
+                                    <td>프레젠테이션 진단</td>
+                                    <td>20</td>
+                                    <td>발표 자료의 준비, 장비 및 도구, 장소 사전 조사, 준비의 효과(Q/A) 등</td>
+                                </tr>
+                                <tr>
+                                    <td>발표-불안감 진단</td>
+                                    <td>28</td>
+                                    <td>발표 불안감, 두려움 경험, 긴장/예민함 상태 등</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 mb-2">
+                        <span class="font-weight-bold">
+                            <i class="fas fa-angle-double-right"></i>
+                            자가진단결과
+                        </span>
+                    </div>
+                    <div class="col-12">
+                        <table class="table table-bordered shadow">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th>등급</th>
+                                    <th>내용</th>
+                                    <th>권장 가이드</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>초급</td>
+                                    <td>PT 초보</td>
+                                    <td rowspan="2">PT BASIC GUIDE</td>
+                                </tr>
+                                <tr>
+                                    <td>중급</td>
+                                    <td>PT 보통</td>
+                                </tr>
+                                <tr>
+                                    <td>고급</td>
+                                    <td>PT 숙련</td>
+                                    <td>PT PROFESSIONAL GUIDE</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <a class="btn btn-success font-weight-bold" href="/survey">자가진단 시작</a>
+                    </div>
+                </div>
+            </div>
+            <!-- End of Main Content -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top"> <i
+            class="fas fa-angle-up"></i>
+    </a>
+</th:block>
+</html>
