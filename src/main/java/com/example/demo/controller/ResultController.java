@@ -20,6 +20,10 @@ import java.util.*;
 
 @Controller
 public class ResultController {
+	private final String FILE_PATH 				= "file/";
+	private final String FILE_BASIC_NM 			= "프레젠테이션가이드북_Basic.pptx";
+	private final String FILE_PROFESSIONAL_NM 	= "프레젠테이션가이드북_Professional.pptx";
+
 	private MemberResultService memberResultService;
 
 	@Autowired
@@ -43,20 +47,25 @@ public class ResultController {
 			List<Map<String, Object>> allResults 		= memberResultService.findMemberResultSums();
 			List<String>              dataCategory 		= Arrays.asList(new String[]{"title","score","detail", "description"});
 
-			String					  filePath			= "file/프레젠테이션가이드북.pptx";
-			String					  fileNm			= "프레젠테이션가이드북.pptx";
+			String					  filePath			= FILE_PATH;
+			String					  fileBasicNm		= FILE_BASIC_NM;
+			String					  fileProfNm		= FILE_PROFESSIONAL_NM;
+
 			String					  totalResultKey	= "종합점수";
 
 			System.out.println(results);
 			System.out.println(allResults);
 			System.out.println(dataCategory);
 
-			modelAndView.addObject("result", results);
-			modelAndView.addObject("allResult", allResults);
-			modelAndView.addObject("dataCategory", dataCategory);
-			modelAndView.addObject("filePath", filePath);
-			modelAndView.addObject("fileNm", fileNm);
-			modelAndView.addObject("totalResultKey", totalResultKey);
+			modelAndView.addObject("result"				, results);
+			modelAndView.addObject("allResult"			, allResults);
+			modelAndView.addObject("dataCategory"		, dataCategory);
+
+			modelAndView.addObject("filePath"			, filePath);
+			modelAndView.addObject("fileBasicNm"		, fileBasicNm);
+			modelAndView.addObject("fileProfessionalNm"	, fileProfNm);
+
+			modelAndView.addObject("totalResultKey"		, totalResultKey);
 
 			modelAndView.setViewName("result");
 		} catch (Exception e) {
