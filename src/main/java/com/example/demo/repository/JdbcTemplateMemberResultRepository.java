@@ -319,34 +319,107 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 
 	@Override
 	public int saveResult(MemberResult result) {
-		int rslt = jdbcTemplate.update("Insert into RESULT (USER_ID, CATEGORY, SCORE, WORK_DTIM, SCORE_100) VALUES (?,?,?,?,?) ",
-				result.getUser_id(), result.getCategory(), result.getScore(),result.getWorkDtim(), result.getScore_100());
+		int rslt = jdbcTemplate.update(
+						" MERGE INTO RESULT USING ( SELECT 'X' FROM DUAL) AS X                                " +
+						"    ON (WORK_DTIM BETWEEN SUBSTR(?,1,8) || '000000' AND SUBSTR(?,1,8) || '999999'    " +
+						"                              AND USER_ID = ?                                        " +
+						"                              AND CATEGORY = ?)                                    " +
+						" WHEN MATCHED THEN                                                                   " +
+						" 		     UPDATE SET SCORE = ?,                                                    " +
+						" 		     			SCORE_100 = ?                                                 " +
+						" 		     			                                                              " +
+						" WHEN NOT MATCHED THEN INSERT (USER_ID, CATEGORY, SCORE, WORK_DTIM, SCORE_100)       " +
+						" VALUES (?,?,?,?,?) ;",
+						result.getWorkDtim(), result.getWorkDtim(), result.getUser_id(),  result.getCategory(), result.getScore(), result.getScore_100(),
+				result.getUser_id(), result.getCategory(), result.getScore(), result.getWorkDtim(), result.getScore_100());
 		return rslt;
 	}
 	
 	@Override
 	public int saveTotresult(MemberResult result) {
 		
-		int rslt = jdbcTemplate.update( "INSERT INTO RESULT (USER_ID," +
-		"        CATEGORY, "+
-		"        WORK_DTIM, "+
-		"        SCORE) "+
-		" VALUES(?, "+
-		"        't', "+
-		"        ?, "+
-		"        ( SELECT SUM(SCORE) " +
-	    "          FROM (SELECT A.USER_ID, "+
-		"                  A.CATEGORY, " +
-		"                 B.SCORE AS SCORE  "+
-		"             FROM RESULT A, "+
-		"                 SCORE_DETAIL B, "+
-		"                  CATEGORY C "+
-		"            WHERE A.CATEGORY = B.ID "+
-		"              AND A.SCORE BETWEEN B.FROM_SCORE AND B.TO_SCORE "+
-		"              AND B.ID = C.ID "+
-		"              AND C.USE_YN = 'Y' "+
-		"              AND A.USER_ID = ? "+
-		"              AND A.WORK_DTIM = ?)))", result.getUser_id(), result.getWorkDtim(), result.getUser_id(), result.getWorkDtim());
+		int rslt = jdbcTemplate.update( 
+				"   MERGE INTO RESULT USING ( SELECT 'X'FROM DUAL) AS X            " +
+						"           ON (WORK_DTIM BETWEEN SUBSTR(?,1,8) || '000000' AND SUBSTR(?,1, 8) || '999999'      " +
+						"     AND USER_ID = ?                                                                                                    " +
+						"     AND CATEGORY = 't' )                                                                                                    " +
+						"     WHEN MATCHED THEN UPDATE SET SCORE = ( SELECT SUM(SCORE)                                                                " +
+						"                                             FROM ( SELECT A.USER_ID,                                                        " +
+						"                                                           A.CATEGORY,                                                       " +
+						"                                                           B.SCORE AS SCORE                                                  " +
+						"                                                      FROM RESULT A,                                                         " +
+						"                                                           SCORE_DETAIL B,                                                   " +
+						"                                                           CATEGORY C                                                        " +
+						"                                                     WHERE A.CATEGORY = B.ID                                                 " +
+						"                                                       AND A.SCORE BETWEEN B.FROM_SCORE                                      " +
+						"                                                       AND B.TO_SCORE                                                        " +
+						"                                                       AND B.ID = C.ID                                                       " +
+						"                                                       AND C.USE_YN = 'Y'                                                    " +
+						"                                                       AND A.USER_ID = ?                                                " +
+						"                                                       AND A.WORK_DTIM = (SELECT MAX(WORK_DTIM) FROM RESULT WHERE USER_ID = ? AND CATEGORY = 't')) ),                                " +
+						"                                  SCORE_100 = ( SELECT SUM(A.SCORE) / SUM(B.SCORE) * 100                                     " +
+						"                                                 FROM ( SELECT A.USER_ID,                                                    " +
+						"                                                               A.CATEGORY,                                                   " +
+						"                                                               B.SCORE AS SCORE                                              " +
+						"                                                          FROM RESULT A,                                                     " +
+						"                                                               SCORE_DETAIL B,                                               " +
+						"                                                               CATEGORY C                                                    " +
+						"                                                         WHERE A.CATEGORY = B.ID                                             " +
+						"                                                           AND A.SCORE BETWEEN B.FROM_SCORE                                  " +
+						"                                                           AND B.TO_SCORE                                                    " +
+						"                                                           AND B.ID = C.ID                                                   " +
+						"                                                           AND C.USE_YN = 'Y'                                                " +
+						"                                                           AND A.USER_ID = ?                                           " +
+						"                                                           AND A.WORK_DTIM =(SELECT MAX(WORK_DTIM) FROM RESULT WHERE USER_ID = ? AND CATEGORY = 't')) A,                            " +
+						"                                                      ( SELECT MAX(A.SCORE) AS SCORE,                                        " +
+						"                                                                A.ID                                                         " +
+						"                                                           FROM SCORE_DETAIL A,                                              " +
+						"                                                                CATEGORY B                                                   " +
+						"                                                          WHERE A.ID = B.ID                                                  " +
+						"                                                            AND B.USE_YN = 'Y'                                               " +
+						"                                                          GROUP BY A.ID) B)                                                  " +
+						"      WHEN NOT MATCHED THEN INSERT  (USER_ID, CATEGORY, WORK_DTIM, SCORE, SCORE_100)                                         " +
+						"                                        VALUES(?,                                                                       " +
+						"                                               't',                                                                          " +
+						"                                               ?,                                                             " +
+						"                                               ( SELECT SUM(SCORE)                                                           " +
+						"                                                    FROM ( SELECT A.USER_ID,                                                 " +
+						"                                                                  A.CATEGORY,                                                " +
+						"                                                                  B.SCORE AS SCORE                                           " +
+						"                                                             FROM RESULT A,                                                  " +
+						"                                                                  SCORE_DETAIL B,                                            " +
+						"                                                                  CATEGORY C                                                 " +
+						"                                                            WHERE A.CATEGORY = B.ID                                          " +
+						"                                                              AND A.SCORE BETWEEN B.FROM_SCORE                               " +
+						"                                                              AND B.TO_SCORE                                                 " +
+						"                                                              AND B.ID = C.ID                                                " +
+						"                                                              AND C.USE_YN = 'Y'                                             " +
+						"                                                              AND A.USER_ID = ?                                         " +
+						"                                                              AND A.WORK_DTIM = ?) ),                         " +
+						"                                               ( SELECT SUM(A.SCORE) / SUM(B.SCORE) * 100                                    " +
+						"                                                    FROM ( SELECT A.USER_ID,                                                 " +
+						"                                                                  A.CATEGORY,                                                " +
+						"                                                                  B.SCORE AS SCORE                                           " +
+						"                                                             FROM RESULT A,                                                  " +
+						"                                                                  SCORE_DETAIL B,                                            " +
+						"                                                                  CATEGORY C                                                 " +
+						"                                                            WHERE A.CATEGORY = B.ID                                          " +
+						"                                                              AND A.SCORE BETWEEN B.FROM_SCORE                               " +
+						"                                                              AND B.TO_SCORE                                                 " +
+						"                                                              AND B.ID = C.ID                                                " +
+						"                                                              AND C.USE_YN = 'Y'                                             " +
+						"                                                              AND A.USER_ID = ?                                         " +
+						"                                                              AND A.WORK_DTIM = ? ) A,                         " +
+						"                                                         ( SELECT MAX(A.SCORE) AS SCORE,                                     " +
+						"                                                                   A.ID                                                      " +
+						"                                                              FROM SCORE_DETAIL A,                                           " +
+						"                                                                   CATEGORY B                                                " +
+						"                                                             WHERE A.ID = B.ID                                               " +
+						"                                                               AND B.USE_YN = 'Y'                                            " +
+						"                                                             GROUP BY A.ID) B));                                             " ,
+						 result.getWorkDtim(), result.getWorkDtim(), result.getUser_id(),  result.getUser_id(),  result.getUser_id(), 
+						 result.getUser_id(),  result.getUser_id(),  result.getUser_id(), result.getWorkDtim(),  result.getUser_id(), 
+						 result.getWorkDtim(),  result.getUser_id(), result.getWorkDtim());
 				
 		
 		return rslt;
