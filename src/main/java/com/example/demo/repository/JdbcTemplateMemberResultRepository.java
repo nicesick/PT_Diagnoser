@@ -217,7 +217,7 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 				"    AND a.CATEGORY = c.ID" +
 				"    AND a.USER_ID = ?" +
 				"    AND a.SCORE BETWEEN c.FROM_SCORE AND c.TO_SCORE" +
-				" ORDER BY TO_CHAR(TO_DATE(a.WORK_DTIM, 'yyyyMMddhh24miss'), 'yyyy-MM-dd') DESC, a.CATEGORY" +
+				" ORDER BY TO_CHAR(TO_DATE(a.WORK_DTIM, 'yyyyMMddhh24miss'), 'yyyy-MM-dd') DESC, b.SEQ" +
 				")" +
 				"  WHERE row_num = 1;", memberResultSumRowMapper(), id);
 
@@ -248,7 +248,7 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 				"    AND a.CATEGORY = c.ID" +
 				"    AND a.E_NUM = ?" +
 				"    AND a.SCORE BETWEEN c.FROM_SCORE AND c.TO_SCORE" +
-				" ORDER BY TO_CHAR(TO_DATE(a.WORK_DTIM, 'yyyyMMddhh24miss'), 'yyyy-MM-dd') DESC, a.CATEGORY" +
+				" ORDER BY TO_CHAR(TO_DATE(a.WORK_DTIM, 'yyyyMMddhh24miss'), 'yyyy-MM-dd') DESC, b.SEQ" +
 				")" +
 				"  WHERE row_num = 1;", memberResultSumRowMapper(), eNum);
 
@@ -279,7 +279,7 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 				"    AND a.CATEGORY = c.ID" +
 				"    AND a.EMAIL = ?" +
 				"    AND a.SCORE BETWEEN c.FROM_SCORE AND c.TO_SCORE" +
-				" ORDER BY TO_CHAR(TO_DATE(a.WORK_DTIM, 'yyyyMMddhh24miss'), 'yyyy-MM-dd') DESC, a.CATEGORY" +
+				" ORDER BY TO_CHAR(TO_DATE(a.WORK_DTIM, 'yyyyMMddhh24miss'), 'yyyy-MM-dd') DESC, b.SEQ" +
 				")" +
 				"  WHERE row_num = 1;", memberResultSumRowMapper(), email);
 
@@ -309,7 +309,7 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 				"  WHERE a.CATEGORY = b.ID" +
 				"    AND a.CATEGORY = c.ID" +
 				"    AND a.SCORE BETWEEN c.FROM_SCORE AND c.TO_SCORE" +
-				" ORDER BY TO_CHAR(TO_DATE(a.WORK_DTIM, 'yyyyMMddhh24miss'), 'yyyy-MM-dd') DESC, a.CATEGORY" +
+				" ORDER BY TO_CHAR(TO_DATE(a.WORK_DTIM, 'yyyyMMddhh24miss'), 'yyyy-MM-dd') DESC, b.SEQ" +
 				")" +
 				"  WHERE row_num = 1;", memberResultSumRowMapper());
 
