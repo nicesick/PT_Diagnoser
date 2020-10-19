@@ -250,7 +250,7 @@ GROUP BY a.USER_ID;
 
 
 **-- SELECT RESULT SUM EACH CATEGORY 변경사항**
--- 2020.10.12 repository 단에서 같은 workDtim 별 결과로 가공합니다.
+-- 2020.10.12 repository 단에서 같은 workDtim 별 결과로 가공합니다. + 2020.10.15 score_100 추가, category 테이블 use_yn 추가
 
 SELECT userId
        , workDtim
@@ -261,7 +261,7 @@ SELECT userId
 FROM
 (SELECT a.USER_ID        AS userId
        , TO_CHAR(TO_DATE(a.WORK_DTIM, 'yyyyMMddhh24miss'), 'yyyy-MM-dd')     AS workDtim
-       , CASE WHEN a.SCORE > 100 THEN 100 ELSE a.SCORE END    AS score
+       , a.SCORE_100     AS score
        , b.TITLE         AS title
 	   , c.DETAIL		 AS detail
 	   , c.DESCRIPTION	 AS description
@@ -273,6 +273,7 @@ FROM
 	AND a.CATEGORY = c.ID
     AND a.USER_ID = 'park'
 	AND a.SCORE BETWEEN c.FROM_SCORE AND c.TO_SCORE
+	AND b.USE_YN = 'Y'
 ORDER BY TO_CHAR(TO_DATE(a.WORK_DTIM, 'yyyyMMddhh24miss'), 'yyyy-MM-dd') DESC, a.CATEGORY
 )
 WHERE row_num = 1;

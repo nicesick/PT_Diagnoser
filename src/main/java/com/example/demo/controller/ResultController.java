@@ -1,11 +1,12 @@
 package com.example.demo.controller;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.example.demo.SessionUtil;
+import com.example.demo.Util;
+import com.example.demo.service.MemberResultService;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,16 +15,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.example.demo.SessionUtil;
-import com.example.demo.Util;
-import com.example.demo.service.MemberResultService;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.util.*;
 
 @Controller
 public class ResultController {
+	private final String FILE_PATH 				= "file/";
+	private final String FILE_BASIC_NM 			= "프레젠테이션가이드북_Basic.pptx";
+	private final String FILE_PROFESSIONAL_NM 	= "프레젠테이션가이드북_Professional.pptx";
+
 	private MemberResultService memberResultService;
 
 	@Autowired
@@ -42,18 +42,37 @@ public class ResultController {
 		String userId= "";
 		try {
 			userId = SessionUtil.getAttribute("user_id").toString();
+
+			List<Map<String, Object>> results 			= memberResultService.findMemberResultSumById(userId);
+			List<Map<String, Object>> allResults 		= memberResultService.findMemberResultSums();
+			List<String>              dataCategory 		= Arrays.asList(new String[]{"title","score","detail", "description"});
+
+			String					  filePath			= FILE_PATH;
+			String					  fileBasicNm		= FILE_BASIC_NM;
+			String					  fileProfNm		= FILE_PROFESSIONAL_NM;
+
+			String					  totalResultKey	= "종합점수";
+
+			System.out.println(results);
+			System.out.println(allResults);
+			System.out.println(dataCategory);
+
+			modelAndView.addObject("result"				, results);
+			modelAndView.addObject("allResult"			, allResults);
+			modelAndView.addObject("dataCategory"		, dataCategory);
+
+			modelAndView.addObject("filePath"			, filePath);
+			modelAndView.addObject("fileBasicNm"		, fileBasicNm);
+			modelAndView.addObject("fileProfessionalNm"	, fileProfNm);
+
+			modelAndView.addObject("totalResultKey"		, totalResultKey);
+
+			modelAndView.setViewName("result");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			modelAndView.setViewName("content");
+		} finally {
+			return modelAndView;
 		}
-		List<Map<String, Object>> results = memberResultService.findMemberResultSumById(userId);
-
-		System.out.println(results);
-
-		modelAndView.addObject("result", results);
-		modelAndView.setViewName("result");
-
-		return modelAndView;
 	}
 	
 	

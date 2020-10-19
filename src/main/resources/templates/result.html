@@ -29,7 +29,7 @@
                                 <div class="card-header py-3">
                                     <div class="row">
                                         <div class="col-12">
-                                            <div class="dropdown">
+                                            <div id="dropdownMenu" class="dropdown">
                                                 <button class="btn btn-primary btn-block dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     <span id="current-workDtim"></span>
                                                 </button>
@@ -44,6 +44,40 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div id="dropdownStandard" class="dropdown">
+                                                <button class="btn btn-primary btn-block dropdown-toggle" type="button" id="dropdownStandardButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <span id="compare-standard">평균</span>
+                                                </button>
+                                                <div class="dropdown-menu w-100" aria-labelledby="dropdownStandardButton">
+                                                    <!--<a class="dropdown-item" href="#">Action</a>
+                                                    <a class="dropdown-item" href="#">Another action</a>
+                                                    <a class="dropdown-item" href="#">Something else here</a>-->
+                                                    <a class="text-center dropdown-item dropdown-workDtim">평균</a>
+                                                    <a class="text-center dropdown-item dropdown-workDtim">최대값</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div id="dropdownComp" class="dropdown">
+                                                <button class="btn btn-primary btn-block dropdown-toggle" type="button" id="dropdownCompButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <span id="compare-target">비교대상</span>
+                                                </button>
+                                                <div class="dropdown-menu w-100" aria-labelledby="dropdownCompButton">
+                                                    <!--<a class="dropdown-item" href="#">Action</a>
+                                                    <a class="dropdown-item" href="#">Another action</a>
+                                                    <a class="dropdown-item" href="#">Something else here</a>-->
+                                                    <a class="text-center dropdown-item dropdown-workDtim">없음</a>
+                                                    <a class="text-center dropdown-item dropdown-workDtim">전 인원</a>
+
+                                                    <div th:each="compareResult : ${allResult}">
+                                                        <a class="text-center dropdown-item dropdown-workDtim" th:text="${compareResult.user_id}"></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="card-body mb-4">
                                     <div class="chart-bar">
@@ -53,22 +87,20 @@
                             </div>
                         </div>
                         <div class="col-md-12 col-lg-6">
-                            <!-- Horizontal Bar Chart -->
+                            <!-- Horizontal Bar Chart : 영역별 진단결과 -->
                             <div class="card shadow mb-4 h-100">
                                 <div class="card-header py-3">
                                     <div class="row">
                                         <div class="col-12">
-                                            <h6 class="font-weight-bold text-primary">점검결과</h6>
+                                            <h6 class="font-weight-bold text-primary">영역별 진단결과</h6>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="card-body mb-4">
-                                    <div th:each="title : ${result[0].data[0].title}">
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <div>
-                                                    <canvas th:attr="id=|barChart_${title}|" height="37"></canvas>
-                                                </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div>
+                                                <canvas id="barChart"></canvas>
                                             </div>
                                         </div>
                                     </div>
@@ -78,35 +110,27 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-12">
+                            <!-- Table : 종합결과 -->
                             <div class="card shadow h-100">
                                 <div class="card-header py-3">
                                     <div class="row">
                                         <div class="col-12">
-                                            <h6 class="font-weight-bold text-primary">교육과정</h6>
+                                            <h6 class="font-weight-bold text-primary">종합결과</h6>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="card-body mb-4">
-                                    <div class="table-responsive">
-                                        <table class="table" width="100%" cellspacing="0">
+                                    <div class="table table-bordered table-striped table-responsive">
+                                        <table id="total-result-table" class="table" width="100%" cellspacing="0">
                                             <thead>
                                                 <tr>
+                                                    <th>분야</th>
                                                     <th>등급</th>
-                                                    <th>교육과정</th>
-                                                    <th>비고</th>
+                                                    <!-- <th>점수</th> -->
+                                                    <th>설명</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr id="edu_begin">
-                                                    <td>초, 중급</td>
-                                                    <td>PT 기초 입문</td>
-                                                    <td>PT 공통 및 기본 사항</td>
-                                                </tr>
-                                                <tr id="edu_expert">
-                                                    <td>고급</td>
-                                                    <td>PT 발표 전문가 양성 과정</td>
-                                                    <td>숙련자가 되기 위해 놓치지 말아야 할 내용 기술</td>
-                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -127,9 +151,44 @@
 
 <th:block layout:fragment="script">
     <script type="text/javascript" th:inline="javascript">
-        var resultSet = /*[[${result}]]*/;
+        /**
+         * resultSet            : 현 사용자의 모든 자가진단 결과
+         * allResultSet         : 모든 사용자(현 사용자 포함) 모든 자가진단 결과
+         * dataCategory         : 서버로 받은 데이터 키
+         *
+         * FILE_PATH            : 종합점수 등급 파일 다운로드 경로
+         * FILE_BASIC_NM        : 초급 가이드 다운로드 명
+         * FILE_PROFESSIONAL_NM : 고급 가이드 다운로드 명
+         *
+         * TOTAL_RESULT_KEY     : 종합점수 구분 키
+         *
+         * radarChart           : 레이더차트의 인스턴스
+         * barCharts            : 바차트의 인스턴스
+         *
+         * currentResultData    : 현재 보여주는 현 사용자의 데이터(총합점수 제외)
+         * currentResultTotal   : 현재 보여주는 현 사용자의 총합점수데이터
+         *
+         * currentCompResultData    : 현재 보여주는 비교 사용자의 데이터(총합점수 제외)
+         * currentCompResultTotal   : 현재 보여주는 비교 사용자의 총합점수데이터
+         */
+        var resultSet               = /*[[${result}]]*/;
+        var allResultSet            = /*[[${allResult}]]*/;
+        var dataCategory            = /*[[${dataCategory}]]*/;
+
+        var FILE_PATH               = /*[[${filePath}]]*/;
+        var FILE_BASIC_NM           = /*[[${fileBasicNm}]]*/;
+        var FILE_PROFESSIONAL_NM    = /*[[${fileProfessionalNm}]]*/;
+
+        var TOTAL_RESULT_KEY        = /*[[${totalResultKey}]]*/;
+
         var radarChart;
         var barCharts;
+
+        var currentResultData;
+        var currentResultTotal;
+
+        var currentCompResultData;
+        var currentCompResultTotal;
 
         /**
          * 처음 페이지 초기화
@@ -138,28 +197,93 @@
             console.log(resultSet);
 
             if (resultSet[0].data[0].workDtim != "") {
-                $('.dropdown-workDtim:first').trigger('click');
+                $('#dropdownMenu .dropdown-workDtim:first').trigger('click');
+                $('#dropdownComp .dropdown-workDtim:eq(1)').trigger('click');
+
+                $('#dropdownStandard').addClass('d-none');
+                $('#dropdownComp').addClass('d-none');
             }
         });
 
         /**
-         * Button Event
+         * Button Event , Sync
          *
-         * .dropdown-workDtim.click
+         * #dropdownMenu .dropdown-workDtim.click
+         * #dropdownStandard .dropdown-workDtim.click
+         * #dropdownComp .dropdown-workDtim.click
+         *
+         * syncData
          */
-        $('.dropdown-workDtim').click(function(){
-            var targetWorkDtim = $(this).text();
-
-            var targetWorkDtimTitle     = findValue(targetWorkDtim, 'title');
-            var targetWorkDtimScore     = findValue(targetWorkDtim, 'score');
-            var targetWorkDtimDetail    = findValue(targetWorkDtim, 'detail');
-            var targetWorkDtimDesc      = findValue(targetWorkDtim, 'description');
+        $('#dropdownMenu .dropdown-workDtim').click(function(){
+            var workDtim    = $(this).text();
+            var targetData  = [];
 
             /*
              * dropdown 현행화
              */
-            $('#current-workDtim').text(targetWorkDtim);
+            $('#current-workDtim').text(workDtim);
 
+            /*
+             * 현 사용자 workDtim 에 해당하는 data 추출
+             */
+            $(resultSet[0].data).each(function(index, result){
+                if (result.workDtim == workDtim) {
+                    targetData = result;
+                    return;
+                }
+            });
+
+            /*
+             * 현 사용자 데이터, 총합점수 분리
+             */
+            var dataResult      = createCurrentResultData(targetData);
+
+            currentResultData   = dataResult[0];
+            currentResultTotal  = dataResult[1];
+
+            syncData();
+        });
+
+        $('#dropdownStandard .dropdown-workDtim').click(function(){
+            var standard    = $(this).text();
+            var compUserId  = $('#compare-target').text();
+
+            /*
+             * standard 현행화
+             */
+            $('#compare-standard').text(standard);
+
+            var dataResult = getCompResultData(standard, compUserId);
+
+            currentCompResultData   = dataResult[0];
+            currentCompResultTotal  = dataResult[1];
+
+            syncData();
+        });
+
+        $('#dropdownComp .dropdown-workDtim').click(function(){
+            var standard    = $('#compare-standard').text();
+            var compUserId  = $(this).text();
+
+            /*
+             * compare-target 현행화
+             */
+            $('#compare-target').text(compUserId);
+
+            if (compUserId == '없음') {
+                currentCompResultData   = null;
+                currentCompResultTotal  = null;
+            } else {
+                var dataResult = getCompResultData(standard, compUserId);
+
+                currentCompResultData   = dataResult[0];
+                currentCompResultTotal  = dataResult[1];
+            }
+
+            syncData();
+        });
+
+        function syncData() {
             /*
              * 차트 제거
              */
@@ -168,165 +292,292 @@
             }
 
             if (barCharts != null) {
-                $(barCharts).each(function(index, barChart){
-                    barChart.destroy();
-                });
+                barCharts.destroy();
             }
 
             /*
              * 차트 현행화
              */
-            radarChart = createRadarChart(targetWorkDtimTitle
-                , targetWorkDtimScore
-                , targetWorkDtimDetail
-                , targetWorkDtimDesc);
-            barCharts = [];
-
-            $(targetWorkDtimTitle).each(function(index) {
-                barCharts.push(createHorizontalBarChart(targetWorkDtimTitle[index]
-                    , targetWorkDtimScore[index]
-                    , targetWorkDtimDetail[index]
-                    , targetWorkDtimDesc[index]));
-            });
+            radarChart  = createRadarChart(currentResultData, currentCompResultData);
+            barCharts   = createHorizontalBarChart(currentResultData, currentCompResultData);
 
             /*
-             * 교육과정 현행화
+             * 종합결과 현행화
              */
-            setEduLevel(targetWorkDtimTitle);
-        });
+            createTotalTable();
+        }
 
         /**
-         * setEduLevel
+         * creates
+         *
+         * createTotalTable         : 종합점수 테이블 생성
+         *
+         * getCompResultData        : 평균, 최댓값 기준에 따라 비교 데이터 생성 및 사용자 데이터, 종합점수 데이터 분리
+         *
+         * createCompResultData     : 평균, 최댓값 기준에 따라 비교 데이터 생성
+         * createCurrentResultData  : 사용자 데이터, 종합점수 데이터 분리
+         *
+         * createRadarChart         : 레이더차트 생성
+         * createHorizontalBarChart : 바 차트 생성
          */
-        function setEduLevel(titles) {
-            var isBeginner = true;
+        function createTotalTable() {
+            /*
+             * ToDo : 등급 별 FILE_PATH, FILE_NM - data dictionary 에 추가예정
+             */
+            $('#total-result-table tbody tr').remove();
 
-            $(titles).each(function(index, title){
-                if (title.indexOf('필요') == -1) {
-                    isBeginner = false;
-                    return;
-                }
-            });
+            var tdRankTag       = "";
 
-            if (isBeginner) {
-                $('#edu_begin').addClass('table-success');
-                $('#edu_expert').removeClass('table-success');
+            if (currentResultTotal.detail == '고급') {
+                tdRankTag       = '<td class="font-weight-bold">' + '<a href="' +
+                    FILE_PATH + FILE_PROFESSIONAL_NM +
+                    '" download="' + FILE_PROFESSIONAL_NM + '">' +
+                    currentResultTotal.detail + '</a>' + '</td>';
             } else {
-                $('#edu_begin').removeClass('table-success');
-                $('#edu_expert').addClass('table-success');
+                tdRankTag       = '<td class="font-weight-bold">' + '<a href="' +
+                    FILE_PATH + FILE_BASIC_NM +
+                    '" download="' + FILE_BASIC_NM + '">' +
+                    currentResultTotal.detail + '</a>' + '</td>';
             }
+
+            var tdTitleTag      = '<td class="font-weight-bold">' + '종합결과' + '</td>';
+            var tdDescTag       = '<td class="font-weight-bold">' + currentResultTotal.description + '</td>';
+
+            var trTag           = '<tr>' + tdTitleTag + tdRankTag + tdDescTag + '</tr>';
+
+            $('#total-result-table tbody').append(trTag);
+
+            $(currentResultData.title).each(function(index){
+                var tdTitleTag  = '<td>' + currentResultData.title[index] + '</td>';
+                var tdRankTag   = '<td>' + currentResultData.detail[index] + '</td>';
+                var tdDescTag   = '<td>' + currentResultData.description[index] + '</td>';
+
+                var trTag       = '<tr>' + tdTitleTag + tdRankTag + tdDescTag + '</tr>';
+
+                $('#total-result-table tbody').append(trTag);
+            });
         }
 
-        /**
-         * Utils
-         *
-         * findValue
-         */
-        function findValue(workDtim, keyParam) {
-            var value;
+        function getCompResultData(standard, compUserId) {
+            /*
+             * targetData 검출
+             */
+            var targetComp = {};
 
-            $(resultSet[0].data).each(function(index, data){
-                if (data.workDtim == workDtim) {
-                    value = data[keyParam];
-                    return;
+            if (compUserId == '전 인원') {
+                $(allResultSet).each(function(allResultIdx, result){
+                    if (targetComp.hasOwnProperty('user_id')) {
+                        $(result.data).each(function(resultIdx, data){
+                            targetComp.data.push(data);
+                        });
+                    } else {
+                        targetComp = result;
+                        targetComp.user_id = compUserId;
+                    }
+                });
+            } else {
+                $(allResultSet).each(function(index, result){
+                    if (compUserId == result.user_id) {
+                        targetComp = result;
+                        return;
+                    }
+                });
+            }
+
+            /*
+             * targetData 평균, 최댓값 계산
+             * targetData 데이터, 종합점수 분리
+             */
+            var newTargetComp   = createCompResultData(standard, targetComp);
+            var dataResult      = createCurrentResultData(newTargetComp);
+
+            return dataResult;
+        }
+
+        function createCompResultData(standard, compData) {
+            var newCompData = {};
+            newCompData['workDtim'] = compData.user_id + '(' + standard + ')';
+
+            $(compData.data[0].title).each(function(titleIdx){
+                if (newCompData.hasOwnProperty(dataCategory[0])) {
+                    $(dataCategory).each(function(index, category){
+                        newCompData[category].push(compData.data[0][category][titleIdx]);
+                    });
+                } else {
+                    $(dataCategory).each(function(index, category){
+                        newCompData[category] = [compData.data[0][category][titleIdx],];
+                    });
                 }
             });
 
-            return value;
+            $(compData.data).each(function(dataIdx, data){
+                $(data.score).each(function(scoreIdx, score){
+                    if (standard == '평균') {
+                        newCompData['score'][scoreIdx] = (score + newCompData['score'][scoreIdx]) / 2;
+                    } else if (standard == '최댓값') {
+                        if (score > newCompData['score'][scoreIdx]) {
+                            newCompData['score'][scoreIdx] = score;
+                        }
+                    }
+                });
+            });
+
+            return newCompData;
         }
 
-        /**
-         * createCharts
-         *
-         * createRaderChart
-         * createHorizontalBarChart
-         */
-        function createRadarChart(title, score, detail, description) {
+        function createCurrentResultData(currentData) {
+            var resultData  = {};
+            var resultTotal = {};
+
+            resultData['workDtim']  = currentData.workDtim;
+            resultTotal['workDtim'] = currentData.workDtim;
+
+            $(currentData.title).each(function(titleIdx, data){
+                if (data == TOTAL_RESULT_KEY) {
+                    if (resultTotal.hasOwnProperty(dataCategory[0])) {
+                        $(dataCategory).each(function(index, category){
+                            resultTotal[category].push(currentData[category][titleIdx]);
+                        });
+                    } else {
+                        $(dataCategory).each(function(index, category){
+                            resultTotal[category] = [currentData[category][titleIdx],];
+                        });
+                    }
+                } else {
+                    if (resultData.hasOwnProperty(dataCategory[0])) {
+                        $(dataCategory).each(function(index, category){
+                            resultData[category].push(currentData[category][titleIdx]);
+                        });
+                    } else {
+                        $(dataCategory).each(function(index, category){
+                            resultData[category] = [currentData[category][titleIdx], ];
+                        });
+                    }
+                }
+            });
+
+            return [resultData, resultTotal];
+        }
+
+        function createRadarChart(resultData, compResultData) {
+            var datasets = [{
+                label : resultData.workDtim,
+                backgroundColor : 'rgba(255, 0, 0, 0.2)',
+                borderColor: 'rgb(255, 0, 0)',
+                pointBackgroundColor : 'rgb(255, 0, 0)',
+                pointRadius : 5,
+                pointHoverRadius : 7,
+                data : resultData.score
+            }];
+
+            var options = {
+                legend : {
+                    labels : {
+                        fontSize: 15
+                    },
+                    display : false,
+                    position : 'bottom'
+                },
+                scale : {
+                    pointLabels : {
+                        fontSize : 15
+                    },
+                    ticks : {
+                        beginAtZero : true,
+                        min : 0,
+                        max : 100,
+                        stepSize : 20,
+                        fontSize : 15
+                    }
+                }
+            };
+
+            if (compResultData != null) {
+                datasets.push({
+                    label : compResultData.workDtim,
+                    backgroundColor : 'rgba(0, 0, 255, 0.2)',
+                    borderColor: 'rgb(0, 0, 255)',
+                    pointBackgroundColor : 'rgb(0, 0, 255)',
+                    pointRadius : 5,
+                    pointHoverRadius : 7,
+                    data : compResultData.score
+                });
+
+                options.legend.display = true;
+            }
+
             var chart = new Chart($('#mainChart'), {
                 type    : 'radar',
                 data    : {
-                    labels : title,
-                    datasets : [{
-                        backgroundColor : 'rgba(255, 99, 132, 0.5)',
-                        pointRadius : 5,
-                        pointHoverRadius : 7,
-                        data : score
-                    }]
+                    labels : resultData.title,
+                    datasets : datasets
                 },
-                options : {
-                    legend : {
-                        display : false
-                    },
-                    scale : {
-                        ticks : {
-                            beginAtZero : true,
-                            min : 0,
-                            max : 100,
-                            stepSize : 20
-                        }
-                    },
-                    tooltips : {
-                        callbacks : {
-                            title : function(tooltipItem, data) {
-                                return data['datasets'][0]['data'][tooltipItem[0]['index']] +
-                                    "점 : " +
-                                    detail[tooltipItem[0]['index']];
-                            },
-                            label : function (tooltipItem, data) {
-                                return description[tooltipItem['index']];
-                            }
-                        }
-                    }
-                }
+                options : options
             });
 
             return chart;
         }
 
-        function createHorizontalBarChart(title, score, detail, description) {
-            var chart = new Chart($('#barChart_' + title), {
+        function createHorizontalBarChart(resultDatas, compResultDatas) {
+            var datasets = [{
+                label : resultDatas.workDtim,
+                fill : false,
+                backgroundColor : 'rgba(255, 0, 0, 0.5)',
+                borderColor : 'rgb(255, 0, 0)',
+                data : resultDatas.score
+            }];
+
+            var options = {
+                legend : {
+                    labels : {
+                        fontSize: 15
+                    },
+                    display : false,
+                    position : 'bottom'
+                },
+                responsive : true,
+                elements : {
+                    rectangle : {
+                        borderWidth : 2
+                    }
+                },
+                scales : {
+                    xAxes : [{
+                        ticks : {
+                            beginAtZero : true,
+                            min : 0,
+                            max : 100,
+                            stepSize : 20,
+                            fontSize : 15
+                        }
+                    }],
+                    yAxes : [{
+                        afterFit: function(scaleInstance) {
+                            scaleInstance.width = 120; // sets the width to 100px
+                        }
+                    }]
+                }
+            };
+
+            if (compResultDatas != null) {
+                datasets.push({
+                    label : compResultDatas.workDtim,
+                    fill : false,
+                    backgroundColor : 'rgba(0, 0, 255, 0.5)',
+                    borderColor : 'rgb(0, 0, 255)',
+                    data : compResultDatas.score
+                });
+
+                options.legend.display = true;
+            }
+
+            var chart = new Chart($('#barChart'), {
                 type : 'horizontalBar',
                 data : {
-                    labels : [title],
-                    datasets : [{
-                        fill : false,
-                        backgroundColor : ['rgba(255, 99, 132, 0.5)'],
-                        borderColor : ['rgb(255, 159, 64)'],
-                        data : [score]
-                    }]
+                    labels : resultDatas.title,
+                    datasets : datasets
                 },
-                options : {
-                    legend : {
-                        display : false
-                    },
-                    scales : {
-                        xAxes : [{
-                            ticks : {
-                                beginAtZero : true,
-                                min : 0,
-                                max : 100,
-                                stepSize : 20
-                            }
-                        }],
-                        yAxes : [{
-                            afterFit: function(scaleInstance) {
-                                scaleInstance.width = 125; // sets the width to 100px
-                            }
-                        }]
-                    },
-                    tooltips : {
-                        callbacks : {
-                            title : function(tooltipItem, data) {
-                                return data['datasets'][0]['data'][tooltipItem[0]['index']] +
-                                    "점 : " +
-                                    detail;
-                            },
-                            label : function (tooltipItem, data) {
-                                return description;
-                            }
-                        }
-                    }
-                }
+                options : options
             });
 
             return chart;
