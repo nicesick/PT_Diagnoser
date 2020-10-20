@@ -84,7 +84,7 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 	 * results = [
 	 * 		userScores = {
 	 * 		 	user_id : 'park',
-	 * 		 	datas : [
+	 * 		 	datas 	: [
 	 * 		 		data = {
 	 * 		 		    workDtim : '20201012',
 	 * 		 		    title : [...],
@@ -205,7 +205,7 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 				" FROM" +
 				"(SELECT a.USER_ID        AS userId" +
 				"       , TO_CHAR(TO_DATE(a.WORK_DTIM, 'yyyyMMddhh24miss'), 'yyyy-MM-dd')     AS workDtim" +
-				"       , CASE WHEN a.SCORE > 100 THEN 100 ELSE a.SCORE END                   AS score" +
+				"       , ROUND(a.SCORE_100)                                                  AS score" +
 				"       , b.TITLE         AS title" +
 				"       , c.DETAIL        AS detail" +
 				"       , c.DESCRIPTION   AS description" +
@@ -236,7 +236,7 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 				" FROM" +
 				"(SELECT a.USER_ID        AS userId" +
 				"       , TO_CHAR(TO_DATE(a.WORK_DTIM, 'yyyyMMddhh24miss'), 'yyyy-MM-dd')     AS workDtim" +
-				"       , CASE WHEN a.SCORE > 100 THEN 100 ELSE a.SCORE END                   AS score" +
+				"       , ROUND(a.SCORE_100)                                                  AS score" +
 				"       , b.TITLE         AS title" +
 				"       , c.DETAIL        AS detail" +
 				"       , c.DESCRIPTION   AS description" +
@@ -267,7 +267,7 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 				" FROM" +
 				"(SELECT a.USER_ID        AS userId" +
 				"       , TO_CHAR(TO_DATE(a.WORK_DTIM, 'yyyyMMddhh24miss'), 'yyyy-MM-dd')     AS workDtim" +
-				"       , CASE WHEN a.SCORE > 100 THEN 100 ELSE a.SCORE END                   AS score" +
+				"       , ROUND(a.SCORE_100)                                                  AS score" +
 				"       , b.TITLE         AS title" +
 				"       , c.DETAIL        AS detail" +
 				"       , c.DESCRIPTION   AS description" +
@@ -298,7 +298,7 @@ public class JdbcTemplateMemberResultRepository implements MemberResultRepositor
 				" FROM" +
 				"(SELECT a.USER_ID        AS userId" +
 				"       , TO_CHAR(TO_DATE(a.WORK_DTIM, 'yyyyMMddhh24miss'), 'yyyy-MM-dd')     AS workDtim" +
-				"       , CASE WHEN a.SCORE > 100 THEN 100 ELSE a.SCORE END                   AS score" +
+				"       , ROUND(a.SCORE_100)                                                  AS score" +
 				"       , b.TITLE         AS title" +
 				"       , c.DETAIL        AS detail" +
 				"       , c.DESCRIPTION   AS description" +

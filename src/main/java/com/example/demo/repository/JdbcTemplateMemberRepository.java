@@ -60,7 +60,7 @@ public class JdbcTemplateMemberRepository implements MemberRepository {
 	public int modifyUserInfo(Member member) {
 		int result = jdbcTemplate.update(""
 				+ "UPDATE GUEST SET PWD = ?, EMAIL=? WHERE USER_ID = ?",
-				member.getPwd(), member.getEmail());
+				member.getPwd(), member.getEmail(), member.getId());
 		return result;
 	}
 

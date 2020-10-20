@@ -1,8 +1,8 @@
 package com.example.demo.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.example.demo.SessionUtil;
+import com.example.demo.Util;
+import com.example.demo.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,10 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.example.demo.SessionUtil;
-import com.example.demo.Util;
-import com.example.demo.dto.Member;
-import com.example.demo.service.MemberService;
+import java.util.Map;
 
 @Controller
 public class ProfileController {
@@ -55,24 +52,11 @@ public class ProfileController {
 	@RequestMapping(value = "/profile/submit", method = RequestMethod.POST)
 	public Map<String, Object> saveUserInfo(@RequestBody Map<String, Object> param) throws Exception {
 		System.out.println("profile/submit controller start");
-		
+
 		// 파라미터 값 출력 
 		Util.printParam(param);
-		
-		Map<String, Object> output = new HashMap<String, Object>();
-		
-		Member member = new Member(); 
-		member.setName(param.get("name").toString());
-		member.setEmail(param.get("email").toString());
-		member.setPwd(param.get("pwd").toString());
-		
-		if(memberService.modifyMember(member) > 0 ) {
-			output.put("msg", "SUCCESS"); 
-		} else {
-			output.put("msg", "FAIL");
-		}
-		
+		Map<String, Object> output = memberService.modifyMember(param);
+
 		return output;
 	}
-
 }

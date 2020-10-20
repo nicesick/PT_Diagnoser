@@ -18,25 +18,26 @@
 							<div class="text-center">
 								<h1 class="h4 text-gray-900 mb-4">개인정보수정</h1>
 							</div>
-							<form class="user">
+							<form id="editForm">
 								<div class="form-group">
 									<input type="text" class="form-control form-control-user" id="ibx_name" placeholder="이름" th:value = "${userNm}" disabled = "true" />
 								</div>
 								<div class="form-group">
-									<input type="email" class="form-control form-control-user" id="ibx_email" placeholder="Email 주소" th:value = "${userEmail}" />
+									<input type="email" class="form-control form-control-user" id="ibx_email" placeholder="Email 주소" th:value = "${userEmail}" required="true"/>
 								</div>
 								<div class="form-group">
-									<input type="email" class="form-control form-control-user" id="ibx_pwd" placeholder="현재 비밀번호" />
+									<input type="password" class="form-control form-control-user" id="ibx_pwd" placeholder="현재 비밀번호" required="true"/>
 								</div>
 								<div class="form-group row">
 									<div class="col-sm-6 mb-3 mb-sm-0">
-										<input type="password" class="form-control form-control-user" id="ibx_newPwd1" placeholder="새 비밀번호" />
+										<input type="password" class="form-control form-control-user" id="ibx_newPwd1" placeholder="새 비밀번호" required="true"/>
 									</div>
 									<div class="col-sm-6">
-										<input type="password" class="form-control form-control-user" id="ibx_newPwd2" placeholder="새 비밀번호 확인" />
+										<input type="password" class="form-control form-control-user" id="ibx_newPwd2" placeholder="새 비밀번호 확인" required="true"/>
 									</div>
 								</div>
-								<a href="#" class="btn btn-primary btn-user btn-block" onclick = "fn_submit_onclick()">저	장</a>
+								<button type="submit" class="btn btn-primary btn-user btn-block">저	장</button>
+								<!--<a href="#" class="btn btn-primary btn-user btn-block1" onclick = "fn_submit_onclick()">저	장</a>-->
 							</form>
 						</div>
 					</div>
@@ -67,21 +68,32 @@
 <th:block layout:fragment="script">
 
 	<script type="text/javascript" th:inline="javascript">
+		$('#editForm').submit(function(event){
+			event.preventDefault();
+			fn_submit_onclick();
+		});
+
 		function fn_submit_onclick() {
-			console.log("onclick event start"); 
+			console.log("onclick event start");
 			
 			var pwd1 = document.getElementById("ibx_newPwd1").value; 
-			var pwd2 = document.getElementById("ibx_newPwd2").value; 
+			var pwd2 = document.getElementById("ibx_newPwd2").value;
+
 			if(pwd1 != pwd2 ) {
 				console.log(pwd1, pwd2);
 				alert("비밀번호가 일치하지 않습니다.");
+
 				return ;
 			}
 			
-			var user = {"name":document.getElementById("ibx_name").value, 
-				    "email":document.getElementById("ibx_email").value,
-				    "pwd":document.getElementById("ibx_pwd").value,
-				    "newPwd":document.getElementById("ibx_newPwd1").value}; 
+			var user = {
+				"id"		: document.getElementById("ibx_name").value,
+				"email"		: document.getElementById("ibx_email").value,
+				"pwd"		: document.getElementById("ibx_pwd").value,
+				"newPwd1"	: document.getElementById("ibx_newPwd1").value,
+				"newPwd2"	: document.getElementById("ibx_newPwd2").value,
+			};
+
 			$.ajax({
 		        type: "POST",
 		        url: "profile/submit",
@@ -89,7 +101,13 @@
 		        contentType:'application/json; charset=UTF-8',
 		        success: function(data) {
 		            console.log(" AJAX_SUCCESS ");
-		            location.href = "/";
+
+		            if (data.msg == 'SUCCESS') {
+						alert('수정이 정상적으로 처리되었습니다.');
+						location.href = "/";
+					} else if (data.msg == 'FAIL') {
+		            	alert(data.msgDetail);
+					}
 		        },
 		        error : function(request, status, error){
 		            console.log("code = "+ request.status + " error = " + error); // 실패 시 처리
