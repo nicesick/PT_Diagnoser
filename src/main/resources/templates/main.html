@@ -128,7 +128,7 @@
         <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
         <div class="modal-footer">
           <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-          <a class="btn btn-primary" href="login">Logout</a>
+          <a class="btn btn-primary" href="logout">Logout</a>
         </div>
       </div>
     </div>
@@ -148,29 +148,7 @@
   <script src="vendor/chart.js/Chart.min.js"></script>
 
   <script type="text/javascript" th:inline="javascript">
-   /* $(document).ready(function(){
-       console.log("main page Ready"); 
-      // location.href = "/result";
-        $.ajax({
-	        type: "POST",
-	        url: "result",
-	        contentType:'application/json; charset=UTF-8',
-	        success: function(data) {
-	            console.log("AJAX SUCCESS");
-	            
-	            // 통신 후 화면 매핑 
-	            $("#surveypage").replaceWith(data);
-	        },
-	        error : function(request, status, error){
-	            console.log("AJAX_ERROR");
-	            console.log("code = "+ request.status + " error = " + error); // 실패 시 처리
-	        }
-	    }); 
-
-       
-   }); */
-
-  
+   
   </script>
 
   <th:block layout:fragment="script"></th:block>
