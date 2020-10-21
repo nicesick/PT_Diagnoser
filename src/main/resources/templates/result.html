@@ -350,7 +350,7 @@
             $('#total-result-table tbody').append(trTag);
 
             $(currentResultData.title).each(function(index){
-                var tdTitleTag  = '<td>' + currentResultData.title[index] + '</td>';
+                var tdTitleTag  = '<td>' +"&nbsp" + currentResultData.title[index] + '</td>';
                 var tdRankTag   = '<td>' + currentResultData.detail[index] + '</td>';
                 var tdDescTag   = '<td>' + currentResultData.description[index] + '</td>';
 
