@@ -2,6 +2,9 @@ package com.example.demo.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.example.demo.Util;
 
 @Controller
 public class HomeController {
@@ -20,7 +23,17 @@ public class HomeController {
 	}
 
 	@RequestMapping("/guide")
-	public String guide() {
-		return "guide";
+	public ModelAndView guide(ModelAndView modelAndView) {
+		String filePath		= Util.getFilePath();
+		String fileBasicNm	= Util.getFileBasic();
+		String fileProfNm	= Util.getFileProfessional();
+
+		modelAndView.addObject("filePath"			, filePath);
+		modelAndView.addObject("fileBasicNm"		, fileBasicNm);
+		modelAndView.addObject("fileProfessionalNm"	, fileProfNm);
+
+		modelAndView.setViewName("guide");
+
+		return modelAndView;
 	}
 }

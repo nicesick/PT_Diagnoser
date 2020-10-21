@@ -20,10 +20,6 @@ import java.util.*;
 
 @Controller
 public class ResultController {
-	private final String FILE_PATH 				= "file/";
-	private final String FILE_BASIC_NM 			= "프레젠테이션가이드북_Basic.pptx";
-	private final String FILE_PROFESSIONAL_NM 	= "프레젠테이션가이드북_Professional.pptx";
-
 	private MemberResultService memberResultService;
 
 	@Autowired
@@ -81,9 +77,9 @@ public class ResultController {
 			List<Map<String, Object>> allResults 		= memberResultService.findMemberResultSums();
 			List<String>              dataCategory 		= Arrays.asList(new String[]{"title","score","detail", "description"});
 
-			String					  filePath			= FILE_PATH;
-			String					  fileBasicNm		= FILE_BASIC_NM;
-			String					  fileProfNm		= FILE_PROFESSIONAL_NM;
+			String					  filePath			= Util.getFilePath();
+			String					  fileBasicNm		= Util.getFileBasic();
+			String					  fileProfNm		= Util.getFileProfessional();
 
 			String					  totalResultKey	= "종합점수";
 

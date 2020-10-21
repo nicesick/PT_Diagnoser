@@ -19,9 +19,9 @@
                     <div class="col-12">
                         <div class="alert alert-success border border-dark rounded shadow">
                             <span>
-                                개인의 PT수준을 진단 할 수 있는 도구로 스피치, 프레젠테이션, 발표불안감 영역에서 총 76개 항목을 제공한다.
+                                개인의 PT수준을 진단 할 수 있는 도구로 스피치, 프레젠테이션, 발표불안감 영역에서 총 75개 항목을 제공
                                 <br/>
-                                본인 스스로 항목을 평가하면 합산된 점수에 따라 초급, 중급, 고급으로 결과를 보여주고 등급에 맞는 PT 향상 가이드북을 제공한다.
+                                본인 스스로 항목을 평가하면 합산된 점수에 따라 초급, 중급, 고급으로 결과를 보여주고 등급에 맞는 PT 향상 가이드북을 제공
                             </span>
                         </div>
                     </div>
@@ -45,7 +45,7 @@
                             <tbody>
                                 <tr>
                                     <td>스피치 진단</td>
-                                    <td>28</td>
+                                    <td>27</td>
                                     <td>용모와 자세, 제스처, 언어와 목소리 등</td>
                                 </tr>
                                 <tr>
@@ -82,7 +82,7 @@
                                 <tr>
                                     <td>초급</td>
                                     <td>PT 초보</td>
-                                    <td rowspan="2">PT BASIC GUIDE</td>
+                                    <td rowspan="2"><a th:attr="href=|${filePath}${fileBasicNm}|, download=|${fileBasicNm}|">PT BASIC GUIDE</a></td>
                                 </tr>
                                 <tr>
                                     <td>중급</td>
@@ -91,7 +91,7 @@
                                 <tr>
                                     <td>고급</td>
                                     <td>PT 숙련</td>
-                                    <td>PT PROFESSIONAL GUIDE</td>
+                                    <td><a th:attr="href=|${filePath}${fileProfessionalNm}|, download=|${fileProfessionalNm}|">PT PROFESSIONAL GUIDE</a></td>
                                 </tr>
                             </tbody>
                         </table>

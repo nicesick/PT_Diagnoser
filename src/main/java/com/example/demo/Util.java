@@ -6,7 +6,22 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class Util {
+	private final static String FILE_PATH 				= "file/";
+	private final static String FILE_BASIC_NM 			= "프레젠테이션가이드북_Basic.pptx";
+	private final static String FILE_PROFESSIONAL_NM 	= "프레젠테이션가이드북_Professional.pptx";
 	
+	public static String getFilePath() {
+		return FILE_PATH;
+	}
+
+	public static String getFileBasic() {
+		return FILE_BASIC_NM;
+	}
+
+	public static String getFileProfessional() {
+		return FILE_PROFESSIONAL_NM;
+	}
+
 	/*
 	 *	Map<String, Object> 출력함수 
 	 * 
