@@ -323,9 +323,6 @@
          * createHorizontalBarChart : 바 차트 생성
          */
         function createTotalTable() {
-            /*
-             * ToDo : 등급 별 FILE_PATH, FILE_NM - data dictionary 에 추가예정
-             */
             $('#total-result-table tbody tr').remove();
 
             var tdRankTag       = "";
@@ -350,7 +347,7 @@
             $('#total-result-table tbody').append(trTag);
 
             $(currentResultData.title).each(function(index){
-                var tdTitleTag  = '<td>' +"&nbsp" + currentResultData.title[index] + '</td>';
+                var tdTitleTag  = '<td>' +'&nbsp;' + currentResultData.title[index] + '</td>';
                 var tdRankTag   = '<td>' + currentResultData.detail[index] + '</td>';
                 var tdDescTag   = '<td>' + currentResultData.description[index] + '</td>';
 
@@ -500,6 +497,16 @@
                         stepSize : 20,
                         fontSize : 15
                     }
+                },
+                tooltips : {
+                    callbacks :{
+                        title : function(tooltipItem, data) {
+                            return data.labels[tooltipItem[0].index];
+                        },
+                        label : function(tooltipItem, data){
+                            return tooltipItem.value + '점';
+                        }
+                    }
                 }
             };
 
@@ -567,6 +574,16 @@
                             scaleInstance.width = 120; // sets the width to 100px
                         }
                     }]
+                },
+                tooltips : {
+                    callbacks :{
+                        title : function(tooltipItem, data) {
+                            return data.labels[tooltipItem[0].index];
+                        },
+                        label : function(tooltipItem, data){
+                            return tooltipItem.value + '점';
+                        }
+                    }
                 }
             };
 

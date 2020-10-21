@@ -46,8 +46,8 @@ public class ResultController {
 			Map<String, Object> data = datas.get(0);
 			String workDtim = (String) data.get("workDtim");
 
-			System.out.println("result : " + results);
-			System.out.println("workDtim : " + workDtim);
+			// System.out.println("result : " + results);
+			// System.out.println("workDtim : " + workDtim);
 
 			/*
 			 * results 결과가 있다면
@@ -83,9 +83,9 @@ public class ResultController {
 
 			String					  totalResultKey	= "종합점수";
 
-			System.out.println(results);
-			System.out.println(allResults);
-			System.out.println(dataCategory);
+			// System.out.println(results);
+			// System.out.println(allResults);
+			// System.out.println(dataCategory);
 
 			modelAndView.addObject("result"				, results);
 			modelAndView.addObject("allResult"			, allResults);
