@@ -67,6 +67,10 @@
 								</tbody>
 							</table>
 						</div>
+						<a id = "btn_before" href="#" class="btn btn-success btn-icon-split" onclick="fn_onclick_btn_before()">
+						 <span class="icon text-white-50"> <i class="fas fa-check"></i> </span> 
+						 <span class="text">이 전</span>
+						</a>
 						<a href="#" class="btn btn-success btn-icon-split"
 							onclick="fn_onclick_btn_submit()"> <span
 							class="icon text-white-50"> <i class="fas fa-check"></i>
@@ -74,7 +78,6 @@
 						</a> 
 						
 					</div>
-<!-- 				</th:block>-->
 				</div>
 				
 			</div>
@@ -149,6 +152,13 @@
 	            	$('td:nth-child(8), th:nth-child(8)').show();
 
 	            }
+	            
+	    		if(index == 0 ){
+	    			document.getElementById("btn_before").style.display = "none";
+	    	   } else {
+	    		   document.getElementById("btn_before").style.display = "hide";
+	    	    	
+	    	   }
 	        },
 	        error : function(request, status, error){
 	            console.log("AJAX_ERROR");
@@ -182,7 +192,23 @@
 	            console.log("code = "+ request.status + " error = " + error); // 실패 시 처리
 	        }
 	    });  
-	}	
+	}
+	
+	/*
+	*	이전버튼 클릭 이벤트 
+ 	*/
+	function fn_onclick_btn_before() {
+		console.log("btn before onclick !"); 
+		
+		console.log(survey_result);
+		survey_result.pop();
+		console.log(survey_result)
+		
+		index --; 
+		
+		fn_getSurveyList(categoryList[index].id, categoryList[index].title);
+		
+	}
 	/*
 	*  다음 버튼 클릭 이벤트 
 	*/
@@ -209,7 +235,7 @@
 		if(categoryList.length == index) {
         	fn_submit_result();
         } else {
-        	fn_getSurveyList(categoryList[index].id, categoryList[index].title);
+  	    	fn_getSurveyList(categoryList[index].id, categoryList[index].title);
         }
 		
 	};
