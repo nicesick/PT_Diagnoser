@@ -74,7 +74,7 @@
 						<a href="#" class="btn btn-success btn-icon-split"
 							onclick="fn_onclick_btn_submit()"> <span
 							class="icon text-white-50"> <i class="fas fa-check"></i>
-						</span> <span class="text">다 음</span>
+						</span> <span class="text" id = "spn_next">다 음</span>
 						</a> 
 						
 					</div>
@@ -101,6 +101,7 @@
 	var pageCnt = 10;
 	var pageNo  = 1; 
 	var survey_result = []; 
+	var survey_resultList = []; 
 	var index = 0; 
 	var categoryList = {};
 	
@@ -132,7 +133,8 @@
 	        data: JSON.stringify(param),  
 	        contentType:'application/json; charset=UTF-8',
 	        success: function(data) {
-	            console.log("AJAX SUCCESS");
+	        	
+	        	console.log("AJAX SUCCESS");
 	            
 	            // 통신 후 화면 매핑 
 	            $("#surveypage").replaceWith(data);
@@ -151,14 +153,27 @@
 	            	document.getElementById("col5").innerHTML=  "매우그렇다<br/>( 4 )";
 	            	$('td:nth-child(8), th:nth-child(8)').show();
 
-	            }
+	           }
 	            
-	    		if(index == 0 ){
+	    	   if(index == 0 ){ //첫번째 화면일 경우 
 	    			document.getElementById("btn_before").style.display = "none";
-	    	   } else {
+	    	   } else if (index == 2){ // 마지막화면일 경우 
+	    		   document.getElementById("spn_next").innerHTML = "제 출";
+	    	   } 
+	    	   else {
 	    		   document.getElementById("btn_before").style.display = "hide";
-	    	    	
 	    	   }
+	    	 
+	    	   console.log(survey_resultList.length+ "index : " + index);
+	    	   if(survey_resultList.length > index ){
+	    		   var length = $('#surveyTable tbody tr').length; 
+	    		   for ( var i = 0; i < length ; i++ ) {
+		    			$('input:radio[name ='+(i+1)+']:radio[value='+survey_resultList[index][i]+']').attr("checked",true);
+		   			}
+		   	   }
+	    	   
+	    	   
+	    		
 	        },
 	        error : function(request, status, error){
 	            console.log("AJAX_ERROR");
@@ -200,14 +215,18 @@
 	function fn_onclick_btn_before() {
 		console.log("btn before onclick !"); 
 		
-		console.log(survey_result);
+		var score_list = []; 
+		var length = $('#surveyTable tbody tr').length; 
+		
+		for ( var i = 0; i < length ; i++ ) {
+			score_list[i] = Number($('input:radio[name ='+(i+1)+']:checked').val());
+		}
+		
+		survey_resultList[index] = score_list; 
 		survey_result.pop();
-		console.log(survey_result)
 		
 		index --; 
-		
 		fn_getSurveyList(categoryList[index].id, categoryList[index].title);
-		
 	}
 	/*
 	*  다음 버튼 클릭 이벤트 
@@ -219,6 +238,7 @@
 		var length = $('#surveyTable tbody tr').length; 
 		var score = 0; 
 		var score_100 = 0;
+		var score_list = []; 
 		
 		for ( var i = 0; i < length ; i++ ) {
 			if($('input:radio[name ='+(i+1)+']').is(":checked") == false) {
@@ -226,16 +246,19 @@
 				return; 
 			}
 			score += Number($('input:radio[name ='+(i+1)+']:checked').val());
+			score_list[i] = Number($('input:radio[name ='+(i+1)+']:checked').val());
 		}
-		
+
+		survey_resultList[index] = score_list; 
 		score_100 = score/(length*(categoryList[index].surveyTyp-1))*100;
 		survey_result.push({"id" : categoryList[index].id, "score" : score, "score_100": score_100});
 		
-		index++; 
-		if(categoryList.length == index) {
-        	fn_submit_result();
+		
+		if(categoryList.length -1 == index ) {  // 현재 화면이 마지막 화면일 경우 
+        	fn_submit_result(); 
         } else {
-  	    	fn_getSurveyList(categoryList[index].id, categoryList[index].title);
+        	index++;  // 그 다음 category 조회 
+    		fn_getSurveyList(categoryList[index].id, categoryList[index].title);
         }
 		
 	};

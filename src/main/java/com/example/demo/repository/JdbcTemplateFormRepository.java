@@ -46,7 +46,8 @@ public class JdbcTemplateFormRepository implements FormRepository {
 				+ "where A.CATEGORY = B.ID "
 				+ "AND A.category = ? "
 				+ "AND A.use_yn = 'Y' "
-				+ "AND B.USE_YN = 'Y'", formRowMapper(),category);
+				+ "AND B.USE_YN = 'Y'"
+				+ " ORDER BY ID ", formRowMapper(),category);
 		return result;
 	}
 
