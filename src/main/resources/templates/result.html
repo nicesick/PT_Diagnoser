@@ -15,7 +15,10 @@
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-2">
-                    <h1 class="h3 text-gray-800"><span th:text="${result[0].user_id}"></span>님의 PT역량 결과입니다.</h1>
+                    <span class="font-weight-bold">
+                        <i class="fas fa-angle-double-right"></i>
+                        PT 자가진단 종합결과
+                    </span>
                 </div>
 
                 <div th:if='${"".equals(result[0].data[0].workDtim)}'>
@@ -24,11 +27,17 @@
                     </div>
                 </div>
                 <div th:unless='${"".equals(result[0].data[0].workDtim)}'>
+                    <div class="row">
+                        <div class="col-12">
+                            <div id="total-description" class="alert alert-success border border-dark rounded shadow">
+                            </div>
+                        </div>
+                    </div>
                     <div class="row mb-3">
                         <div class="col-md-12 col-lg-6">
                             <!-- Rader Chart -->
-                            <div class="card shadow mb-4 h-100">
-                                <div class="card-header py-3">
+                            <div class="card shadow h-100">
+                                <div class="card-header">
                                     <div class="row">
                                         <div class="col-12">
                                             <div id="dropdownMenu" class="dropdown">
@@ -81,7 +90,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card-body mb-4">
+                                <div class="card-body">
                                     <div class="chart-bar">
                                         <canvas id="mainChart"></canvas>
                                     </div>
@@ -90,15 +99,15 @@
                         </div>
                         <div class="col-md-12 col-lg-6">
                             <!-- Horizontal Bar Chart : 영역별 진단결과 -->
-                            <div class="card shadow mb-4 h-100">
-                                <div class="card-header py-3">
+                            <div class="card shadow h-100">
+                                <div class="card-header">
                                     <div class="row">
                                         <div class="col-12">
-                                            <h6 class="font-weight-bold text-primary">영역별 진단결과</h6>
+                                            <span class="btn font-weight-bold text-primary">영역 별 진단결과</span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card-body mb-4">
+                                <div class="card-body">
                                     <div class="row">
                                         <div class="col-12">
                                             <div>
@@ -114,14 +123,14 @@
                         <div class="col-12">
                             <!-- Table : 종합결과 -->
                             <div class="card shadow h-100">
-                                <div class="card-header py-3">
+                                <div class="card-header">
                                     <div class="row">
                                         <div class="col-12">
-                                            <h6 class="font-weight-bold text-primary">종합결과</h6>
+                                            <span class="btn font-weight-bold text-primary">영역 별 등급</span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card-body mb-4">
+                                <div class="card-body">
                                     <div class="table table-bordered table-striped table-responsive">
                                         <table id="total-result-table" class="table" width="100%" cellspacing="0">
                                             <thead>
@@ -154,6 +163,8 @@
 <th:block layout:fragment="script">
     <script type="text/javascript" th:inline="javascript">
         /**
+         * userName             : 사용자 이름정보
+         *
          * resultSet            : 현 사용자의 모든 자가진단 결과
          * allResultSet         : 모든 사용자(현 사용자 포함) 모든 자가진단 결과
          * dataCategory         : 서버로 받은 데이터 키
@@ -173,6 +184,8 @@
          * currentCompResultData    : 현재 보여주는 비교 사용자의 데이터(총합점수 제외)
          * currentCompResultTotal   : 현재 보여주는 비교 사용자의 총합점수데이터
          */
+        var userName                = /*[[${userName}]]*/;
+
         var resultSet               = /*[[${result}]]*/;
         var allResultSet            = /*[[${allResult}]]*/;
         var dataCategory            = /*[[${dataCategory}]]*/;
@@ -323,28 +336,54 @@
          * createHorizontalBarChart : 바 차트 생성
          */
         function createTotalTable() {
-            $('#total-result-table tbody tr').remove();
+            /*
+             * 2020-10-23 종합결과 하단에서 상단으로 변경
+             */
+            $('#total-description span').remove();
 
-            var tdRankTag       = "";
+            var aTag = "";
 
             if (currentResultTotal.detail == '고급') {
-                tdRankTag       = '<td class="font-weight-bold">' + '<a href="' +
+                aTag = '<a href="' +
                     FILE_PATH + FILE_PROFESSIONAL_NM +
                     '" download="' + FILE_PROFESSIONAL_NM + '">' +
-                    currentResultTotal.detail + '</a>' + '</td>';
+                    currentResultTotal.detail + '</a>';
             } else {
-                tdRankTag       = '<td class="font-weight-bold">' + '<a href="' +
+                aTag = '<a href="' +
                     FILE_PATH + FILE_BASIC_NM +
                     '" download="' + FILE_BASIC_NM + '">' +
-                    currentResultTotal.detail + '</a>' + '</td>';
+                    currentResultTotal.detail + '</a>';
             }
+           
+            var strongTag = '<strong>' + aTag + '</strong>';
 
-            var tdTitleTag      = '<td class="font-weight-bold">' + '종합결과' + '</td>';
-            var tdDescTag       = '<td class="font-weight-bold">' + currentResultTotal.description + '</td>';
+            var description = userName + ' 님은 ' + strongTag + '으로 ' + currentResultTotal.description;
+            var spanTag = '<span>' + description + '</span>';
 
-            var trTag           = '<tr>' + tdTitleTag + tdRankTag + tdDescTag + '</tr>';
+            $('#total-description').append(spanTag);
 
-            $('#total-result-table tbody').append(trTag);
+            // var tdRankTag       = "";
+
+            // if (currentResultTotal.detail == '고급') {
+            //     tdRankTag       = '<td class="font-weight-bold">' + '<a href="' +
+            //         FILE_PATH + FILE_PROFESSIONAL_NM +
+            //         '" download="' + FILE_PROFESSIONAL_NM + '">' +
+            //         currentResultTotal.detail + '</a>' + '</td>';
+            // } else {
+            //     tdRankTag       = '<td class="font-weight-bold">' + '<a href="' +
+            //         FILE_PATH + FILE_BASIC_NM +
+            //         '" download="' + FILE_BASIC_NM + '">' +
+            //         currentResultTotal.detail + '</a>' + '</td>';
+            // }
+
+            // var tdTitleTag      = '<td class="font-weight-bold">' + '종합결과' + '</td>';
+            // var tdDescTag       = '<td class="font-weight-bold">' + currentResultTotal.description + '</td>';
+
+            // var trTag           = '<tr>' + tdTitleTag + tdRankTag + tdDescTag + '</tr>';
+
+            // $('#total-result-table tbody').append(trTag);
+
+            $('#total-result-table tbody tr').remove();
 
             $(currentResultData.title).each(function(index){
                 var tdTitleTag  = '<td>' +'&nbsp;' + currentResultData.title[index] + '</td>';
@@ -470,7 +509,7 @@
         function createRadarChart(resultData, compResultData) {
             var datasets = [{
                 label : resultData.workDtim,
-                backgroundColor : 'rgba(255, 0, 0, 0.2)',
+                backgroundColor : 'rgba(255, 0, 0, 0.5)',
                 borderColor: 'rgb(255, 0, 0)',
                 pointBackgroundColor : 'rgb(255, 0, 0)',
                 pointRadius : 5,
@@ -514,8 +553,8 @@
                 datasets.push({
                     label : compResultData.workDtim,
                     backgroundColor : 'rgba(0, 0, 255, 0.2)',
-                    borderColor: 'rgb(0, 0, 255)',
-                    pointBackgroundColor : 'rgb(0, 0, 255)',
+                    borderColor: 'rgba(0, 0, 255, 0.5)',
+                    pointBackgroundColor : 'rgba(0, 0, 255, 0.5)',
                     pointRadius : 5,
                     pointHoverRadius : 7,
                     data : compResultData.score
@@ -591,8 +630,8 @@
                 datasets.push({
                     label : compResultDatas.workDtim,
                     fill : false,
-                    backgroundColor : 'rgba(0, 0, 255, 0.5)',
-                    borderColor : 'rgb(0, 0, 255)',
+                    backgroundColor : 'rgba(0, 0, 255, 0.2)',
+                    borderColor : 'rgba(0, 0, 255, 0.2)',
                     data : compResultDatas.score
                 });
 

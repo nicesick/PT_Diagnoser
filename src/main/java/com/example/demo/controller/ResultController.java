@@ -69,9 +69,12 @@ public class ResultController {
 	public ModelAndView home(ModelAndView modelAndView) {
 		System.out.println("result controller");
 
-		String userId= "";
+		String userId	= "";
+		String userName = "";
+
 		try {
-			userId = SessionUtil.getAttribute("user_id").toString();
+			userId 		= SessionUtil.getAttribute("user_id").toString();
+			userName 	= SessionUtil.getAttribute("user_name").toString();
 
 			List<Map<String, Object>> results 			= memberResultService.findMemberResultSumById(userId);
 			List<Map<String, Object>> allResults 		= memberResultService.findMemberResultSums();
@@ -86,6 +89,8 @@ public class ResultController {
 			// System.out.println(results);
 			// System.out.println(allResults);
 			// System.out.println(dataCategory);
+
+			modelAndView.addObject("userName"			, userName);
 
 			modelAndView.addObject("result"				, results);
 			modelAndView.addObject("allResult"			, allResults);
