@@ -5,8 +5,8 @@ PT역량강화 자가진단을 진행하기위한 서비스 작성
 
 ## Environment
 1. Tomcat			    8.0.36
-2. Spring-Boot    1.3.6.RELEASE
-3. Tibero         5
+2. Spring-Boot        1.3.6.RELEASE
+3. Tibero                  5
 
 
 
@@ -26,11 +26,11 @@ PT역량강화 자가진단을 진행하기위한 서비스 작성
   * Add Modules in pom.xml
 
   ```xml
-  		<dependency>
-  			<groupId>org.springframework.boot</groupId>
-  			<artifactId>spring-boot-starter-tomcat</artifactId>
-  			<scope>provided</scope>
-  		</dependency>
+  <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-tomcat</artifactId>
+      <scope>provided</scope>
+  </dependency>
   ```
 
   * Extend SpringBootServletInitializer And Override for employ
@@ -59,40 +59,40 @@ PT역량강화 자가진단을 진행하기위한 서비스 작성
   * If you want to test in local environment, Add this dependency in pom.xml
 
   ```xml
-    <dependency>
-			<groupId>tibero5-jdbc</groupId>
-			<artifactId>tibero5-jdbc</artifactId>
-			<version>5.0.0</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/tibero5-jdbc.jar</systemPath>
-		</dependency>
+  <dependency>
+	    <groupId>tibero5-jdbc</groupId>
+	    <artifactId>tibero5-jdbc</artifactId>
+	    <version>5.0.0</version>
+	    <scope>system</scope>
+	    <systemPath>${project.basedir}/tibero5-jdbc.jar</systemPath>
+	</dependency>
   ```
 
   * Add DataSource Config in application.properties
   * You have to fill varibles starting with ${}
 
   ```properties
-    spring.datasource.url=jdbc:tibero:thin:@${hostIp}:${hostPort}:tibero
-    spring.datasource.driver-class-name=com.tmax.tibero.jdbc.TbDriver
-    spring.datasource.username=${username}
-    spring.datasource.password=${password}
+  spring.datasource.url=jdbc:tibero:thin:@${hostIp}:${hostPort}:tibero
+  spring.datasource.driver-class-name=com.tmax.tibero.jdbc.TbDriver
+  spring.datasource.username=${username}
+  spring.datasource.password=${password}
 
-    spring.jpa.database-platform=org.hibernate.dialect.Oracle9Dialect
+  spring.jpa.database-platform=org.hibernate.dialect.Oracle9Dialect
   ```
 
   * build datasource using configuration java file
 
   ```java
-    @Configuration
-    public class DataSourceConfig {
+  @Configuration
+  public class DataSourceConfig {
 
-        @Bean
-        @ConfigurationProperties(prefix = "spring.datasource")
-        //위에 application.properties에 앞부분
-        public DataSource dataSource() {
-            return DataSourceBuilder.create().build();
-        }
-    }
+      @Bean
+      @ConfigurationProperties(prefix = "spring.datasource")
+      //위에 application.properties에 앞부분
+      public DataSource dataSource() {
+          return DataSourceBuilder.create().build();
+      }
+  }
   ```
 
 
