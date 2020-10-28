@@ -147,11 +147,11 @@
 	            	 
 	            } else if (categoryList[index].surveyTyp == "5") {
 	            	if(categoryList[index].id == "u") {
-	            		document.getElementById("col1").innerHTML =  "전혀아니다<br/>( 0 )";
-		            	document.getElementById("col2").innerHTML=  "약간그렇다<br/>( 1 )";
+	            		document.getElementById("col1").innerHTML =  "매우그렇다<br/>( 0 )";
+		            	document.getElementById("col2").innerHTML=  "상당히그렇다<br/>( 1 )";
 		            	document.getElementById("col3").innerHTML=  "웬만큼그렇다<br/>( 2 )";
-		            	document.getElementById("col4").innerHTML=  "상당히그렇다<br/>( 3 )";
-		            	document.getElementById("col5").innerHTML=  "매우그렇다<br/>( 4 )";
+		            	document.getElementById("col4").innerHTML=  "약간그렇다<br/>( 3 )";
+		            	document.getElementById("col5").innerHTML=  "전혀아니다<br/>( 4 )";
 		            } else  {
 		            	document.getElementById("col1").innerHTML =  "아니다<br/>( 0 )";
 		            	document.getElementById("col2").innerHTML=  "그저그렇다<br/>( 1 )";
@@ -258,9 +258,9 @@
 		}
 
 		survey_resultList[index] = score_list; 
-		if(categoryList[index].id == "u"){
+		/* if(categoryList[index].id == "u"){
 			score = Number(length*(categoryList[index].surveyTyp-1)) - Number(score); 		
-		}
+		} */
 		score_100 = score/(length*(categoryList[index].surveyTyp-1))*100;
 		survey_result.push({"id" : categoryList[index].id, "score" : score, "score_100": score_100});
 		
