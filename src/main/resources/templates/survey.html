@@ -258,6 +258,9 @@
 		}
 
 		survey_resultList[index] = score_list; 
+		if(categoryList[index].id == "u"){
+			score = Number(length*(categoryList[index].surveyTyp-1)) - Number(score); 		
+		}
 		score_100 = score/(length*(categoryList[index].surveyTyp-1))*100;
 		survey_result.push({"id" : categoryList[index].id, "score" : score, "score_100": score_100});
 		
