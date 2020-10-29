@@ -7,8 +7,8 @@ import java.util.Map;
 
 public class Util {
 	private final static String FILE_PATH 				= "file/";
-	private final static String FILE_BASIC_NM 			= "프레젠테이션가이드북_Basic.pptx";
-	private final static String FILE_PROFESSIONAL_NM 	= "프레젠테이션가이드북_Professional.pptx";
+	private final static String FILE_BASIC_NM 			= "프레젠테이션가이드북_BASIC.pdf";
+	private final static String FILE_PROFESSIONAL_NM 	= "프레젠테이션가이드북_PROFESSIONAL.pdf";
 	
 	public static String getFilePath() {
 		return FILE_PATH;
